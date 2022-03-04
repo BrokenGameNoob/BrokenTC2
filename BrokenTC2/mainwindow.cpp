@@ -173,6 +173,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     connect(&m_gearHandler,&tc::GearHandler::gearChanged,m_gearDisplay,&Widget_gearDisplay::refreshGear);
+    connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,m_gearDisplay,&Widget_gearDisplay::onSwitchGearModeChanged);
+    connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,this,[&](auto){saveProfileSettings();});
 
     using qsdl::SDLEventHandler;
     using qsdl::GameController;
@@ -341,6 +343,7 @@ bool MainWindow::loadProfileSettings()
     try
     {
         m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
+        m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
     }
     catch (const std::runtime_error& e)
     {
@@ -426,11 +429,14 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_G5,m_gearHandler.settings().g5);
     lambdaUpdateText(ui->lbl_G6,m_gearHandler.settings().g6);
     lambdaUpdateText(ui->lbl_G7,m_gearHandler.settings().g7);
+    lambdaUpdateText(ui->lbl_seqUp,m_gearHandler.settings().seqGearUp);
+    lambdaUpdateText(ui->lbl_seqDown,m_gearHandler.settings().seqGearDown);
 
     ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
     lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
+    lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
 }
 
 //------------------------------------------------------------------
@@ -463,8 +469,6 @@ void MainWindow::onControllerButtonPressed(int button)
 
     constexpr int displayDelay{150};
 
-    qDebug() << __CURRENT_PLACE__;
-
     if(button == m_gearHandler.settings().gearUp)
     {
         setStyleSheet(ui->lbl_pad_LB,background_pressed);
@@ -476,6 +480,10 @@ void MainWindow::onControllerButtonPressed(int button)
         setStyleSheet(ui->lbl_pad_RB,background_pressed);
         m_gearHandler.gearDown();
         QTimer::singleShot(displayDelay,this,[&](){setStyleSheet(ui->lbl_pad_RB,background_released);});
+    }
+    else if(button == m_gearHandler.settings().switchMode)
+    {
+        m_gearHandler.switchGearSwitchMode();
     }
 }
 

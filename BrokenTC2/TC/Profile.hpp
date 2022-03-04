@@ -35,8 +35,8 @@ struct ProfileSettings{
     Key g7{55};//key "7"
 
     //the crew keyboard keys for gear up/down
-    Key seqGearUp{-1};//key "e"
-    Key seqGearDown{-1};//key "a"
+    Key seqGearUp{69};//key "e"
+    Key seqGearDown{65};//key "a"
 
     int keyDownTime{20};//ms
 

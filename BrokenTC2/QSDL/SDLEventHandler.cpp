@@ -108,11 +108,8 @@ SDLEventHandler::~SDLEventHandler(){
 
 void SDLEventHandler::onButtonDown(int controllerId,int button)
 {
-    qDebug() << __CURRENT_PLACE__ << "  :  " << QString{"Expected id=%0 but found following :"}.arg(controllerId);
-
     for(const auto& e : m_controllerList)
     {
-        qDebug() << e->id()/* << SDL_JoystickInstanceID()*/;
         if(e->id() == controllerId)
         {
             e->notifyButtonDown(button);

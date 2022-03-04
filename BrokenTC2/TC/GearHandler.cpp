@@ -52,10 +52,13 @@ GearHandler::GearHandler(QObject *parent, ProfileSettings settings) : QObject(pa
 }
 
 void GearHandler::setGear(int gear){
-    gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
-    m_currentGear = static_cast<Gear>(gear);
+    if(m_settings.gearSwitchMode == GearSwitchMode::SEQUENTIAL)
+    {
+        throw std::runtime_error{
+            __CURRENT_PLACE__.toStdString() + " : You must not use setGear when in Sequential Mode!"
+        };
+    }
 
-    auto keyCode{getKeyCode(m_currentGear,m_settings)};
 #ifdef Q_OS_WIN
     using windaube::sendKeyboardEvent;
 #else
@@ -65,6 +68,11 @@ void GearHandler::setGear(int gear){
         }
     };
 #endif
+
+    gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
+    m_currentGear = static_cast<Gear>(gear);
+
+    auto keyCode{getKeyCode(m_currentGear,m_settings)};
 
     auto lambdaSwitchClutch{
         [&](int gearKeyCode){
@@ -89,6 +97,38 @@ void GearHandler::setGear(int gear){
         }
     };
 
+    std::thread t{lambdaSwitchClutch,keyCode};
+    t.detach();
+
+    emit gearChanged(gear);
+}
+
+void GearHandler::switchSeqGear(bool goUp)//if you don't go up, I'll assume you want to go down
+{
+#ifdef Q_OS_WIN
+    using windaube::sendKeyboardEvent;
+#else
+    auto sendKeyboardEvent{
+        [&](auto a,auto b){
+            qDebug() << __CURRENT_PLACE__ << " - UNIX - " << "Sending keyboard event : " << a;
+        }
+    };
+#endif
+    int gear{};
+    ProfileSettings::Key gearKey{};
+    if(goUp)
+    {
+        gear = toInt(m_currentGear+1);
+        gearKey = m_settings.seqGearUp;
+    }
+    else
+    {
+        gear = toInt(m_currentGear-1);
+        gearKey = m_settings.seqGearDown;
+    }
+    gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
+    m_currentGear = static_cast<Gear>(gear);
+
     auto lambdaSwitchSeq{
         [&](int gearKeyCode){
             sendKeyboardEvent(gearKeyCode,true);//press gear key
@@ -96,11 +136,11 @@ void GearHandler::setGear(int gear){
             sendKeyboardEvent(gearKeyCode,false);//release gear Key
         }
     };
-
-    std::thread t{lambdaSwitchClutch,keyCode};
+    std::thread t{lambdaSwitchSeq,gearKey};
     t.detach();
 
-    emit gearChanged(gear);
+    emit gearChanged(toInt(m_currentGear));
 }
+
 
 } // namespace tc

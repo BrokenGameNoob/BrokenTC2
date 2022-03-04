@@ -94,7 +94,6 @@ void GameController::disconnectController(bool unregisterEventHandler){
 inline
 void GameController::notifyButtonDown(int button)
 {
-    qDebug() << __CURRENT_PLACE__;
     emit buttonDown(button);
 }
 inline

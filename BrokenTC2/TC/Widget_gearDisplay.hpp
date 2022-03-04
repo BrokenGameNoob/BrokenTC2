@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "TC/Profile.hpp"
+
 namespace Ui {
 class Widget_gearDisplay;
 }
@@ -18,8 +20,13 @@ public:
 public slots:
     void refreshGear(int value);
 
+    void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
+
 private:
     Ui::Widget_gearDisplay *ui;
+
+    QColor m_clutchColor{255,255,255};
+    QColor m_seqColor{255,0,0};
 };
 
 #endif // WIDGET_GEARDISPLAY_H

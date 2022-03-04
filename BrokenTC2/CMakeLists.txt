@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 3.5)
 
-#set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
+project(BrokenTC2 VERSION 0.1 LANGUAGES CXX)
+
+set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
 
 if(UNIX)
     set(SDL2_INCLUDE_DIR "/usr/include/" CACHE BOOL "" FORCE)
     set(SDL2_LIBRARY "/usr/local/lib/libSDL2.so")
+    message(STATUS "FOUND LINUX")
 else()
     set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
+    message(STATUS "Found Windows")
 endif()
-
-project(BrokenTC2 VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" "${CMAKE_ROOT}/Modules")
 
@@ -21,7 +23,6 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 
 include_directories(${SDL2_INCLUDE_DIR})
 

@@ -46,6 +46,8 @@ public:
         setGear(static_cast<int>(gear));
     }
 
+    void switchSeqGear(bool goUp);//if you don't go up, I'll assume you want to go down
+
     const ProfileSettings& settings()const{
         return m_settings;
     }
@@ -55,25 +57,33 @@ public:
 
     void setGearSwitchMode(GearSwitchMode mode){
         m_settings.gearSwitchMode = mode;
+        emit gearSwitchModeChanged(mode);
     }
 
 public slots:
     void gearUp(){
-        setGear(m_currentGear + 1);
+        if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
+            setGear(m_currentGear + 1);
+        else//GearSwitchMode::SEQUENTIAL
+            switchSeqGear(true);
     }
     void gearDown(){
-        setGear(m_currentGear - 1);
+        if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
+            setGear(m_currentGear - 1);
+        else//GearSwitchMode::SEQUENTIAL
+            switchSeqGear(false);
     }
 
     void switchGearSwitchMode(){
         if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
-            m_settings.gearSwitchMode = GearSwitchMode::SEQUENTIAL;
+            setGearSwitchMode(GearSwitchMode::SEQUENTIAL);
         else
-            m_settings.gearSwitchMode = GearSwitchMode::CLUTCH;
+            setGearSwitchMode(GearSwitchMode::CLUTCH);
     }
 
 signals:
     void gearChanged(int value);
+    void gearSwitchModeChanged(tc::GearSwitchMode newMode);
 
 private:
     ProfileSettings m_settings;
