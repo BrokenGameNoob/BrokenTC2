@@ -137,8 +137,19 @@ MainWindow::MainWindow(QWidget *parent)
         saveProfileSettings();
     });
 
+    connect(ui->pb_selectKey_SeqUp,&QPushButton::clicked,this,[&](){
+        auto key{Dialog_getKeyCode::getKey(this).code};
+        setKey(key,ui->lbl_seqUp,m_gearHandler.settings().seqGearUp);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectKey_SeqDown,&QPushButton::clicked,this,[&](){
+        auto key{Dialog_getKeyCode::getKey(this).code};
+        setKey(key,ui->lbl_seqDown,m_gearHandler.settings().seqGearDown);
+        saveProfileSettings();
+    });
+
     connect(ui->sb_gearDelay,&QSpinBox::valueChanged,this,[&](int val){
-        m_gearHandler.settings().interActionDelay = val;
+        m_gearHandler.settings().keyDownTime = val;
         saveProfileSettings();
     });
 
@@ -148,10 +159,14 @@ MainWindow::MainWindow(QWidget *parent)
         setButton(btn,ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
         saveProfileSettings();
     });
-
     connect(ui->pb_selectButton_GDown,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
         setButton(btn,ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_switchMode,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
         saveProfileSettings();
     });
 
@@ -412,7 +427,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_G6,m_gearHandler.settings().g6);
     lambdaUpdateText(ui->lbl_G7,m_gearHandler.settings().g7);
 
-    ui->sb_gearDelay->setValue(m_gearHandler.settings().interActionDelay);
+    ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
     lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);

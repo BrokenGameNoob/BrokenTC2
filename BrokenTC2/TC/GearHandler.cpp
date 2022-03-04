@@ -78,7 +78,7 @@ void GearHandler::setGear(int gear){
                 gearKeyCode = getKeyCode(Gear::G7,m_settings);
 
             sendKeyboardEvent(gearKeyCode,true);//press gear key
-            std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.interActionDelay));
+            std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
             sendKeyboardEvent(gearKeyCode,false);//release gear Key
 
             sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH,m_settings),false);//release clutch

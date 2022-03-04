@@ -18,7 +18,7 @@ struct GearHandlerSettings{
     Key g6{54};//key "6"
     Key g7{55};//key "7"
 
-    int interActionDelay{20};//ms
+    int keyDownTime{20};//ms
     int maxGear{-9999};
 };
 

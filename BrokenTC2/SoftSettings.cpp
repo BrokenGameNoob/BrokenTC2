@@ -75,7 +75,7 @@ bool saveSettings(const GearHandlerSettings& sett,const QString& fileName)
     keys.insert("gear_6",sett.g6);
     keys.insert("gear_7",sett.g7);
 
-    keys.insert("gearDelay",sett.interActionDelay);
+    keys.insert("gearDelay",sett.keyDownTime);
     keys.insert("maxGear",sett.maxGear);
 
 //    QJsonObject gamepad{};
@@ -111,7 +111,7 @@ GearHandlerSettings readGearHandlerSettings(const QString& fileName)
     out.g6 = keys.value("gear_6").toInt();
     out.g7 = keys.value("gear_7").toInt();
 
-    out.interActionDelay = keys.value("gearDelay").toInt();
+    out.keyDownTime = keys.value("gearDelay").toInt();
     out.maxGear = keys.value("maxGear").toInt();
     return out;
 }

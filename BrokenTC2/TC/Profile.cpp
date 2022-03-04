@@ -25,6 +25,7 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     QJsonObject globObj{};
 
     globObj.insert("name",sett.profileName);
+    globObj.insert("gearSwitchMode",toInt(sett.gearSwitchMode));
 
     QJsonObject keys{};
     keys.insert("gear_reverse",sett.reverse);
@@ -36,13 +37,16 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     keys.insert("gear_5",sett.g5);
     keys.insert("gear_6",sett.g6);
     keys.insert("gear_7",sett.g7);
+    keys.insert("seqGearUp",sett.seqGearUp);
+    keys.insert("seqGearDown",sett.seqGearDown);
 
-    keys.insert("gearDelay",sett.interActionDelay);
+    keys.insert("keyDownTime",sett.keyDownTime);
     keys.insert("maxGear",sett.maxGear);
 
     QJsonObject controller{};
     controller.insert("gearUp",sett.gearUp);
     controller.insert("gearDown",sett.gearDown);
+    controller.insert("switchMode",sett.switchMode);
 
     globObj.insert("keys",keys);
     globObj.insert("controller",controller);
@@ -64,24 +68,30 @@ ProfileSettings readProfileSettings(const QString& fileName)
     auto docObj{docOpt.value().object()};
 
     ProfileSettings out{};
+    ProfileSettings ref{};
 
-    out.profileName = docObj.value("name").toString();
+    out.profileName = docObj.value("name").toString(ref.profileName);
+    out.gearSwitchMode = GearSwitchMode{docObj.value("gearSwitchMode").toInt(
+                                        toInt(ref.gearSwitchMode))};
 
     auto keys{docObj.value("keys").toObject()};
-    out.reverse = keys.value("gear_reverse").toInt();
-    out.clutch = keys.value("gear_clutch").toInt();
-    out.g1 = keys.value("gear_1").toInt();
-    out.g2 = keys.value("gear_2").toInt();
-    out.g3 = keys.value("gear_3").toInt();
-    out.g4 = keys.value("gear_4").toInt();
-    out.g5 = keys.value("gear_5").toInt();
-    out.g6 = keys.value("gear_6").toInt();
-    out.g7 = keys.value("gear_7").toInt();
-    out.interActionDelay = keys.value("gearDelay").toInt();
+    out.reverse = keys.value("gear_reverse").toInt(ref.reverse);
+    out.clutch = keys.value("gear_clutch").toInt(ref.clutch);
+    out.g1 = keys.value("gear_1").toInt(ref.g1);
+    out.g2 = keys.value("gear_2").toInt(ref.g2);
+    out.g3 = keys.value("gear_3").toInt(ref.g3);
+    out.g4 = keys.value("gear_4").toInt(ref.g4);
+    out.g5 = keys.value("gear_5").toInt(ref.g5);
+    out.g6 = keys.value("gear_6").toInt(ref.g6);
+    out.g7 = keys.value("gear_7").toInt(ref.g7);
+    out.seqGearUp = keys.value("seqGearUp").toInt(ref.seqGearUp);
+    out.seqGearDown = keys.value("seqGearDown").toInt(ref.seqGearDown);
+    out.keyDownTime = keys.value("keyDownTime").toInt(ref.keyDownTime);
 
     auto controller{docObj.value("controller").toObject()};
-    out.gearUp = controller.value("gearUp").toInt();
-    out.gearDown = controller.value("gearDown").toInt();
+    out.gearUp = controller.value("gearUp").toInt(ref.gearUp);
+    out.gearDown = controller.value("gearDown").toInt(ref.gearDown);
+    out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
 
     out.maxGear = keys.value("maxGear").toInt();
 

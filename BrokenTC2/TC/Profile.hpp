@@ -5,6 +5,12 @@
 
 namespace tc {
 
+enum class GearSwitchMode{
+    CLUTCH=0,
+    SEQUENTIAL=1
+};
+inline int toInt(GearSwitchMode g){return static_cast<int>(g);}
+
 struct ProfileSettings{
     using Key = int;
     using Button = int;
@@ -12,6 +18,8 @@ struct ProfileSettings{
     //---- global ----//
 
     QString profileName{"Default"};
+    GearSwitchMode gearSwitchMode{GearSwitchMode::CLUTCH};
+
     int maxGear{7};
 
     //---- keyboard ----//
@@ -26,13 +34,18 @@ struct ProfileSettings{
     Key g6{54};//key "6"
     Key g7{55};//key "7"
 
-    int interActionDelay{20};//ms
+    //the crew keyboard keys for gear up/down
+    Key seqGearUp{-1};//key "e"
+    Key seqGearDown{-1};//key "a"
+
+    int keyDownTime{20};//ms
 
     //---- Controller ----//
 
     Button gearUp{4};
     Button gearDown{5};
 
+    Button switchMode{-1};
 };
 
 bool saveSettings(const ProfileSettings& sett,const QString& fileName);
