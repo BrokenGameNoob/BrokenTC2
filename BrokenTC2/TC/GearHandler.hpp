@@ -46,6 +46,18 @@ public:
         setGear(static_cast<int>(gear));
     }
 
+    const ProfileSettings& settings()const{
+        return m_settings;
+    }
+    ProfileSettings& settings(){//that, here, is a fcking bad idea that lead to some problems
+        return m_settings;
+    }
+
+    void setGearSwitchMode(GearSwitchMode mode){
+        m_settings.gearSwitchMode = mode;
+    }
+
+public slots:
     void gearUp(){
         setGear(m_currentGear + 1);
     }
@@ -53,11 +65,11 @@ public:
         setGear(m_currentGear - 1);
     }
 
-    const ProfileSettings& settings()const{
-        return m_settings;
-    }
-    ProfileSettings& settings(){//that, here, is a fcking bad idea that lead to some problems
-        return m_settings;
+    void switchGearSwitchMode(){
+        if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
+            m_settings.gearSwitchMode = GearSwitchMode::SEQUENTIAL;
+        else
+            m_settings.gearSwitchMode = GearSwitchMode::CLUTCH;
     }
 
 signals:

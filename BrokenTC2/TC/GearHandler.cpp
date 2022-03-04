@@ -66,7 +66,7 @@ void GearHandler::setGear(int gear){
     };
 #endif
 
-    auto lambdaSwitch{
+    auto lambdaSwitchClutch{
         [&](int gearKeyCode){
             auto t_starting{std::chrono::high_resolution_clock::now()};
 
@@ -89,7 +89,15 @@ void GearHandler::setGear(int gear){
         }
     };
 
-    std::thread t{lambdaSwitch,keyCode};
+    auto lambdaSwitchSeq{
+        [&](int gearKeyCode){
+            sendKeyboardEvent(gearKeyCode,true);//press gear key
+            std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
+            sendKeyboardEvent(gearKeyCode,false);//release gear Key
+        }
+    };
+
+    std::thread t{lambdaSwitchClutch,keyCode};
     t.detach();
 
     emit gearChanged(gear);
