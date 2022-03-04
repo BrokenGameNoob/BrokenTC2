@@ -44,6 +44,7 @@ if(UNIX)
 )
 endif(UNIX)
 
+set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/iconResource.rc")
 
 set(PROJECT_SOURCES
         assets/resources.qrc
@@ -82,6 +83,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(BrokenTC2
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${APP_ICON_RESOURCE_WINDOWS}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET BrokenTC2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -91,12 +93,14 @@ else()
     if(ANDROID)
         add_library(BrokenTC2 SHARED
             ${PROJECT_SOURCES}
+            ${APP_ICON_RESOURCE_WINDOWS}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(BrokenTC2
             ${PROJECT_SOURCES}
+            ${APP_ICON_RESOURCE_WINDOWS}
         )
     endif()
 endif()

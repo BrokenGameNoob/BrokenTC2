@@ -50,7 +50,6 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,std::sh
         case SDL_JOYBUTTONDOWN:
 //            instance()->m_buttonsTimes[e.jbutton.button].setDown();
 //            qDebug() << "Button DOWN : " << e.jbutton.button;
-            qDebug() << "----------------------------";
             emit buttonDown(e.jdevice.which,e.jbutton.button);
             break;
         case SDL_JOYBUTTONUP:
