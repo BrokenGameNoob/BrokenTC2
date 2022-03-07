@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include <QFile>
 #include <QFileInfo>
@@ -85,6 +86,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->dockConsole->setVisible(false);
     connect(ui->action_ShowDevconsole,&QAction::triggered,this,[&](bool){ui->dockConsole->setVisible(true);});
+
+    connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
+        constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2"};
+        qDebug() << __CURRENT_PLACE__ << " : open " << helpLink;
+        if(!QDesktopServices::openUrl(QUrl{helpLink}))
+        {
+            QMessageBox::warning(this,tr("Can't help"),tr("Sorry, we can't open help. Go to this page :\n%0").
+                                 arg(helpLink));
+        }
+    });
 
 
     qsdl::SDLEventHandler::start();

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file>img/softPic.png</file>
+        <file>img/helpIcon.png</file>
     </qresource>
 </RCC>

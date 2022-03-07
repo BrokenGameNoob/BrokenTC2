@@ -1,5 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
 
+#VERSION = MAJOR.MINOR.PATCH
+set(VERSIONING_MAJOR 0)
+set(VERSIONING_MINOR 0)#new features added
+set(VERSIONING_PATCH 2)
+
+project(SimpleUpdater VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_PATCH}
+        LANGUAGES CXX)
+
+add_definitions("-DPROJECT_V_MAJOR=\"${VERSIONING_MAJOR}\"")
+add_definitions("-DPROJECT_V_MINOR=\"${VERSIONING_MINOR}\"")
+add_definitions("-DPROJECT_V_PATCH=\"${VERSIONING_PATCH}\"")
+add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
+#add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
+
+set(EXE_NAME "BrokenTC2v${CMAKE_PROJECT_VERSION}")
+
+
 project(BrokenTC2 VERSION 0.1 LANGUAGES CXX)
 
 set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
@@ -80,7 +97,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(BrokenTC2
+    qt_add_executable(${EXE_NAME}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         ${APP_ICON_RESOURCE_WINDOWS}
@@ -91,32 +108,32 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(BrokenTC2 SHARED
+        add_library(${EXE_NAME} SHARED
             ${PROJECT_SOURCES}
             ${APP_ICON_RESOURCE_WINDOWS}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(BrokenTC2
+        add_executable(${EXE_NAME}
             ${PROJECT_SOURCES}
             ${APP_ICON_RESOURCE_WINDOWS}
         )
     endif()
 endif()
 
-target_link_libraries(BrokenTC2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+target_link_libraries(${EXE_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
     ${SDL2_LIBRARIES}
 )
 
-set_target_properties(BrokenTC2 PROPERTIES
+set_target_properties(${EXE_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(BrokenTC2)
+    qt_finalize_executable(${EXE_NAME})
 endif()
 
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)

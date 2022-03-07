@@ -115,7 +115,7 @@
         <item>
          <widget class="QTabWidget" name="tb_settings">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QScrollArea" name="tb_settingsPage1">
            <property name="sizePolicy">
@@ -146,9 +146,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-281</y>
-              <width>337</width>
-              <height>614</height>
+              <y>0</y>
+              <width>336</width>
+              <height>568</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -647,6 +647,13 @@ Sequential / Clutch</string>
       <property name="text">
        <string>...</string>
       </property>
+      <property name="icon">
+       <iconset resource="assets/resources.qrc">
+        <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -657,7 +664,7 @@ Sequential / Clutch</string>
      <x>0</x>
      <y>0</y>
      <width>607</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">
@@ -701,6 +708,8 @@ Sequential / Clutch</string>
    <header>Debug/logConsole.hpp</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="assets/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
