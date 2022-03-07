@@ -86,20 +86,21 @@ def main():
     exePath = getExePath(releaseDir)
     if(not exePath):
         errorOccured("Cannot find exe path",True)
-    print("Found exe at : {}".format(exePath))
+    print("Found exe at : {}\n".format(exePath))
 
     if(CONFIG_outputDir == "AUTO"):
         CONFIG_outputDir = "./{}".format(pathlib.Path(exePath).stem)
 
     print("Creating deploy dir <{}> ...".format(CONFIG_outputDir))
     mkpathOverwrite(CONFIG_outputDir)#erase and re-create deploy dir
+    print("Done\n")
 
     print("Copying exe...")
     try:
         shutil.copy(exePath,CONFIG_outputDir)
     except:
         errorOccured("Cannot copy exe file",True)
-    print("Done")
+    print("Done\n")
 
     print("Running windeployqt...")
     if(not checkFile(CONFIG_WINDEPLOYQT_PATH)):
