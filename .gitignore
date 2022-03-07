@@ -64,3 +64,4 @@ build-*/
 #deploy files
 BrokenTC2v*.*.*/
 deployScript.nsi
+deployLog.txt
