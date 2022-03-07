@@ -6,7 +6,6 @@ import re
 import inspect
 import pathlib
 import shutil
-from wsgiref.handlers import read_environ
 
 def filterListWithRegex(inVar : list, regex : str):
     return list(filter(re.compile(regex).match,inVar))
