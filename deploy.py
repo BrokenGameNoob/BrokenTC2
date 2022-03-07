@@ -42,7 +42,9 @@ def mkpathOverwrite(path : str) -> bool:
 
 def checkFile(path : str)->bool:
     tmpPath = pathlib.Path(path)
-    if(not tmpPath.is_file() or not tmpPath.exists()):
+    isFile = tmpPath.is_file()
+    exis = tmpPath.exists()
+    if((not tmpPath.is_file()) or (not tmpPath.exists())):
         return False
     return True
 
@@ -67,8 +69,9 @@ def getExePath(releaseDir : str) -> str:
 
 
 def main():
-    CONFIG_OUTPUT_DIR = "AUTO"#the dir will have the name of the found executable
+    CONFIG_outputDir = "AUTO"#the dir will have the name of the found executable
     CONFIG_WINDEPLOYQT_PATH = "C:/Qt/6.2.3/mingw_64/bin/windeployqt.exe"
+    CONFIG_DEPENDENCY_DIR = "./BrokenTC2/assets/dependency"
 
 
     print("------------------------------------------------------")
@@ -85,27 +88,32 @@ def main():
         errorOccured("Cannot find exe path",True)
     print("Found exe at : {}".format(exePath))
 
-    if(CONFIG_OUTPUT_DIR == "AUTO"):
-        CONFIG_OUTPUT_DIR = "./{}".format(pathlib.Path(exePath).stem)
+    if(CONFIG_outputDir == "AUTO"):
+        CONFIG_outputDir = "./{}".format(pathlib.Path(exePath).stem)
 
-    print("Creating deploy dir <{}> ...".format(CONFIG_OUTPUT_DIR))
-    mkpathOverwrite(CONFIG_OUTPUT_DIR)#erase and re-create deploy dir
+    print("Creating deploy dir <{}> ...".format(CONFIG_outputDir))
+    mkpathOverwrite(CONFIG_outputDir)#erase and re-create deploy dir
 
     print("Copying exe...")
-    shutil.copy(exePath,CONFIG_OUTPUT_DIR)
+    try:
+        shutil.copy(exePath,CONFIG_outputDir)
+    except:
+        errorOccured("Cannot copy exe file",True)
+    print("Done")
 
     print("Running windeployqt...")
     if(not checkFile(CONFIG_WINDEPLOYQT_PATH)):
         errorOccured("Cannot find windeployqt exe at {}".format(CONFIG_WINDEPLOYQT_PATH),True)
-    windeployCmd = "{} {} {}".format(CONFIG_WINDEPLOYQT_PATH,CONFIG_OUTPUT_DIR,exePath)
+    windeployCmd = "{} {} {}".format(CONFIG_WINDEPLOYQT_PATH,CONFIG_outputDir,exePath)
     print("\tusing command <{}>".format(windeployCmd))
     if(os.system(windeployCmd)):#if windeployqt failed
         errorOccured("windeployqt failed to execute properly.",True)
+    print("Done")
     
     print("")
 
     print("Deleting useless files")
-    uselessFilePath = "{}/opengl32sw.dll".format(CONFIG_OUTPUT_DIR)
+    uselessFilePath = "{}/opengl32sw.dll".format(CONFIG_outputDir)
     if(checkFile(uselessFilePath)):
         print("\tDeleting : <{}>".format(uselessFilePath))
         try:
@@ -114,6 +122,16 @@ def main():
             errorOccured("Cannot delete <{}>".format(uselessFilePath),False)#non fatal error, keep going
     print("Done")
 
+    print("Adding dependency")
+    dependencyPath = "{}/SDL2.dll".format(CONFIG_DEPENDENCY_DIR)
+    print("\tAdding : <{}>".format(dependencyPath))
+    if(not checkFile(dependencyPath)):
+        errorOccured("Cannot find following dependency : <{}>".format(dependencyPath),True)
+    try:
+        shutil.copy(dependencyPath,CONFIG_outputDir)
+    except:
+        errorOccured("Cannot dependency <{}>".format(dependencyPath),True)
+    print("Done")
 
     print("\nCreating setup...")
     
