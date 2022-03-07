@@ -120,7 +120,7 @@ def main():
             os.remove(uselessFilePath)
         except:
             errorOccured("Cannot delete <{}>".format(uselessFilePath),False)#non fatal error, keep going
-    print("Done")
+    print("Done\n")
 
     print("Adding dependency")
     dependencyPath = "{}/SDL2.dll".format(CONFIG_DEPENDENCY_DIR)
