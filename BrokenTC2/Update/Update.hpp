@@ -158,7 +158,7 @@ bool operator<(const Version& v0,const Version& v1);
 inline
 QDebug operator<<(QDebug dbg,const Version& v){
     dbg.nospace() << v.major << "." << v.minor << "." << v.patch;
-    return dbg << "\n";
+    return dbg;
 }
 
 struct Info

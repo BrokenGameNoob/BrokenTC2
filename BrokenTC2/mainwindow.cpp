@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include "global.hpp"
+#include "Update/PostUpdate.hpp"
 #include <QTimer>
 
 #include "Utils/Dialog_getKeyCode.hpp"
@@ -84,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_gearDisplay{new Widget_gearDisplay()},
       m_controller{}
 {
+    updt::postUpdateFunction();
+
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 

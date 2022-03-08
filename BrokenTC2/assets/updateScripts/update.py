@@ -6,7 +6,8 @@ import re
 import inspect
 import subprocess
 import time
-from tracemalloc import start
+from pathlib import Path
+
 
 def filterListWithRegex(inVar : list, regex : str):
     return list(filter(re.compile(regex).match,inVar))
@@ -27,6 +28,8 @@ def errorOccured(what : str = None,quitProg : bool = False):
 #--------------------------------------------------
 
 def main():
+    UPDATED_TAG_FILENAME = "UPDATED.TAG"
+
     updateFile = ls(".",".*\\.update$")
     if(len(updateFile) != 0):
         updateFile = updateFile[0]
@@ -58,6 +61,8 @@ def main():
     os.rename(updateFile,oldExe)
 
     os.remove(__file__)
+
+    Path(UPDATED_TAG_FILENAME).touch()
 
     subprocess.Popen(oldExe)
 
