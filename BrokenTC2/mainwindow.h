@@ -11,6 +11,8 @@
 
 #include "QSDL/GameController.hpp"
 
+#include "Update/UpdateManager.hpp"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -68,6 +70,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    updt::UpdateManager m_updateManager;
     Settings m_softSettings;
     const QString c_appDataFolder;
     const QString c_softSettingsFile;

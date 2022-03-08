@@ -31,6 +31,7 @@
 #include <QDir>
 
 #include <QDebug>
+#include <QProcess>
 
 namespace{
 
@@ -76,6 +77,7 @@ void setButton(int button,QLabel* lblDisp,tc::ProfileSettings::Key& settingsBtnT
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
+      m_updateManager{false,this},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       m_softSettings{},
       c_softSettingsFile{c_appDataFolder+"settings.conf"},
@@ -225,6 +227,19 @@ MainWindow::MainWindow(QWidget *parent)
     refreshDisplayFromGearHandlerSettings();
 
     m_softSettings.isInit = true;
+
+
+
+    //UPDATES
+
+    connect(&m_updateManager,&updt::UpdateManager::hiddenUpdateAvailable,this,[&](){
+        auto ans = QMessageBox::question(this,tr("Update available"),tr("A new update is available. Do you want to download it ?"));
+        if(ans == QMessageBox::Yes)
+        {
+            m_updateManager.exec();
+        }
+    });
+    m_updateManager.checkUpdate();
 
 //    Dialog_getGameControllerButton::getButton(&m_controller,this);
 }

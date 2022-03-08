@@ -1,23 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
-set(VERSIONING_MAJOR 0)
+set(VERSIONING_MAJOR 0)#incompatible update
 set(VERSIONING_MINOR 0)#new features added
-set(VERSIONING_PATCH 2)
+set(VERSIONING_PATCH 0)#bug fixed
 
-project(SimpleUpdater VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_PATCH}
-        LANGUAGES CXX)
 
-add_definitions("-DPROJECT_V_MAJOR=\"${VERSIONING_MAJOR}\"")
-add_definitions("-DPROJECT_V_MINOR=\"${VERSIONING_MINOR}\"")
-add_definitions("-DPROJECT_V_PATCH=\"${VERSIONING_PATCH}\"")
+add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
+add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
+add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
 add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
-#add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
+add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
 
 set(EXE_NAME "BrokenTC2v${CMAKE_PROJECT_VERSION}")
 
 
-project(BrokenTC2 VERSION 0.1 LANGUAGES CXX)
+project(BrokenTC2 VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_PATCH} LANGUAGES CXX)
 
 set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
 
@@ -45,8 +43,8 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 find_package(SDL2 REQUIRED)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 
 if(WIN32)
@@ -65,6 +63,8 @@ set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/iconResource.r
 
 set(PROJECT_SOURCES
         assets/resources.qrc
+        Update/Update.hpp Update/Update.cpp
+        Update/UpdateManager.hpp Update/UpdateManager.cpp Update/UpdateManager.ui
 
         main.cpp
         mainwindow.cpp
@@ -123,6 +123,7 @@ else()
 endif()
 
 target_link_libraries(${EXE_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
     ${SDL2_LIBRARIES}
 )
 

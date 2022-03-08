@@ -3,4 +3,7 @@
         <file>img/softPic.png</file>
         <file>img/helpIcon.png</file>
     </qresource>
+    <qresource prefix="/update">
+        <file>updateScripts/update.py</file>
+    </qresource>
 </RCC>
