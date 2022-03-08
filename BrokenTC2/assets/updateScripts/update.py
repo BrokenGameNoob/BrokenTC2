@@ -4,8 +4,7 @@ import glob
 import os
 import re
 import inspect
-import pathlib
-import shutil
+import subprocess
 import time
 from tracemalloc import start
 
@@ -59,6 +58,8 @@ def main():
     os.rename(updateFile,oldExe)
 
     os.remove(__file__)
+
+    subprocess.Popen(oldExe)
 
 if(__name__ == "__main__"):
     main()
