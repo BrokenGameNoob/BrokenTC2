@@ -128,7 +128,7 @@ std::optional<Version> getLatestReleaseInfo(QJsonDocument doc)
 
 QString getLatestReleaseUpdateFile(const QJsonDocument& doc)
 {
-    const QRegularExpression updateFileNameRegex{"/(?!.*/).*v[0-9]{1,}\\.[0-9]{1,}\\.[0-9]{1,}\\.update$"};
+    const QRegularExpression updateFileNameRegex{"/(?!.*/).*\\.update$"};
 
     auto jsonObj{doc.object()};
     auto assets(jsonObj["assets"].toArray());
