@@ -47,5 +47,30 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}";WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
+;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}";WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
 
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
+
+
+[Code]
+function CreateFile(): boolean;
+var
+  fileName : string;
+  lines : TArrayOfString;
+begin
+  Result := true;
+  fileName := ExpandConstant('{app}\UPDATED.TAG');
+  SetArrayLength(lines, 1);
+  lines[0] := '42';
+  Result := SaveStringsToFile(filename,lines,true);
+  exit;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if  CurStep=ssPostInstall then
+    begin
+         CreateFile();
+    end
+end;
