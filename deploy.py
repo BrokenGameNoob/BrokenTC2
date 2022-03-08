@@ -88,7 +88,7 @@ def main():
     print("Found exe at : {}\n".format(exePath))
 
     if(CONFIG_outputDir == "AUTO"):
-        CONFIG_outputDir = "./{}".format(pathlib.Path(exePath).stem)
+        CONFIG_outputDir = "./{}".format(pathlib.Path(exePath).stem+"_release")
 
     print("Creating deploy dir <{}> ...".format(CONFIG_outputDir))
     mkpathOverwrite(CONFIG_outputDir)#erase and re-create deploy dir

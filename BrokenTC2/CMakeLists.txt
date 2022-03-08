@@ -12,7 +12,7 @@ add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
 add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
 add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
 
-set(EXE_NAME "BrokenTC2v${CMAKE_PROJECT_VERSION}")
+set(EXE_NAME "BrokenTC2")
 
 
 project(BrokenTC2 VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_PATCH} LANGUAGES CXX)

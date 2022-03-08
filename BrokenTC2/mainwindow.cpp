@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_controller{}
 {
     ui->setupUi(this);
+    ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
     ui->dockConsole->setVisible(false);
     connect(ui->action_ShowDevconsole,&QAction::triggered,this,[&](bool){ui->dockConsole->setVisible(true);});
