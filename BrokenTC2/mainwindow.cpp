@@ -240,6 +240,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //UPDATES
+    connect(ui->action_checkUpdates,&QAction::triggered,&m_updateManager,&updt::UpdateManager::checkUpdate);
 
     connect(&m_updateManager,&updt::UpdateManager::hiddenUpdateAvailable,this,[&](){
         auto ans = QMessageBox::question(this,tr("Update available"),tr("A new update is available. Do you want to download it ?"));
@@ -247,6 +248,9 @@ MainWindow::MainWindow(QWidget *parent)
         {
             m_updateManager.exec();
         }
+    });
+    connect(&m_updateManager,&updt::UpdateManager::hiddenNoUpdateAvailable,this,[&](){
+        ui->statusbar->showMessage(tr("No available update found"),10000);
     });
     m_updateManager.checkUpdate();
 

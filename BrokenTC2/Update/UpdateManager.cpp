@@ -120,6 +120,7 @@ void UpdateManager::onApiRequestFinished(const QJsonDocument& doc)
     else
     {
         ui->lbl_feedback->setText(tr("No newer version available"));
+        notifyNoAvailableUpdate();
     }
 }
 

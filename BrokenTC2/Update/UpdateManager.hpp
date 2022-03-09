@@ -20,24 +20,26 @@ public:
     explicit UpdateManager(bool checkUpdateOnInit = false, QWidget *parent = nullptr);
     ~UpdateManager();
 
+public slots:
     void checkUpdate(){
         on_pb_checkUpdt_clicked();
     }
 
 signals:
     void hiddenUpdateAvailable();//signal emitted when an update is found when window invisible
+    void hiddenNoUpdateAvailable();
 
 private:
     void resetUpdateInfo();
 
 private slots:
     void notifyAvailableUpdate(){
-        static bool firstTime{true};
         if(!this->isVisible())
-        {
             emit hiddenUpdateAvailable();
-            firstTime = false;
-        }
+    }
+    void notifyNoAvailableUpdate(){
+        if(!this->isVisible())
+            emit hiddenNoUpdateAvailable();
     }
     void onApiRequestFinished(const QJsonDocument& doc);
     void onUpdateDownloadFinished();

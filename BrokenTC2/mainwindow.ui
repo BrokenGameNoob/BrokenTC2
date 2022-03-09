@@ -740,6 +740,9 @@ Sequential / Clutch</string>
     <addaction name="menuAdvanced"/>
     <addaction name="separator"/>
     <addaction name="action_about"/>
+    <addaction name="separator"/>
+    <addaction name="action_checkUpdates"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuTools"/>
   </widget>
@@ -758,6 +761,11 @@ Sequential / Clutch</string>
   <action name="action_about">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="action_checkUpdates">
+   <property name="text">
+    <string>Check updates</string>
    </property>
   </action>
  </widget>
