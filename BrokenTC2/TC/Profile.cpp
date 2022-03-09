@@ -46,6 +46,7 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     QJsonObject controller{};
     controller.insert("gearUp",sett.gearUp);
     controller.insert("gearDown",sett.gearDown);
+    controller.insert("setFirstGear",sett.setFirstGear);
     controller.insert("switchMode",sett.switchMode);
 
     globObj.insert("keys",keys);
@@ -91,6 +92,7 @@ ProfileSettings readProfileSettings(const QString& fileName)
     auto controller{docObj.value("controller").toObject()};
     out.gearUp = controller.value("gearUp").toInt(ref.gearUp);
     out.gearDown = controller.value("gearDown").toInt(ref.gearDown);
+    out.setFirstGear = controller.value("setFirstGear").toInt(ref.setFirstGear);
     out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
 
     out.maxGear = keys.value("maxGear").toInt();

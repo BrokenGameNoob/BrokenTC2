@@ -44,6 +44,7 @@ struct ProfileSettings{
 
     Button gearUp{4};
     Button gearDown{5};
+    Button setFirstGear{-1};
 
     Button switchMode{-1};
 };

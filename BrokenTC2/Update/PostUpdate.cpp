@@ -12,24 +12,7 @@ namespace{
 inline
 void postUpdate()
 {
-    auto appdataPath{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)};
-    QDir newAppdata{appdataPath};
-    QFileInfo appdataInfo{appdataPath};
-    auto appdataRoaming{appdataInfo.dir()};
-    QDir oldAppdataDir{appdataRoaming.path()+"/BrokenTC2v0"};
-
-    if(!appdataRoaming.exists("BrokenTC2v0"))
-    {
-        qDebug() << "Old dir not found";
-        return;
-    }
-
-    if(newAppdata.exists())//if the new dir already exists (How ?)
-    {
-        newAppdata.removeRecursively();//delete it
-    }
-
-    qDebug() << oldAppdataDir.rename(oldAppdataDir.path(),"../"+QFileInfo(appdataPath).completeBaseName());
+    //v0.1.0 -> v0.1.1
 }
 
 }

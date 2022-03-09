@@ -181,6 +181,11 @@ MainWindow::MainWindow(QWidget *parent)
         setButton(btn,ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
         saveProfileSettings();
     });
+    connect(ui->pb_selectButton_GDown,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_firstGear,m_gearHandler.settings().setFirstGear);
+        saveProfileSettings();
+    });
     connect(ui->pb_selectButton_switchMode,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
         setButton(btn,ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
@@ -466,6 +471,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
     lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
+    lambdaUpdateText(ui->lbl_btn_firstGear,m_gearHandler.settings().setFirstGear);
     lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
 }
 
@@ -510,6 +516,15 @@ void MainWindow::onControllerButtonPressed(int button)
         setStyleSheet(ui->lbl_pad_RB,background_pressed);
         m_gearHandler.gearDown();
         QTimer::singleShot(displayDelay,this,[&](){setStyleSheet(ui->lbl_pad_RB,background_released);});
+    }
+    else if(button == m_gearHandler.settings().setFirstGear)
+    {
+        if(m_gearHandler.mode() == tc::GearSwitchMode::SEQUENTIAL){
+            m_gearHandler.setGearNoAction(tc::Gear::G1);
+        }
+        else{
+            m_gearHandler.setGear(tc::Gear::G1);
+        }
     }
     else if(button == m_gearHandler.settings().switchMode)
     {

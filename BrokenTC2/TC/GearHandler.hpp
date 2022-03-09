@@ -46,6 +46,15 @@ public:
         setGear(static_cast<int>(gear));
     }
 
+    void setGearNoAction(int gear){
+        gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
+        m_currentGear = static_cast<Gear>(gear);
+        emit gearChanged(gear);
+    }
+    void setGearNoAction(Gear gear){
+        setGearNoAction(static_cast<int>(gear));
+    }
+
     void switchSeqGear(bool goUp);//if you don't go up, I'll assume you want to go down
 
     const ProfileSettings& settings()const{
@@ -58,6 +67,9 @@ public:
     void setGearSwitchMode(GearSwitchMode mode){
         m_settings.gearSwitchMode = mode;
         emit gearSwitchModeChanged(mode);
+    }
+    GearSwitchMode mode()const{
+        return m_settings.gearSwitchMode;
     }
 
 public slots:
