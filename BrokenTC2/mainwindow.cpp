@@ -181,7 +181,7 @@ MainWindow::MainWindow(QWidget *parent)
         setButton(btn,ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
         saveProfileSettings();
     });
-    connect(ui->pb_selectButton_GDown,&QPushButton::clicked,this,[&](){
+    connect(ui->pb_selectButton_firstGear,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
         setButton(btn,ui->lbl_btn_firstGear,m_gearHandler.settings().setFirstGear);
         saveProfileSettings();
