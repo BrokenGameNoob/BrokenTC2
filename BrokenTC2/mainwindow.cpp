@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QProcess>
 
+
 namespace{
 
 void setKey(int keyCode,QLabel* lblDisp,tc::ProfileSettings::Key& settingsKeyToChange)
