@@ -6,7 +6,7 @@ set UPDATE_TAG_FILENAME=UPDATED.TAG
 set EXTENSION_EXE=.exe
 set EXTENSION_UPDATE=.update
 @REM How long it will take to fail update
-set /A "TIMEOUT_TIME=30"
+set /A "TIMEOUT_TIME=25"
 
 
 set EXE_NAME=%EXE_BASE_NAME%%EXTENSION_EXE%
@@ -17,7 +17,7 @@ del %EXE_NAME%
 set /A "cnt=0"
 :loopRmExe
 set /A "cnt=cnt+1"
-timeout /t 1 /nobreak
+PING localhost -n 2 >NUL
 echo %cnt% ===== %TIMEOUT_TIME%
 
 if %cnt% GEQ %TIMEOUT_TIME% goto endOfFile_error
@@ -39,5 +39,7 @@ if errorlevel 1 goto endOfFile_error
 
 echo .>%UPDATE_TAG_FILENAME%
 
-del "%0"
+start %EXE_NAME%
+
+del "%~f0"
 :endOfFile_error

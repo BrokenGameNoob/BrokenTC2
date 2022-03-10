@@ -32,11 +32,9 @@ private:
 
 private slots:
     void notifyAvailableUpdate(){
-        static bool firstTime{true};
         if(!this->isVisible())
         {
             emit hiddenUpdateAvailable();
-            firstTime = false;
         }
     }
     void onApiRequestFinished(const QJsonDocument& doc);
