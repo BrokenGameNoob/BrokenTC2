@@ -8,7 +8,5 @@
         <file>update/update.bat</file>
         <file>update/changelog.md</file>
     </qresource>
-    <qresource prefix="/Docs">
-        <file>docs/README_fr.md</file>
-    </qresource>
+    <qresource prefix="/Docs"/>
 </RCC>
