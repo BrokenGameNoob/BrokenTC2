@@ -131,7 +131,7 @@ Voici la page que vous devriez voir lors du lancement du logiciel :
 
 1. Ceci permet de voir quand est-ce que le logiciel détecte l'appui sur la touche pour rétrogader ou passer la vitesse. L'un des deux rectangle passera au vert de l'appui sur la touche.
 2. C'est ici que vous pouvez sélectionner le contrôleur que vous souhaitez utiliser
-3. L'onglet `In game` correspond aux touches configurées en jeu et le champs `Gear key press delay (ms)` correspond au temps durant lequel le logiciel va simuler l'appui sur une touche du clavier.
+3. L'onglet `In game` correspond aux touches configurées en jeu et le champ `Gear key press delay (ms)` correspond au temps durant lequel le logiciel va simuler l'appui sur une touche du clavier.
     > **Note :** La valeur par défaut est 20ms. Si vous avez souvent des ratés de passage de vitesse, vous pouvez augmenter la valeur jusqu'à ce que ça marche.
 4. L'onglet `Controller` concerne les paramètres du contrôleur (les boutons utilisées pour les différentes actions)
 5. Ceci permet d'afficher la vitesse actuellement engagée par la boîte séquentielle du jeu. Je **recommande** vivement d'activer ceci puisque en cas de lag ou de problème, la vitesse du logiciel et celle utilisée en jeu pourrait différer. L'afficher permet de s'en rendre compte
