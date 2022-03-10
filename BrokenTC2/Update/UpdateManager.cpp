@@ -158,8 +158,16 @@ void UpdateManager::on_pb_update_clicked()
 
 void UpdateManager::processUpdate()
 {
+#ifdef Q_OS_WINDOWS
+    constexpr auto LOCAL_SCRIPT_NAME{"update.bat"};
+    constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.py"};
+    constexpr auto START_COMMAND{"python"};
+#else
     constexpr auto LOCAL_SCRIPT_NAME{"update.py"};
     constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.py"};
+    constexpr auto START_COMMAND{"python"};
+
+#endif
 
     auto scriptPath{QApplication::applicationDirPath()+"/"+LOCAL_SCRIPT_NAME};
 
