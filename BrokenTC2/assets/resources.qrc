@@ -4,7 +4,8 @@
         <file>img/helpIcon.png</file>
     </qresource>
     <qresource prefix="/update">
-        <file>updateScripts/update.py</file>
-        <file>updateScripts/update.bat</file>
+        <file>update/update.py</file>
+        <file>update/update.bat</file>
+        <file>update/changelog.md</file>
     </qresource>
 </RCC>

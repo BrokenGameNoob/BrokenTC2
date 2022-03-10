@@ -80,14 +80,13 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_updateManager{false,this},
+      m_wasUpdated{updt::postUpdateFunction()},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       m_softSettings{},
       c_softSettingsFile{c_appDataFolder+"settings.conf"},
       m_gearDisplay{new Widget_gearDisplay()},
       m_controller{}
 {
-    updt::postUpdateFunction();
-
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
@@ -282,6 +281,12 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
         saveSoftSettings();
 
         QMetaObject::invokeMethod(this, "on_action_about_triggered", Qt::ConnectionType::QueuedConnection);//call it after function terminated
+    }
+    if(m_wasUpdated || true)
+    {
+        QMetaObject::invokeMethod(this,[this](){
+            updt::showChangelog(this,":/update/update/changelog.md");
+        },Qt::ConnectionType::QueuedConnection);
     }
 }
 

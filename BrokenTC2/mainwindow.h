@@ -71,6 +71,8 @@ private:
 private:
     Ui::MainWindow *ui;
     updt::UpdateManager m_updateManager;
+    bool m_wasUpdated;
+
     Settings m_softSettings;
     const QString c_appDataFolder;
     const QString c_softSettingsFile;
