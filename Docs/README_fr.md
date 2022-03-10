@@ -52,7 +52,7 @@ Grand luxe ! Le logiciel cherche si des mises à jour sont disponibles à chaque
 
 A partir de la [version 0.1.1](https://github.com/BrokenGameNoob/BrokenTC2/releases/tag/v0.1.1), l'utilisateur peut demander à vérifier l'existence de mise à jour manuellement depuis le menu ***Tools*** du logiciel.
 
-Lors d'une mise à jour, le logiciel va télécharger les fichiers nécessaires puis se fermer le temps de l'installation et se **relancer automatiquement en cas de succès**. En cas de problème de mise à jour, se référer à [la section dédié](#FAQ-update-failed)
+Lors d'une mise à jour, le logiciel va télécharger les fichiers nécessaires puis se fermer le temps de l'installation et se **relancer automatiquement en cas de succès**. En cas de problème de mise à jour, se référer à [la FAQ](#FAQ-update-failed)
 
 
 <br/><br/>
