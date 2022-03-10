@@ -434,7 +434,7 @@ void MainWindow::refreshFromSettings()
 
 void MainWindow::populateDevicesComboBox()
 {
-    auto curDevice{ui->cb_selectDevice->currentText()};
+    auto curDevice{(ui->cb_selectDevice->count() == 0?m_softSettings.currentDeviceName:ui->cb_selectDevice->currentText())};
     ui->cb_selectDevice->clear();
 
     auto deviceList{qsdl::getPluggedJoysticks()};
