@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "GameController.hpp"
+#include "QSDL/SDLGlobal.hpp"
 
 namespace qsdl {
 
@@ -19,7 +20,8 @@ class SDLEventThread : public QObject
 Q_OBJECT
 
 public slots:
-    void work(const QVector<qsdl::GameController*>& controllerList,std::shared_ptr<bool> shouldStop);
+    void work(const QVector<qsdl::GameController*>& controllerList,
+              std::shared_ptr<const EventHandlerSharedConfig> shouldStop);
 
 signals:
     void testSignal();
@@ -55,11 +57,11 @@ public:
     }
 
     static void start(){
-        emit instance()->operate(instance()->m_controllerList,instance()->m_shouldStop);
+        emit instance()->operate(instance()->m_controllerList,instance()->m_sharedConfig);
     }
 
 signals:
-    void operate(const QVector<qsdl::GameController*>&,std::shared_ptr<bool>);
+    void operate(const QVector<qsdl::GameController*>&,std::shared_ptr<EventHandlerSharedConfig>);
 
     void gameControllerAdded(int id);
     void gameControllerRemoved(int id);
@@ -83,7 +85,8 @@ private:
     SDLEventHandler(const SDLEventHandler&)= delete;
     SDLEventHandler& operator=(const SDLEventHandler&)= delete;
 
-    std::shared_ptr<bool> m_shouldStop{std::make_shared<bool>(false)};
+    std::shared_ptr<EventHandlerSharedConfig> m_sharedConfig{
+        std::make_shared<EventHandlerSharedConfig>(EventHandlerSharedConfig{false})};
 
     QVector<GameController*> m_controllerList;
 

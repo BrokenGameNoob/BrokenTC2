@@ -17,7 +17,8 @@ namespace qsdl{
 //-----------------------------------------------------------------------
 
 
-void SDLEventThread::work(const QVector<GameController*>& controllerList,std::shared_ptr<bool> shouldStop)
+void SDLEventThread::work(const QVector<GameController*>& controllerList,
+                          std::shared_ptr<const EventHandlerSharedConfig> sharedConfig)
 {
     static SDL_Event e;
     int i{};
@@ -39,7 +40,7 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,std::sh
 //                qDebug() << "Removed CONTROLLER";
 //            i = controllerList.size();
 //        }
-        m_continue = !(*(shouldStop.get()));
+        m_continue = !(sharedConfig.get()->m_shouldStop);
         if(m_continue == false)
             qDebug() << __CURRENT_PLACE__ <<"  : WE SHOULD STOP NOW";
 
@@ -95,7 +96,7 @@ SDLEventHandler::SDLEventHandler() : QObject(),m_controllerList()
 }
 
 SDLEventHandler::~SDLEventHandler(){
-    *(m_shouldStop.get()) = true;//nicely exit event loop
+    m_sharedConfig.get()->m_shouldStop = true;//nicely exit event loop
     workerThread.quit();
     workerThread.wait();
 }

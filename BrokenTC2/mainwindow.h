@@ -25,8 +25,15 @@ struct Settings{
     bool isInit{false};
 
     bool displayAboutOnStartup{true};
-    QString currentDeviceName;
-    bool gearDisplayed;
+    QString currentDeviceName{};
+    bool gearDisplayed{false};
+
+    void setLowPerfMode(){
+
+    }
+
+private:
+    bool lowPerfModeEnabled{false};
 };
 
 public:

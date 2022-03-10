@@ -9,6 +9,32 @@
 
 namespace qsdl {
 
+//this struct contains data shared between the EventHandler and the EventThread
+class EventHandlerSharedConfig
+{
+public:
+    EventHandlerSharedConfig(bool lowPerfMode = false): m_lowPerfMode{lowPerfMode}
+    {
+
+    }
+
+    void lowPerfMode()const{
+
+    }
+    void setLowPerfMode(bool enable){
+        m_lowPerfMode = enable;
+    }
+
+private:
+    friend class SDLEventThread;
+    friend class SDLEventHandler;
+
+    bool m_lowPerfMode;
+
+
+    bool m_shouldStop{false};
+};
+
 bool initSDL(uint64_t flags);
 
 inline
