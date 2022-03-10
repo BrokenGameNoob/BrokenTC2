@@ -8,6 +8,7 @@
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_About.hpp"
+#include "Utils/GUITools.hpp"
 
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
@@ -282,10 +283,10 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 
         QMetaObject::invokeMethod(this, "on_action_about_triggered", Qt::ConnectionType::QueuedConnection);//call it after function terminated
     }
-    if(m_wasUpdated || true)
+    if(m_wasUpdated)
     {
         QMetaObject::invokeMethod(this,[this](){
-            updt::showChangelog(this,":/update/update/changelog.md");
+            updt::showChangelog(this);
         },Qt::ConnectionType::QueuedConnection);
     }
 }

@@ -4,6 +4,8 @@
 #include <QFile>
 #include <QFileInfo>
 
+#include "Utils/GUITools.hpp"
+
 namespace updt {
 
 constexpr auto UPDATED_TAG_FILENAME{"UPDATED.TAG"};
@@ -28,7 +30,11 @@ void markAsNotUpdated(){
  */
 bool postUpdateFunction();
 
-void showChangelog(QWidget *parent, const QString& changelogMdFile);
+inline
+void showChangelog(QWidget *parent)
+{
+    utils::gui::showMarkdown(parent,":/update/update/changelog.md");
+}
 
 } // namespace updt
 

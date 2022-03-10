@@ -92,6 +92,7 @@ set(PROJECT_SOURCES
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
         Utils/JSONTools.hpp Utils/JSONTools.cpp
+        Utils/GUITools.hpp Utils/GUITools.cpp
 
         Debug/logConsole.cpp Debug/logConsole.hpp
 
