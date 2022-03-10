@@ -160,8 +160,8 @@ void UpdateManager::processUpdate()
 {
 #ifdef Q_OS_WINDOWS
     constexpr auto LOCAL_SCRIPT_NAME{"update.bat"};
-    constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.py"};
-    constexpr auto START_COMMAND{"python"};
+    constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.bat"};
+    constexpr auto START_COMMAND{"start"};
 #else
     constexpr auto LOCAL_SCRIPT_NAME{"update.py"};
     constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.py"};
@@ -177,7 +177,7 @@ void UpdateManager::processUpdate()
         return;
     }
 
-    if(!QProcess::startDetached("python",{scriptPath},QApplication::applicationDirPath()))
+    if(!QProcess::startDetached(START_COMMAND,{scriptPath},QApplication::applicationDirPath()))
     {
         QMessageBox::critical(this,tr("Error"),tr("Cannot update the program for an unknown reason")+QString{"\n%0"}.arg(__CURRENT_PLACE__));
         return;
