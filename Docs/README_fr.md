@@ -7,7 +7,7 @@
 
 ## Intro
 
-Ce logiciel est destiné à rendre le jeu *The Crew 2* un peu plus compétitif à plus de monde.
+Ce logiciel est destiné à rendre le jeu *The Crew 2* un peu plus compétitif pour le plus de joueur possible.
 
 La communauté s'est  acharnée à trouver des moyens de casser le jeu pour exploiter le plus possible les bugs, glitchs et faiblesses de celui-ci. Parmi ces techniques, l'une d'entre elle est désignée **"clutch"** qui permet de passer les vitesses instantanément. Cela donne une accélération folle à toutes les voitures 
 
@@ -34,7 +34,7 @@ Pour savoir avec quels périphériques le logiciel est compatible, cf. [la FAQ](
 
 ## Télécharger
 
-Vous pouvez télécharger l'installateur de la dernière version [ICI](https://github.com/brokenGameNoob/BrokenTC2/releases/latest/download/BrokenTC2_setup_x64.exe).
+Vous pouvez télécharger l'installateur de la dernière version directement [ICI](https://github.com/brokenGameNoob/BrokenTC2/releases/latest/download/BrokenTC2_setup_x64.exe).
 
 Ou vous rendre sur [la page des versions publiées](https://github.com/BrokenGameNoob/BrokenTC2/releases/latest/) et télécharger l'installateur de la dernière version.
 
@@ -60,22 +60,123 @@ Lors d'une mise à jour, le logiciel va télécharger les fichiers nécessaires 
 <a name="GUIDE-Usage"></a>
 # Utilisation
 
-Ca prend beaucoup trop de temps de faire cette connerie donc va falloir patienter encore un peu ... C'est en cours de rédaction
+## Configuration initiale
 
+Points importants:
+- Une configuration est saauvegardée pour un contrôleur de jeu. Ce qui fait que vous pouvez faire plusieurs configurations en fonction du périphérique que vous utilisez pour jouer. **MAIS** vous devrez donc aussi re-définir les touches du clavier (on y vient) pour chaque nouveau contrôleur.
+- On peut distinguer deux configurations : celle du clavier qui correspond aux paramètres définis IN-GAME. Et celle du contrôleur qui correspond aux boutons affectés sur la manette.
 <br/><br/>
 
+
+## Configurer le jeu
+<br/>
+
+<a name="settings-in-game-keyboard"></a>
+### Clavier
+<br/>
+
+Il est avant tout nécessaire de configurer le jeu, vous pouvez donc le lancer.
+
+Le but est ici de définir des touches correspondantes aux actions liées à la boîte manuelle. Une touche pour l'embrayage, une pour la marche arrière et une pour chaque vitesse. Une configuration classique est "0" pour l'embrayage, "1" à "7" pour les 7 vitesses et "8" pour la marche arrière.
+
+Profitez d'avoir le jeu ouvert pour chercher quelles touches sont utilisées pour le passage de vitesse séquentiel des véhicules terrestres. Par défaut "A" pour rétrogader et "E" pour passer la vitesse.
+<br/><br/>
+
+
+### Manette / Contrôleur
+<br/>
+
+**J'assume pour la suite que vous souhaitez remplacer le passage de vitesse séquentiel de votre contrôleur par l'usage de BrokenTC2**.
+
+Afin d'éviter tout conflit, la première étape pour cela est de ***supprimer l'affectation des boutons de votre contrôleur*** dans le jeu (en particulier si vous jouez avec une manette). Mais étant donné que *IVT* ne peut pas penser à tout, ce n'est pas possible directement en jeu. Je vous invite donc à fermer celui-ci et suivre la démarche suivante :
+
+> ***Note :*** *On peut également simplement ré-affecter les touches dans le jeu si cette étape semble trop complexe. Elle ne nécessite cependant que quelques minutes*
+
+Ouvrir l'explorateur de fichiers et vous rendre dans le dossier
+> Documents/The Crew 2/
+
+Cherchez ensuite dans ce dossier un fichier nommé à peu près de cette manière :
+> Bindings_6cb1bec2.xml
+
+Puis ouvrez-le avec un éditeur de texte comme le *bloc note*.
+
+- Cherchez le texte `RoadGearUp` dans ce fichier à l'aide de **Ctrl+F**
+- Vous devriez trouver quelque chose du genre
+    ```xml
+    <Action Name="RoadGearUp" IsAnalog="0">
+        <Channel Device="PAD" Name="BUTTON9" />
+    </Action>
+    ```
+- Vous n'avez qu'à supprimer la ligne du milieu
+    ```xml
+        <Channel Device="PAD" Name="BUTTON9" />
+    ```
+    Pour vous retrouver avec le contenu suivant :
+    ```xml
+    <Action Name="RoadGearUp" IsAnalog="0">
+    </Action>
+    ```
+- et c'est fini pour celui-là ! Il faut maintenant répéter cette opération mais en cherchant le texte `RoadGearDown` (qui devrait être juste en dessous normalement)
+<br/><br/>
+
+## Configurer le logiciel
+
+<br/>
+
+<a name="GUI-presentation"></a>
+### Présentation de l'interface
+
+Voici la page que vous devriez voir lors du lancement du logiciel :
+![Présentation](./README_images/homePage_explanation.png)
+
+1. Ceci permet de voir quand est-ce que le logiciel détecte l'appui sur la touche pour rétrogader ou passer la vitesse. L'un des deux rectangle passera au vert de l'appui sur la touche.
+2. C'est ici que vous pouvez sélectionner le contrôleur que vous souhaitez utiliser
+3. L'onglet `In game` correspond aux touches configurées en jeu et le champs `Gear key press delay (ms)` correspond au temps durant lequel le logiciel va simuler l'appui sur une touche du clavier.
+    > **Note :** La valeur par défaut est 20ms. Si vous avez souvent des ratés de passage de vitesse, vous pouvez augmenter la valeur jusqu'à ce que ça marche.
+4. L'onglet `Controller` concerne les paramètres du contrôleur (les boutons utilisées pour les différentes actions)
+5. Ceci permet d'afficher la vitesse actuellement engagée par la boîte séquentielle du jeu. Je **recommande** vivement d'activer ceci puisque en cas de lag ou de problème, la vitesse du logiciel et celle utilisée en jeu pourrait différer. L'afficher permet de s'en rendre compte
+
+<br/>
+
+### Configurer une touche
+
+Il faut maintenant configurer chaque touche de l'onglet `In game` avec celles que vous avez paramétré [plus tôt](#settings-in-game-keyboard).
+
+Pour affecter une touche, il suffit de cliquer sur le bouton correspondant. Une fenêtre va s'ouvrir et attender l'appui sur une touche pour l'utiliser.
+
+<br/>
+
+### Configurer un bouton du contrôleur
+
+Rendez-vous dans l'onglet `Controller`. Suivez ensuite la même démarche pour les fonctions qui vous intéressent.
+
+![Page de configuration du contrôleur](./README_images/homepage_controller_explanation.png)
+
+1. Monter / descendre les vitesses
+2. Mettre directement la première vitesse
+3. Changer de mode Séquentiel normal (du jeu) / Séquentiel clutch. Cela est utile pour les voitures avec 8 vitesses ou pour lesquelles le clutch est inutile ou contre-productif
+    > ***Note :*** Lorsque en mode "Séquentiel normal", l'indicateur de rapport engagé est affiché en Rouge. Il est blanc lorsque le mode utilisé est "Séquentiel clutch"
+
+
+<br/><br/>
 # FAQ
 
 <a name="FAQ-supported-controller"></a>
-## Périphériques supportés
+## Quels sont les périphériques supportés ?
 N'importe quel contrôleur de jeu est supporté par le logiciel.
 
 Cependant, il n'est pas possible de l'utiliser si vous jouez au clavier.
 <br/><br/>
 
 
+<a name="FAQ-interface"></a>
+## A quoi sert chaque élément de l'interface ?
+Se référer à [l'explication](#GUI-presentation)
+<br/><br/>
+
+
 <a name="FAQ-update-failed"></a>
-## Échec de mise à jour
+## Que faire en cas d'échec de mise à jour ?
 Dans le cas où le logiciel ne se relance pas automatiquement après avoir demandé une mise à jour, il y a de fortes chances que celle-ni n'aie pas été un succès.
 
 Dans ce cas, je vous invite à prendre contact avec moi via la [section dédiée sur GitHub](https://github.com/BrokenGameNoob/BrokenTC2/issues) ou par mail [brokengamenoob@gmail.com](brokengamenoob@gmail.com)
