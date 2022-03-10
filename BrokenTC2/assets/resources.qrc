@@ -5,5 +5,6 @@
     </qresource>
     <qresource prefix="/update">
         <file>updateScripts/update.py</file>
+        <file>updateScripts/update.bat</file>
     </qresource>
 </RCC>
