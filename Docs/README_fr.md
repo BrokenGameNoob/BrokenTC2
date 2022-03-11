@@ -2,6 +2,7 @@
 
 - [Installation](#GUIDE-Install)
 - [Utilisation](#GUIDE-Usage)
+- [Problèmes connus (CPU Bloqué à 100%)](#FAQ-known-problems)
 
 # Qu'est-ce que c'est que cette chose là ?
 
@@ -180,3 +181,11 @@ Se référer à [l'explication](#GUI-presentation)
 Dans le cas où le logiciel ne se relance pas automatiquement après avoir demandé une mise à jour, il y a de fortes chances que celle-ni n'aie pas été un succès.
 
 Dans ce cas, je vous invite à prendre contact avec moi via la [section dédiée sur GitHub](https://github.com/BrokenGameNoob/BrokenTC2/issues) ou par mail [brokengamenoob@gmail.com](brokengamenoob@gmail.com)
+
+
+<a name="FAQ-known-problems"></a>
+## Problèmes connus
+- *Utilisation du CPU à 100%*
+    
+    **Solution** : Activer le "Low performance mode" (dernière case à cocher en bas du logiciel)
+<br/><br/>
