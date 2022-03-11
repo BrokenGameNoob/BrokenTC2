@@ -187,5 +187,5 @@ Dans ce cas, je vous invite à prendre contact avec moi via la [section dédiée
 ## Problèmes connus
 - *Utilisation du CPU à 100%*
     
-    **Solution** : Activer le "Low performance mode" (dernière case à cocher en bas du logiciel)
+    **Solution** : Activer le "Low performance mode" (dernière case à cocher en bas du logiciel depuis la version v0.1.2)
 <br/><br/>
