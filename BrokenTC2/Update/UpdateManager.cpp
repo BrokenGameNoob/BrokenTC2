@@ -16,7 +16,9 @@ bool saveFromRc(const QString rcPath,const QString& filePath)
     //":/linux/updateScript/linux.sh"
     QFile scriptRc{rcPath};
     if(!scriptRc.open(QIODevice::ReadOnly)){
-        throw std::runtime_error(__CURRENT_PLACE__.toStdString()+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath).toStdString());
+//        throw std::runtime_error(__CURRENT_PLACE__.toStdString()+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath).toStdString());
+        qCritical() << __CURRENT_PLACE__+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath);
+        return false;
     }
     auto scriptRcContent{scriptRc.readAll()};
     scriptRc.close();
@@ -161,14 +163,14 @@ void UpdateManager::processUpdate()
 {
 #ifdef Q_OS_WINDOWS
     constexpr auto LOCAL_SCRIPT_NAME{"update.bat"};
-    constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.bat"};
+    constexpr auto UPDATER_SCRIPT_RC{":/update/update/update.bat"};
     constexpr auto START_COMMAND{"cmd.exe"};
 
 #define UPDATE_OPT_ARG "/c",
 
 #else
     constexpr auto LOCAL_SCRIPT_NAME{"update.py"};
-    constexpr auto UPDATER_SCRIPT_RC{":/update/updateScripts/update.py"};
+    constexpr auto UPDATER_SCRIPT_RC{":/update/update/update.py"};
     constexpr auto START_COMMAND{"python"};
 
 #define UPDATE_OPT_ARG

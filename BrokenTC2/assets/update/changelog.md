@@ -5,3 +5,4 @@
 
 # Bugs patched
 - Last controller selectionned should now be restored on startup (second try)
+- Fixed update mechanism
