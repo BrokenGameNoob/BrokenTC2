@@ -6,4 +6,4 @@
 
 # Bugs patched
 - Last controller selectionned should now be restored on startup
-- CPU Usage should now be able to be reduced thanks to the new option "Low perf mode"
+- CPU Usage should now be able to be reduced on computers experiencing issues thanks to the new option "Low perf mode"

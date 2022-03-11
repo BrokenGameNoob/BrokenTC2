@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>607</width>
-    <height>662</height>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -719,7 +719,7 @@ Sequential / Clutch</string>
     <item row="5" column="0" colspan="2">
      <widget class="QCheckBox" name="cb_lowPerfMode">
       <property name="text">
-       <string>Enable low performance mode (reducing CPU Usage but slightly  increase latency)</string>
+       <string>Enable low performance mode (reducing CPU Usage but slightly increase latency)</string>
       </property>
      </widget>
     </item>
