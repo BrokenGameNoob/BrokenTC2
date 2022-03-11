@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
+    qDebug() << "UPDATED ? " << m_wasUpdated;
+
     ui->dockConsole->setVisible(false);
     connect(ui->action_ShowDevconsole,&QAction::triggered,this,[&](bool){ui->dockConsole->setVisible(true);});
 
