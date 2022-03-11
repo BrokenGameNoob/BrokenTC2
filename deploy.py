@@ -71,6 +71,7 @@ def main():
     CONFIG_outputDir = "AUTO"#the dir will have the name of the found executable
     CONFIG_WINDEPLOYQT_PATH = "C:/Qt/6.2.3/mingw_64/bin/windeployqt.exe"
     CONFIG_DEPENDENCY_DIR = "./BrokenTC2/assets/dependency"
+    CONFIG_INNOSETUP_SCRIPT = "./buildSetup.iss"
 
 
     print("------------------------------------------------------")
@@ -142,9 +143,12 @@ def main():
         shutil.copy(exePath,"./{}".format(updateImage))
     except:
         errorOccured("Cannot create update image <{}>".format(updateImage),True)
-    print("Done")
+    print("Done\n")
 
+    print("##########################################")
     print("\nCreating setup...")
+    os.system("iscc.exe {}".format(CONFIG_INNOSETUP_SCRIPT))
+    print("##########################################\n")
     
 
     print("------------------------------------------------------")
