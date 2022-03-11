@@ -131,6 +131,17 @@ def main():
         shutil.copy(dependencyPath,CONFIG_outputDir)
     except:
         errorOccured("Cannot dependency <{}>".format(dependencyPath),True)
+    print("Done\n")
+
+
+
+    print("Creating update image")
+    updateImage = pathlib.Path(exePath).stem+".update"
+    print("\tUpdate image file : <{}>".format(updateImage))
+    try:
+        shutil.copy(exePath,"./{}".format(updateImage))
+    except:
+        errorOccured("Cannot create update image <{}>".format(updateImage),True)
     print("Done")
 
     print("\nCreating setup...")

@@ -440,7 +440,10 @@ void MainWindow::refreshFromSettings()
 
 void MainWindow::populateDevicesComboBox()
 {
-    auto curDevice{(ui->cb_selectDevice->count() == 0?m_softSettings.currentDeviceName:ui->cb_selectDevice->currentText())};
+    auto curDevice{ui->cb_selectDevice->currentText()};
+    if(curDevice.isEmpty())
+        curDevice = m_softSettings.currentDeviceName;
+
     ui->cb_selectDevice->clear();
 
     auto deviceList{qsdl::getPluggedJoysticks()};
@@ -559,9 +562,12 @@ void MainWindow::on_pb_selectKey_resetDefault_clicked()
 
 void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
 {
+    if(!m_softSettings.isInit)
+        return;
+
     if(index == -1 && qsdl::getPluggedJoysticksCount() == 0)//no device selected and no available device connected
     {
-        m_gearHandler.settings().profileName = {};//reset settings
+//        m_gearHandler.settings().profileName = {};//reset settings
         m_controller.disconnectController();//disconnect controller
     }
     else if(index == -1 && ui->cb_selectDevice->count() > 0)
