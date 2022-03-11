@@ -10,6 +10,7 @@
 #include "TC/Widget_gearDisplay.hpp"
 
 #include "QSDL/GameController.hpp"
+#include "QSDL/SDLEventHandler.hpp"
 
 #include "Update/UpdateManager.hpp"
 
@@ -28,12 +29,16 @@ struct Settings{
     QString currentDeviceName{};
     bool gearDisplayed{false};
 
-    void setLowPerfMode(){
-
+    void setLowPerfMode(bool enable){
+        m_lowPerfModeEnabled = enable;
+        qsdl::SDLEventHandler::setLowPerfMode(m_lowPerfModeEnabled);
+    }
+    bool lowPerfMode()const{
+        return m_lowPerfModeEnabled;
     }
 
 private:
-    bool lowPerfModeEnabled{false};
+    bool m_lowPerfModeEnabled{false};
 };
 
 public:

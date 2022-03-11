@@ -318,6 +318,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("displayAboutOnStartup",m_softSettings.displayAboutOnStartup);
     settings.insert("lastProfile",m_softSettings.currentDeviceName);
     settings.insert("displayGear",m_softSettings.gearDisplayed);
+    settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
 
     globObj.insert("settings",settings);
 
@@ -352,6 +353,7 @@ bool MainWindow::loadSoftSettings()
     out.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
     out.currentDeviceName = settings.value("lastProfile").toString();
     out.gearDisplayed = settings.value("displayGear").toBool();
+    out.setLowPerfMode(settings.value("lowPerfMode").toBool());
 
     m_softSettings = out;
 
@@ -425,6 +427,7 @@ bool MainWindow::loadProfile(QString gamePadName)
 void MainWindow::refreshFromSettings()
 {
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
+    ui->cb_lowPerfMode->setChecked(m_softSettings.lowPerfMode());
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};
     if(deviceIndex >= 0)
@@ -613,6 +616,7 @@ void MainWindow::on_action_about_triggered()
 
 void MainWindow::on_cb_lowPerfMode_stateChanged(int arg1)
 {
-    qsdl::SDLEventHandler::setLowPerfMode(bool(arg1));
+    m_softSettings.setLowPerfMode(bool(arg1));
+    saveSoftSettings();
 }
 
