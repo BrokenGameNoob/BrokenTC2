@@ -60,6 +60,10 @@ public:
         emit instance()->operate(instance()->m_controllerList,instance()->m_sharedConfig);
     }
 
+    static void setLowPerfMode(bool enable){
+        instance()->m_sharedConfig.get()->setLowPerfMode(enable);
+    }
+
 signals:
     void operate(const QVector<qsdl::GameController*>&,std::shared_ptr<EventHandlerSharedConfig>);
 

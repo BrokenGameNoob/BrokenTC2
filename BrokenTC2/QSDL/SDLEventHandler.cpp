@@ -12,6 +12,12 @@
 
 #include <QDebug>
 
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#else
+    #define Sleep(x) __asm("nop")
+#endif
+
 namespace qsdl{
 
 //-----------------------------------------------------------------------
@@ -45,7 +51,14 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             qDebug() << __CURRENT_PLACE__ <<"  : WE SHOULD STOP NOW";
 
         if(SDL_WaitEventTimeout(&e,100) == 0)
+//        isf(SDL_PollEvent(&e) == 0)
+        {
+            if(sharedConfig.get()->lowPerfMode())
+            {
+                Sleep(10);
+            }
             continue; //wait next iteration
+        }
         switch (e.type)
         {
         case SDL_JOYBUTTONDOWN:

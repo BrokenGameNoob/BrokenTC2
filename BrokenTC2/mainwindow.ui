@@ -15,87 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0">
-     <widget class="QCheckBox" name="cb_showCurrentGear">
-      <property name="text">
-       <string>Display current gear engaged</string>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="gb_profile">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>User profiles</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="hlay_profileComboBox">
-         <item>
-          <widget class="QLabel" name="lbl_disp_selectProfile">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Select profile :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="cb_selectDevice"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <layout class="QHBoxLayout" name="hlay_pad">
-      <item>
-       <widget class="QLabel" name="lbl_pad_LB">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color:rgb(180,0,0)</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lbl_pad_RB">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color:rgb(180,0,0)</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="2" column="0" colspan="2">
      <widget class="QSplitter" name="splitter">
       <property name="minimumSize">
@@ -147,8 +66,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>339</width>
-              <height>495</height>
+              <width>336</width>
+              <height>568</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -702,6 +621,87 @@ Sequential / Clutch</string>
       </widget>
      </widget>
     </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QGroupBox" name="gb_profile">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>User profiles</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="hlay_profileComboBox">
+         <item>
+          <widget class="QLabel" name="lbl_disp_selectProfile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Select profile :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cb_selectDevice"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="hlay_pad">
+      <item>
+       <widget class="QLabel" name="lbl_pad_LB">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(180,0,0)</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_pad_RB">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(180,0,0)</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="4" column="0">
+     <widget class="QCheckBox" name="cb_showCurrentGear">
+      <property name="text">
+       <string>Display current gear engaged</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
     <item row="4" column="1">
      <widget class="QToolButton" name="toolB_help">
       <property name="text">
@@ -716,6 +716,13 @@ Sequential / Clutch</string>
       </property>
      </widget>
     </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QCheckBox" name="cb_lowPerfMode">
+      <property name="text">
+       <string>Enable low performance mode (reducing CPU Usage butslightly  increase latency)</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -724,7 +731,7 @@ Sequential / Clutch</string>
      <x>0</x>
      <y>0</y>
      <width>607</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">

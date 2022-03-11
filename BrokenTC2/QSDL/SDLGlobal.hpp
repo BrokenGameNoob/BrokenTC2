@@ -18,8 +18,8 @@ public:
 
     }
 
-    void lowPerfMode()const{
-
+    bool lowPerfMode()const{
+        return m_lowPerfMode;
     }
     void setLowPerfMode(bool enable){
         m_lowPerfMode = enable;

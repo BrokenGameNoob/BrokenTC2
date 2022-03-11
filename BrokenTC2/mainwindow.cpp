@@ -610,3 +610,9 @@ void MainWindow::on_action_about_triggered()
     dial.exec();
 }
 
+
+void MainWindow::on_cb_lowPerfMode_stateChanged(int arg1)
+{
+    qsdl::SDLEventHandler::setLowPerfMode(bool(arg1));
+}
+
