@@ -2,7 +2,7 @@
 #include "ui_Dialog_getKeyCode.h"
 
 #ifdef Q_OS_WIN
-#include "Windaube/winextras.hpp"
+#include "Windows/winextras.hpp"
 #include <windows.h>
 #else
 

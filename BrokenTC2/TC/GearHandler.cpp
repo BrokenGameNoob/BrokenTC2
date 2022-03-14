@@ -5,7 +5,7 @@
 #include "../global.hpp"
 
 #ifdef Q_OS_WIN
-#include "Windaube/WinEventHandler.hpp"
+#include "Windows/WinEventHandler.hpp"
 #endif
 
 #include <QTimer>
@@ -60,7 +60,7 @@ void GearHandler::setGear(int gear){
     }
 
 #ifdef Q_OS_WIN
-    using windaube::sendKeyboardEvent;
+    using windows::sendKeyboardEvent;
 #else
     auto sendKeyboardEvent{
         [&](auto a,auto b){
@@ -106,7 +106,7 @@ void GearHandler::setGear(int gear){
 void GearHandler::switchSeqGear(bool goUp)//if you don't go up, I'll assume you want to go down
 {
 #ifdef Q_OS_WIN
-    using windaube::sendKeyboardEvent;
+    using windows::sendKeyboardEvent;
 #else
     auto sendKeyboardEvent{
         [&](auto a,auto b){

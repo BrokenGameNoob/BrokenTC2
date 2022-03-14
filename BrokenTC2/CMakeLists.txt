@@ -50,8 +50,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 if(WIN32)
     SET(PLATEFORM_DEPENDANT_SOURCES
-            Windaube/WinEventHandler.hpp Windaube/WinEventHandler.cpp
-            Windaube/winextras.hpp Windaube/winextras.cpp
+            Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
+            Windows/winextras.hpp Windows/winextras.cpp
 )
 endif(WIN32)
 if(UNIX)
@@ -85,8 +85,8 @@ set(PROJECT_SOURCES
         QSDL/GameController.hpp QSDL/GameController.cpp
         QSDL/SDLEventHandler.hpp QSDL/SDLEventHandler.cpp
 
-#        Windaube/WinEventHandler.hpp Windaube/WinEventHandler.cpp
-#        Windaube/winextras.hpp Windaube/winextras.cpp
+#        Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
+#        Windows/winextras.hpp Windows/winextras.cpp
 
         Utils/Dialog_getKeyCode.hpp Utils/Dialog_getKeyCode.cpp Utils/Dialog_getKeyCode.ui
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
