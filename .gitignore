@@ -60,6 +60,8 @@ compile_commands.json
 build-*/
 *.pro.user
 
+*.ignore
+
 
 #deploy files
 BrokenTC2v*.*.*/

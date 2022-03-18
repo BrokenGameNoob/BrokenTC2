@@ -63,4 +63,6 @@ class WinExtras : public QObject
   public slots:
 };
 
+QString VirtualKeyCodeToString(UCHAR virtualKey);
+
 #endif // WINDAUBE_WINEXTRAS_H
