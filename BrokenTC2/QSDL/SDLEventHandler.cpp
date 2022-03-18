@@ -24,6 +24,7 @@
 #include <chrono>
 #include <iostream>
 #include <future>
+#include <unordered_map>
 
 #include <SDL2/SDL.h>
 
@@ -53,6 +54,13 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
 
     }
 
+    auto deviceId{[&](){
+            return e.jdevice.which;
+        }};
+    static std::unordered_map<int,bool> dpadDown{};//<Button ID,isDown>
+    //Button ID : (button+OFFSET)*10+joystickId
+    //isDown : true/false
+
     while(m_continue)
     {
 //        if(controllerList.size() != i)
@@ -81,13 +89,34 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
         case SDL_JOYBUTTONDOWN:
 //            instance()->m_buttonsTimes[e.jbutton.button].setDown();
 //            qDebug() << "Button DOWN : " << e.jbutton.button;
-            emit buttonDown(e.jdevice.which,e.jbutton.button);
+            emit buttonDown(deviceId(),e.jbutton.button);
             break;
         case SDL_JOYBUTTONUP:
 //            instance()->m_buttonsTimes[e.jbutton.button].setUp();
 //            qDebug() << "Button UP : " << e.jbutton.button;
-            emit buttonUp(e.jdevice.which,e.jbutton.button);
+            emit buttonUp(deviceId(),e.jbutton.button);
             break;
+        case SDL_JOYHATMOTION:{
+            constexpr auto HAT_BUTTON_OFFSET{100};
+            auto curPos{e.jhat.value};
+
+            auto checkPos{[&](const auto& hatVal){
+                    auto dictKey{(HAT_BUTTON_OFFSET+hatVal)*10+deviceId()};
+                    if(curPos & hatVal){
+                        emit buttonDown(deviceId(),HAT_BUTTON_OFFSET+hatVal);
+                        dpadDown[dictKey] = true;
+                    }
+                    else if(dpadDown[dictKey] == true){
+                        emit buttonUp(deviceId(),HAT_BUTTON_OFFSET+hatVal);
+                        dpadDown[dictKey] = false;
+                    }
+                }};
+            checkPos(SDL_HAT_UP);
+            checkPos(SDL_HAT_RIGHT);
+            checkPos(SDL_HAT_DOWN);
+            checkPos(SDL_HAT_LEFT);
+            break;}
+
         case SDL_JOYDEVICEADDED:
             emit newControllerPluggedIn(e.jdevice.which);
 //            qDebug() << "PLUGGED IN CONTROLLER";
