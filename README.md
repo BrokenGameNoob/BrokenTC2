@@ -4,7 +4,7 @@
 
 ## Features
 - Sequential clutch (only 2 buttons required to go from Reverse to 7th gear as fast as possible)
-- Usable with wheels, controllers and pretty much everything recognized
+- Usable with wheels, controllers and pretty much anything recognized
 - Profiles linked to controller in use
 - Easy configuration and detailed instructions just below
 - Automatic upgrades
