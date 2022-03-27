@@ -4,6 +4,7 @@
 
 ## Features
 - Sequential clutch (only 2 buttons required to go from Reverse to 7th gear as fast as possible)
+- Current gear engaged by the software displayed on screen (allows to spot for differences between IG gear and BTC2 gear in case of shifting failure)
 - Usable with wheels, controllers and pretty much anything recognized
 - Profiles linked to controller in use
 - Easy configuration and detailed instructions just below
