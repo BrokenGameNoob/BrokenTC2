@@ -72,6 +72,9 @@ Points importants:
 ## Configurer le jeu
 <br/>
 
+| ⚠️        | Il est nécessaire que le jeu soit en "plein écran sans bordure" pour afficher la vitesse engagée par le logiciel       |
+|-----------|:-----------------------------------------------------------------------------------------------------------------------|
+
 <a name="settings-in-game-keyboard"></a>
 ### Clavier
 <br/>
