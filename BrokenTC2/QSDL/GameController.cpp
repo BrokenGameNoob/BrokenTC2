@@ -70,4 +70,27 @@ void GameController::connectController(int controllerId)
     }
 }
 
+void GameController::disconnectController(bool unregisterEventHandler){
+    if(m_controllerInstance)
+    {
+        SDL_JoystickClose(m_controllerInstance);
+        m_controllerInstance = nullptr;
+        m_controllerId = -1;
+    }
+    if(unregisterEventHandler)
+        emit unregisterFromEventHandler(this);
+}
+
+
+void GameController::notifyButtonDown(int button)
+{
+    emit buttonDown(button);
+}
+
+
+void GameController::notifyButtonUp(int button)
+{
+    emit buttonUp(button);
+}
+
 } // namespace qsdl

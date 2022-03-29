@@ -28,7 +28,10 @@ Dialog_getGameControllerButton::Dialog_getGameControllerButton(qsdl::GameControl
 {
     ui->setupUi(this);
 
-    connect(controller,&qsdl::GameController::buttonDown,this,&Dialog_getGameControllerButton::done);
+    connect(controller,&qsdl::GameController::buttonDown,this,[&](int code){
+        m_buttonSelected=true;
+        done(code);
+    });
 
     connect(ui->pb_unbind,&QPushButton::clicked,this,[&](){
         this->done(-1);
@@ -47,7 +50,14 @@ int Dialog_getGameControllerButton::getButton(qsdl::GameController* controller,Q
 {
     auto dial{new Dialog_getGameControllerButton{controller,parent}};
 
-    auto rval{dial->exec()};//0 means cancelled | -1 means unbind
+    //some buttons might have value 0
+    //which is the value used when closing the dialog
+    //So if the value is 0 and no button was selected, this means cancel
+    auto rval{dial->exec()};//-2 means cancelled | -1 means unbind
+    if(rval == 0 && !dial->buttonSelected())
+    {
+        rval = -2;
+    }
 
     qDebug() << __CURRENT_PLACE__ << "  : got : " << rval;
 

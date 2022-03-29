@@ -554,5 +554,5 @@ QString VirtualKeyCodeToString(UCHAR virtualKey)
     if(result == 0)
         throw std::system_error(std::error_code(GetLastError(), std::system_category()),
                                 "WinAPI Error occured.");
-    return QString::fromStdString(zName);
+    return QString::fromStdString(szName);
 }

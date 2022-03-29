@@ -75,11 +75,11 @@ void setKey(int keyCode,QLabel* lblDisp,tc::ProfileSettings::Key& settingsKeyToC
 inline
 void setButton(int button,QLabel* lblDisp,tc::ProfileSettings::Key& settingsBtnToChange)
 {
-    if(button == 0)//means do nothing
+    if(button < -1)//means do nothing
     {
         return;
     }
-    else if(button < 0)//means unbind key
+    else if(button == -1)//means unbind key
     {
         lblDisp->setText("-");
     }

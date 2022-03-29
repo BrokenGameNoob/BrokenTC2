@@ -36,8 +36,13 @@ public:
 
     static int getButton(qsdl::GameController* controller,QWidget *parent = nullptr);
 
+    bool buttonSelected()const{
+        return m_buttonSelected;
+    }
+
 private:
     Ui::Dialog_getGameControllerButton *ui;
+    bool m_buttonSelected{false};
 };
 
 #endif // DIALOG_GETGAMECONTROLLERBUTTON_HPP

@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.5)
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 0)#incompatible update
 set(VERSIONING_MINOR 1)#new features added
-set(VERSIONING_PATCH 3)#bug fixed / minor change
+set(VERSIONING_PATCH 5)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
@@ -139,7 +139,8 @@ else()
     endif()
 endif()
 
-target_link_libraries(${EXE_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+target_link_libraries(${EXE_NAME} PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     ${SDL2_LIBRARIES}
 )

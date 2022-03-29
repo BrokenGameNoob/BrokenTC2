@@ -20,6 +20,8 @@
 #ifndef WINDAUBE_WINEXTRAS_H
 #define WINDAUBE_WINEXTRAS_H
 
+#include <windows.h>
+
 #include <QHash>
 #include <QObject>
 #include <QPoint>

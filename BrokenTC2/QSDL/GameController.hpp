@@ -96,28 +96,7 @@ private:
 //*         GameController inline funcs
 //-------------------------------------
 
-inline
-void GameController::disconnectController(bool unregisterEventHandler){
-    if(m_controllerInstance)
-    {
-        SDL_JoystickClose(m_controllerInstance);
-        m_controllerInstance = nullptr;
-        m_controllerId = -1;
-    }
-    if(unregisterEventHandler)
-        emit unregisterFromEventHandler(this);
-}
 
-inline
-void GameController::notifyButtonDown(int button)
-{
-    emit buttonDown(button);
-}
-inline
-void GameController::notifyButtonUp(int button)
-{
-    emit buttonUp(button);
-}
 
 
 } // namespace qsdl
