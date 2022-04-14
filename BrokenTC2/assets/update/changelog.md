@@ -1,7 +1,7 @@
 # New Features
-- *Not this time, sorry*
+- It is now possible to switch mode from a keyboard key
 
 <br/><br/>
 
 # Bugs patched
-- One button per controller was not recognized
+- *Not this time, sorry*
