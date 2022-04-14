@@ -612,7 +612,6 @@ void MainWindow::onControllerButtonPressed(int button)
 
 void MainWindow::onKeyboardPressed(int key)
 {
-    qDebug() << __CURRENT_PLACE__ << " : Key down : " << key;
     if(key == m_gearHandler.settings().kSwitchMode)
     {
         m_gearHandler.switchGearSwitchMode();
