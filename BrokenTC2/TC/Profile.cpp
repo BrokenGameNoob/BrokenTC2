@@ -57,6 +57,7 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     keys.insert("seqGearUp",sett.seqGearUp);
     keys.insert("seqGearDown",sett.seqGearDown);
 
+    keys.insert("kSwitchMode",sett.kSwitchMode);
     keys.insert("keyDownTime",sett.keyDownTime);
     keys.insert("maxGear",sett.maxGear);
 
@@ -104,6 +105,7 @@ ProfileSettings readProfileSettings(const QString& fileName)
     out.g7 = keys.value("gear_7").toInt(ref.g7);
     out.seqGearUp = keys.value("seqGearUp").toInt(ref.seqGearUp);
     out.seqGearDown = keys.value("seqGearDown").toInt(ref.seqGearDown);
+    out.kSwitchMode = keys.value("kSwitchMode").toInt(ref.kSwitchMode);
     out.keyDownTime = keys.value("keyDownTime").toInt(ref.keyDownTime);
 
     auto controller{docObj.value("controller").toObject()};

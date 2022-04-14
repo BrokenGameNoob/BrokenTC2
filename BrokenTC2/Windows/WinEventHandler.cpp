@@ -19,15 +19,58 @@
 #include "WinEventHandler.hpp"
 
 /*!
- *  This file is based on the antimicroX project
+ *  This file contains elements of antimicroX project
  *  
 */
 
 #include "Windows/winextras.hpp"
+#include "../global.hpp"
 
 #include <QTimer>
 
+#include <QDebug>
+
 namespace windows {
+
+LRESULT CALLBACK WindowsEventThread::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+    BOOL fEatKeystroke = FALSE;
+
+    if (nCode == HC_ACTION)
+    {
+        PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
+        auto vkCode = p->vkCode;
+        switch (wParam)
+        {
+        case WM_KEYDOWN:
+        case WM_SYSKEYDOWN:
+            emitKeyDown(vkCode);
+            break;
+        case WM_KEYUP:
+        case WM_SYSKEYUP:
+        default:
+            break;
+        }
+    }
+    return(fEatKeystroke ? 1 : CallNextHookEx(NULL, nCode, wParam, lParam));
+}
+
+
+WindowsEventThread::WindowsEventThread() : QObject()
+{
+    HHOOK hhkLowLevelKybd = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsEventThread::LowLevelKeyboardProc, 0, 0);
+}
+
+WindowsEventThread::~WindowsEventThread()
+{
+
+}
+
+
+
+
+
+
 
 void sendKeyboardEvent(int code, bool pressed,int codeAlias)
 {

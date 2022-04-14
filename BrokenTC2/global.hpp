@@ -21,6 +21,7 @@
 #include <QString>
 #include <algorithm>
 
+
 #pragma clang diagnostic ignored "-Wstring-plus-int"
 #define __FILENAME_PRIVATE__ (__FILE__ + SOURCE_PATH_SIZE)
 
@@ -36,6 +37,7 @@
 
 
 #define __CURRENT_PLACE__ QString{"%0 : <%1> : l.%2"}.arg(__FILENAME_PRIVATE__,__func__,_LINE_)
+
 
 inline
 QString removeSpecialChars(QString str){

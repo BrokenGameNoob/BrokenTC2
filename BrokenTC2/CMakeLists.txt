@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.5)
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 0)#incompatible update
 set(VERSIONING_MINOR 1)#new features added
-set(VERSIONING_PATCH 5)#bug fixed / minor change
+set(VERSIONING_PATCH 6)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
@@ -157,3 +157,14 @@ endif()
 
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
+
+#----- Used to get the current filename
+
+# The additional / is important to remove the last character from the path.
+# Note that it does not matter if the OS uses / or \, because we are only
+# saving the path size.
+#string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
+
+#add_compile_definitions(SOURCE_PATH_SIZE=${SOURCE_PATH_SIZE})
+#add_definitions("-DSOURCE_PATH_SHORT=(char*)((__FILE__) + SOURCE_PATH_SIZE)")
+#add_definitions("-D__CURRENT_PLACE__=QString{\"%0 : <%1> : l.%2\"}.arg(SOURCE_PATH_SHORT,__func__,QString::number(__LINE__))")

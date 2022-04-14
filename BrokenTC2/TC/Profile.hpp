@@ -55,6 +55,7 @@ struct ProfileSettings{
     Key seqGearUp{-1};//key "e"
     Key seqGearDown{-1};//key "a"
 
+    Key kSwitchMode{-1};//keyboard key to switch
     int keyDownTime{20};//ms
 
     //---- Controller ----//

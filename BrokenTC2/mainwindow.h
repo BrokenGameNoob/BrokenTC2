@@ -31,6 +31,8 @@
 
 #include "Update/UpdateManager.hpp"
 
+#include <windows.h>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -59,6 +61,7 @@ private:
 };
 
 public:
+//    LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -71,6 +74,8 @@ private slots:
     void onControllerUnplugged(int id);
 
     void onControllerButtonPressed(int id);
+
+    void onKeyboardPressed(int key);
 
 
 

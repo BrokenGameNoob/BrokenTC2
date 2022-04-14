@@ -27,6 +27,8 @@
 #include "Utils/Dialog_About.hpp"
 #include "Utils/GUITools.hpp"
 
+#include "Windows/WinEventHandler.hpp"
+
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
 
@@ -51,6 +53,32 @@
 
 #include <QDebug>
 #include <QProcess>
+
+#include <windows.h>
+
+
+//LRESULT CALLBACK MainWindow::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+//{
+//    BOOL fEatKeystroke = FALSE;
+
+//    if (nCode == HC_ACTION)
+//    {
+//        PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
+//        auto vkCode = p->vkCode;
+//        switch (wParam)
+//        {
+//        case WM_KEYDOWN:
+//        case WM_SYSKEYDOWN:
+//            qDebug() << __CURRENT_PLACE__ << " : " << vkCode;
+//            break;
+//        case WM_KEYUP:
+//        case WM_SYSKEYUP:
+//        default:
+//            break;
+//        }
+//    }
+//    return(fEatKeystroke ? 1 : CallNextHookEx(NULL, nCode, wParam, lParam));
+//}
 
 
 namespace{
@@ -108,6 +136,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
+
+    qDebug() << c_appDataFolder;
+    qDebug() << c_softSettingsFile;
+
     qDebug() << "UPDATED ? " << m_wasUpdated;
 
     ui->dockConsole->setVisible(false);
@@ -123,6 +155,8 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
 
+    //start keyboard event handler
+    connect(windows::WindowsEventThread::ins(),&windows::WindowsEventThread::keyDown,this,&MainWindow::onKeyboardPressed);
 
     qsdl::SDLEventHandler::start();
     qsdl::SDLEventHandler::registerController(&m_controller);
@@ -185,10 +219,17 @@ MainWindow::MainWindow(QWidget *parent)
         saveProfileSettings();
     });
 
+
+    connect(ui->pb_selectKey_kSwitchMode,&QPushButton::clicked,this,[&](){
+        auto key{Dialog_getKeyCode::getKey(this).code};
+        setKey(key,ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
+        saveProfileSettings();
+    });
     connect(ui->sb_gearDelay,&QSpinBox::valueChanged,this,[&](int val){
         m_gearHandler.settings().keyDownTime = val;
         saveProfileSettings();
     });
+
 
 
     connect(ui->pb_selectButton_GUp,&QPushButton::clicked,this,[&](){
@@ -503,6 +544,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_seqUp,m_gearHandler.settings().seqGearUp);
     lambdaUpdateText(ui->lbl_seqDown,m_gearHandler.settings().seqGearDown);
 
+    lambdaUpdateText(ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
     ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
@@ -563,6 +605,15 @@ void MainWindow::onControllerButtonPressed(int button)
         }
     }
     else if(button == m_gearHandler.settings().switchMode)
+    {
+        m_gearHandler.switchGearSwitchMode();
+    }
+}
+
+void MainWindow::onKeyboardPressed(int key)
+{
+    qDebug() << __CURRENT_PLACE__ << " : Key down : " << key;
+    if(key == m_gearHandler.settings().kSwitchMode)
     {
         m_gearHandler.switchGearSwitchMode();
     }
