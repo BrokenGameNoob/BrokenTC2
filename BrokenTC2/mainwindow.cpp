@@ -45,6 +45,7 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QScreen>
 
 #include <QFile>
 #include <QFileInfo>
@@ -55,30 +56,6 @@
 #include <QProcess>
 
 #include <windows.h>
-
-
-//LRESULT CALLBACK MainWindow::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
-//{
-//    BOOL fEatKeystroke = FALSE;
-
-//    if (nCode == HC_ACTION)
-//    {
-//        PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
-//        auto vkCode = p->vkCode;
-//        switch (wParam)
-//        {
-//        case WM_KEYDOWN:
-//        case WM_SYSKEYDOWN:
-//            qDebug() << __CURRENT_PLACE__ << " : " << vkCode;
-//            break;
-//        case WM_KEYUP:
-//        case WM_SYSKEYUP:
-//        default:
-//            break;
-//        }
-//    }
-//    return(fEatKeystroke ? 1 : CallNextHookEx(NULL, nCode, wParam, lParam));
-//}
 
 
 namespace{
@@ -116,6 +93,13 @@ void setButton(int button,QLabel* lblDisp,tc::ProfileSettings::Key& settingsBtnT
         lblDisp->setText(QString::number(button));
     }
     settingsBtnToChange = button;//if button == -1, it will never be matched = Unbind
+}
+
+inline
+QString screenName(const QScreen* screen)
+{
+    static QRegularExpression reToRemove{"(\\.)|(/)|(\\\\)"};
+    return screen->name().remove(reToRemove);
 }
 
 }
@@ -279,6 +263,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     populateDevicesComboBox();
 
+
+
+
+    auto availableScreens{QApplication::screens()};
+    int i{};
+    for(const auto& e : availableScreens)
+    {
+        ui->cb_gearDisplayScreen->addItem(screenName(e),i);
+        ++i;
+    }
+    connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
+        m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
+        saveSoftSettings();
+        this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
+    });
+
+
+
+
     loadSoftSettings();
 
     //try to read settings profile
@@ -291,7 +294,6 @@ MainWindow::MainWindow(QWidget *parent)
     {
         loadProfileSettings();
     }
-
 
 
     refreshDisplayFromGearHandlerSettings();
@@ -316,6 +318,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_updateManager.checkUpdate();
 
 //    Dialog_getGameControllerButton::getButton(&m_controller,this);
+
 }
 
 MainWindow::~MainWindow()
@@ -378,6 +381,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("displayAboutOnStartup",m_softSettings.displayAboutOnStartup);
     settings.insert("lastProfile",m_softSettings.currentDeviceName);
     settings.insert("displayGear",m_softSettings.gearDisplayed);
+    settings.insert("displayGearScreen",m_softSettings.displayGearScreen);
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
 
     globObj.insert("settings",settings);
@@ -414,6 +418,7 @@ bool MainWindow::loadSoftSettings()
     out.currentDeviceName = settings.value("lastProfile").toString();
     out.gearDisplayed = settings.value("displayGear").toBool();
     out.setLowPerfMode(settings.value("lowPerfMode").toBool());
+    out.displayGearScreen = settings.value("displayGearScreen").toString();
 
     m_softSettings = out;
 
@@ -493,6 +498,16 @@ void MainWindow::refreshFromSettings()
     if(deviceIndex >= 0)
     {
         ui->cb_selectDevice->setCurrentIndex(deviceIndex);
+    }
+
+    auto screenIndex{ui->cb_gearDisplayScreen->findText(m_softSettings.displayGearScreen)};
+    if(screenIndex >= 0)
+    {
+        ui->cb_gearDisplayScreen->setCurrentIndex(screenIndex);
+    }
+    else
+    {
+        ui->cb_gearDisplayScreen->setCurrentIndex(-1);
     }
 }
 
@@ -673,6 +688,14 @@ void MainWindow::on_cb_showCurrentGear_stateChanged(int checked)
 
     if(checked)
     {
+        auto screenList{QApplication::screens()};
+        auto screenId{ui->cb_gearDisplayScreen->currentData().toInt()};
+        if(screenId >= 0  && screenId < screenList.size())
+        {
+            auto screen{screenList[screenId]};
+            auto geo{screen->geometry()};
+            m_gearDisplay->move(geo.x(),geo.y());
+        }
         m_gearDisplay->showFullScreen();
     }
     else

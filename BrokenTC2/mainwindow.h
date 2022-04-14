@@ -47,6 +47,7 @@ struct Settings{
     bool displayAboutOnStartup{true};
     QString currentDeviceName{};
     bool gearDisplayed{false};
+    QString displayGearScreen{};
 
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;
