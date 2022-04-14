@@ -10,6 +10,10 @@
 - Easy configuration and detailed instructions just below
 - Automatic upgrades
 
+## Download
+
+[Click here to access release page](https://github.com/BrokenGameNoob/BrokenTC2/releases)
+
 ## Select language
 - [Français](https://github.com/BrokenGameNoob/BrokenTC2/blob/master/Docs/README_fr.md)
 - [English - auto translated via google translate](https://github-com.translate.goog/BrokenGameNoob/BrokenTC2/blob/master/Docs/README_fr.md?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp)
