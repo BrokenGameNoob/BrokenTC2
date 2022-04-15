@@ -46,6 +46,7 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QScreen>
+#include <QWindow>
 
 #include <QFile>
 #include <QFileInfo>
@@ -275,7 +276,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
     connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
         m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
-        saveSoftSettings();
         this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
     });
 
@@ -693,10 +693,16 @@ void MainWindow::on_cb_showCurrentGear_stateChanged(int checked)
         if(screenId >= 0  && screenId < screenList.size())
         {
             auto screen{screenList[screenId]};
-            auto geo{screen->geometry()};
-            m_gearDisplay->move(geo.x(),geo.y());
+
+            m_gearDisplay->setScreen(screen);
+            m_gearDisplay->setGeometry(screen->geometry());
         }
-        m_gearDisplay->showFullScreen();
+        else
+        {
+            m_gearDisplay->showFullScreen();
+        }
+        if(!m_gearDisplay->isVisible())
+            m_gearDisplay->show();
     }
     else
     {
