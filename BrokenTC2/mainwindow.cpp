@@ -635,6 +635,12 @@ void MainWindow::onKeyboardPressed(int key)
 
 void MainWindow::on_pb_selectKey_resetDefault_clicked()
 {
+    auto ans{QMessageBox::question(this,tr("Confirmation"),tr("This will erase your current settings and they won't be recoverable.\nDo you want to continue ?"))};
+    if(ans != QMessageBox::Yes)
+    {
+        return;
+    }
+
     auto oldProfileName{m_gearHandler.settings().profileName};
     m_gearHandler.settings() = {.profileName=oldProfileName};
     refreshDisplayFromGearHandlerSettings();
