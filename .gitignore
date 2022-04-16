@@ -68,3 +68,4 @@ BrokenTC2v*.*.*/
 *setup*.exe
 deployLog.txt
 *.exe
+*.update
