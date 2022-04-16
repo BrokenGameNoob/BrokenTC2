@@ -121,6 +121,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
+//    QFrame{
+//        background-color: rgb(255, 0, 0);
+//        border-color: rgb(255, 0, 0);
+//    }
+    //Correct line appearances
+    auto lineList{this->findChildren<QFrame*>(QRegularExpression{"^line_[0-9]*$"})};
+    for(auto& e : lineList)
+    {
+        e->setMidLineWidth(1);
+    }
+
 
     qDebug() << c_appDataFolder;
     qDebug() << c_softSettingsFile;
