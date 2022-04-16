@@ -15,41 +15,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="gb_profile">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>User profiles</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="hlay_profileComboBox">
-         <item>
-          <widget class="QLabel" name="lbl_disp_selectProfile">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Select profile :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="cb_selectDevice"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="2" column="0" colspan="3">
      <widget class="QSplitter" name="splitter">
       <property name="minimumSize">
@@ -1399,7 +1364,41 @@ Sequential / Clutch</string>
       </widget>
      </widget>
     </item>
-    <item row="0" column="0">
+    <item row="3" column="2">
+     <widget class="QToolButton" name="toolB_help">
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="assets/resources.qrc">
+        <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="hlay_currentGearDisplay">
+      <item>
+       <widget class="QCheckBox" name="cb_showCurrentGear">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Display current gear engaged on screen</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0" colspan="2">
      <layout class="QHBoxLayout" name="hlay_pad">
       <item>
        <widget class="QLabel" name="lbl_pad_LB">
@@ -1435,39 +1434,40 @@ Sequential / Clutch</string>
       </item>
      </layout>
     </item>
-    <item row="3" column="2">
-     <widget class="QToolButton" name="toolB_help">
-      <property name="text">
-       <string>...</string>
+    <item row="1" column="0" colspan="2">
+     <widget class="QGroupBox" name="gb_profile">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="icon">
-       <iconset resource="assets/resources.qrc">
-        <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
+      <property name="title">
+       <string>User profiles</string>
       </property>
-      <property name="toolButtonStyle">
-       <enum>Qt::ToolButtonIconOnly</enum>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="hlay_profileComboBox">
+         <item>
+          <widget class="QLabel" name="lbl_disp_selectProfile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Select profile :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cb_selectDevice"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <layout class="QHBoxLayout" name="hlay_currentGearDisplay">
-      <item>
-       <widget class="QCheckBox" name="cb_showCurrentGear">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Display current gear engaged on screen</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
