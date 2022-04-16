@@ -28,7 +28,7 @@ Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
     ui(new Ui::Widget_gearDisplay)
 {
     ui->setupUi(this);
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Tool);
     this->setAttribute(Qt::WA_TranslucentBackground,true);
     this->setAttribute(Qt::WA_OpaquePaintEvent,false);
 //    this->setStyleSheet("background-color:transparent;color:rgb(255,255,255)");
