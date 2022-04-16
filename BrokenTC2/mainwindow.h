@@ -88,7 +88,7 @@ private slots:
 
     void on_action_about_triggered();
 
-    void on_cb_lowPerfMode_stateChanged(int arg1);
+    void on_cb_lowPerfMode_currentIndexChanged(int arg1);
 
 private:
     void updateSoftSettings();

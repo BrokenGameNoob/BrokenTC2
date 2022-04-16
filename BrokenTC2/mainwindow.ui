@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>700</height>
+    <width>1272</width>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,8 +100,8 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-232</y>
-              <width>338</width>
+              <y>-210</y>
+              <width>758</width>
               <height>584</height>
              </rect>
             </property>
@@ -256,6 +256,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_directGearSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Direct gear</string>
                  </property>
@@ -358,6 +364,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_seqSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Sequential</string>
                  </property>
@@ -393,6 +405,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_joySoftSettSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Software</string>
                  </property>
@@ -515,8 +533,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>355</width>
-              <height>352</height>
+              <width>775</width>
+              <height>374</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -608,6 +626,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_kbSoftSettSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Software</string>
                  </property>
@@ -660,8 +684,8 @@ Sequential / Clutch</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-183</y>
-              <width>338</width>
+              <y>0</y>
+              <width>758</width>
               <height>535</height>
              </rect>
             </property>
@@ -763,6 +787,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_igKeysSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Keys affected to these actions in TC2</string>
                  </property>
@@ -1016,9 +1046,9 @@ Sequential / Clutch</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-9</y>
-              <width>381</width>
-              <height>344</height>
+              <y>0</y>
+              <width>775</width>
+              <height>374</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1103,6 +1133,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_sepDisplay">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Display</string>
                  </property>
@@ -1191,6 +1227,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_sepKeyboard">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Simulated inputs</string>
                  </property>
@@ -1262,6 +1304,12 @@ Sequential / Clutch</string>
                </item>
                <item>
                 <widget class="QLabel" name="lbl_disp_sepGeneral">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>General</string>
                  </property>
@@ -1279,11 +1327,39 @@ Sequential / Clutch</string>
                </item>
               </layout>
              </item>
-             <item row="11" column="0" colspan="3">
-              <widget class="QCheckBox" name="cb_lowPerfMode">
+             <item row="11" column="2">
+              <widget class="QComboBox" name="cb_lowPerfMode">
+               <item>
+                <property name="text">
+                 <string>No</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yes</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="lbl_disp_lowPerfMode">
                <property name="text">
                 <string>Enable low performance mode
 (reducing CPU Usage but slightly increase latency)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1" rowspan="2">
+              <widget class="Line" name="line_28">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1" rowspan="3">
+              <widget class="Line" name="line_29">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -1400,7 +1476,7 @@ Sequential / Clutch</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>625</width>
+     <width>1272</width>
      <height>25</height>
     </rect>
    </property>
