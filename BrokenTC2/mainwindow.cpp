@@ -121,10 +121,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
-//    QFrame{
-//        background-color: rgb(255, 0, 0);
-//        border-color: rgb(255, 0, 0);
-//    }
     //Correct line appearances
     auto lineList{this->findChildren<QFrame*>(QRegularExpression{"^line_[0-9]*$"})};
     for(auto& e : lineList)
@@ -238,11 +234,45 @@ MainWindow::MainWindow(QWidget *parent)
         setButton(btn,ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
         saveProfileSettings();
     });
-    connect(ui->pb_selectButton_firstGear,&QPushButton::clicked,this,[&](){
+
+
+    connect(ui->pb_selectButton_gearR,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
-        setButton(btn,ui->lbl_btn_firstGear,m_gearHandler.settings().setFirstGear);
+        setButton(btn,ui->lbl_btn_gearR,m_gearHandler.settings().setReverseGear);
         saveProfileSettings();
     });
+    connect(ui->pb_selectButton_gear1,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear1,m_gearHandler.settings().setFirstGear);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_gear2,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear2,m_gearHandler.settings().setSecondGear);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_gear3,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear3,m_gearHandler.settings().setThirdGear);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_gear4,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear4,m_gearHandler.settings().setFourthGear);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_gear5,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear5,m_gearHandler.settings().setFifthGear);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_gear6,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_gear6,m_gearHandler.settings().setSixthGear);
+        saveProfileSettings();
+    });
+
+
     connect(ui->pb_selectButton_switchMode,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
         setButton(btn,ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
@@ -575,7 +605,15 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
     lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
-    lambdaUpdateText(ui->lbl_btn_firstGear,m_gearHandler.settings().setFirstGear);
+
+    lambdaUpdateText(ui->lbl_btn_gearR,m_gearHandler.settings().setReverseGear);
+    lambdaUpdateText(ui->lbl_btn_gear1,m_gearHandler.settings().setFirstGear);
+    lambdaUpdateText(ui->lbl_btn_gear2,m_gearHandler.settings().setSecondGear);
+    lambdaUpdateText(ui->lbl_btn_gear3,m_gearHandler.settings().setThirdGear);
+    lambdaUpdateText(ui->lbl_btn_gear4,m_gearHandler.settings().setFourthGear);
+    lambdaUpdateText(ui->lbl_btn_gear5,m_gearHandler.settings().setFifthGear);
+    lambdaUpdateText(ui->lbl_btn_gear6,m_gearHandler.settings().setSixthGear);
+
     lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
 }
 
@@ -600,6 +638,17 @@ void MainWindow::onControllerButtonPressed(int button)
     static const QString background_pressed{"background-color:rgb(0,200,0)"};
     static const QString background_released{"background-color:rgb(190,0,0)"};
 
+    auto lambdaForceGear{[&](tc::Gear g){
+            auto switchBack{false};
+            if(m_gearHandler.mode() == tc::GearSwitchMode::SEQUENTIAL){
+                m_gearHandler.switchGearSwitchMode();
+                switchBack = true;
+            }
+            m_gearHandler.setGear(g);
+            if(switchBack)
+                m_gearHandler.switchGearSwitchMode();
+        }};
+
     auto setStyleSheet{
         [&](auto* lbl,const auto& style)
         {
@@ -621,14 +670,33 @@ void MainWindow::onControllerButtonPressed(int button)
         m_gearHandler.gearDown();
         QTimer::singleShot(displayDelay,this,[&](){setStyleSheet(ui->lbl_pad_RB,background_released);});
     }
+    else if(button == m_gearHandler.settings().setReverseGear)
+    {
+        lambdaForceGear(tc::Gear::R);
+    }
     else if(button == m_gearHandler.settings().setFirstGear)
     {
-        if(m_gearHandler.mode() == tc::GearSwitchMode::SEQUENTIAL){
-            m_gearHandler.setGearNoAction(tc::Gear::G1);
-        }
-        else{
-            m_gearHandler.setGear(tc::Gear::G1);
-        }
+        lambdaForceGear(tc::Gear::G1);
+    }
+    else if(button == m_gearHandler.settings().setSecondGear)
+    {
+        lambdaForceGear(tc::Gear::G2);
+    }
+    else if(button == m_gearHandler.settings().setThirdGear)
+    {
+        lambdaForceGear(tc::Gear::G3);
+    }
+    else if(button == m_gearHandler.settings().setFourthGear)
+    {
+        lambdaForceGear(tc::Gear::G4);
+    }
+    else if(button == m_gearHandler.settings().setFifthGear)
+    {
+        lambdaForceGear(tc::Gear::G5);
+    }
+    else if(button == m_gearHandler.settings().setSixthGear)
+    {
+        lambdaForceGear(tc::Gear::G6);
     }
     else if(button == m_gearHandler.settings().switchMode)
     {

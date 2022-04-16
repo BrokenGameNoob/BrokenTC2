@@ -62,7 +62,14 @@ struct ProfileSettings{
 
     Button gearUp{4};
     Button gearDown{5};
+
+    Button setReverseGear{-1};
     Button setFirstGear{-1};
+    Button setSecondGear{-1};
+    Button setThirdGear{-1};
+    Button setFourthGear{-1};
+    Button setFifthGear{-1};
+    Button setSixthGear{-1};
 
     Button switchMode{-1};
 };

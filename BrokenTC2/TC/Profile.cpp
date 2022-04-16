@@ -64,7 +64,15 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     QJsonObject controller{};
     controller.insert("gearUp",sett.gearUp);
     controller.insert("gearDown",sett.gearDown);
+
+    controller.insert("setReverseGear",sett.setReverseGear);
     controller.insert("setFirstGear",sett.setFirstGear);
+    controller.insert("setSecondGear",sett.setSecondGear);
+    controller.insert("setThirdGear",sett.setThirdGear);
+    controller.insert("setFourthGear",sett.setFourthGear);
+    controller.insert("setFifthGear",sett.setFifthGear);
+    controller.insert("setSixthGear",sett.setSixthGear);
+
     controller.insert("switchMode",sett.switchMode);
 
     globObj.insert("keys",keys);
@@ -111,7 +119,15 @@ ProfileSettings readProfileSettings(const QString& fileName)
     auto controller{docObj.value("controller").toObject()};
     out.gearUp = controller.value("gearUp").toInt(ref.gearUp);
     out.gearDown = controller.value("gearDown").toInt(ref.gearDown);
+
+    out.setReverseGear = controller.value("setReverseGear").toInt(ref.setReverseGear);
     out.setFirstGear = controller.value("setFirstGear").toInt(ref.setFirstGear);
+    out.setSecondGear = controller.value("setSecondGear").toInt(ref.setSecondGear);
+    out.setThirdGear = controller.value("setThirdGear").toInt(ref.setThirdGear);
+    out.setFourthGear = controller.value("setFourthGear").toInt(ref.setFourthGear);
+    out.setFifthGear = controller.value("setFifthGear").toInt(ref.setFifthGear);
+    out.setSixthGear = controller.value("setSixthGear").toInt(ref.setSixthGear);
+
     out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
 
     out.maxGear = keys.value("maxGear").toInt();
