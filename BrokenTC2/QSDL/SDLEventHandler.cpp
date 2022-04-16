@@ -58,7 +58,11 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             return e.jdevice.which;
         }};
     static std::unordered_map<int,bool> dpadDown{};//<Button ID,isDown>
-    //Button ID : (button+OFFSET)*10+joystickId
+    //Button ID : (button+OFFSET)*10+
+    //isDown : true/false
+
+    static std::unordered_map<int,bool> joyMove{};//<Button ID,isDown>
+    //Button ID : (axis+OFFSET)*100+(value<0?1:2)
     //isDown : true/false
 
     while(m_continue)
@@ -86,7 +90,25 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
         }
         switch (e.type)
         {
-        case SDL_JOYBUTTONDOWN:
+        case SDL_JOYAXISMOTION:{
+            constexpr auto AXIS_BUTTON_OFFSET{1000};
+            auto curPos{abs(e.jaxis.value) > sharedConfig->joyAxisthreshold()};
+            auto axis{e.jaxis.axis};
+            auto dictKey{(AXIS_BUTTON_OFFSET+axis)*1000+(e.jaxis.value<0?1:2)*100+deviceId()};
+
+            if(!joyMove.contains(dictKey))
+                joyMove[dictKey] = curPos;
+
+            if(joyMove.at(dictKey) == false && curPos){
+                emit buttonDown(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
+                joyMove[dictKey] = true;
+            }
+            else if(joyMove.at(dictKey) == true && !curPos){
+                emit buttonUp(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
+                joyMove[dictKey] = false;
+            }
+            break;
+        }case SDL_JOYBUTTONDOWN:
 //            instance()->m_buttonsTimes[e.jbutton.button].setDown();
 //            qDebug() << "Button DOWN : " << e.jbutton.button;
             emit buttonDown(deviceId(),e.jbutton.button);
@@ -101,7 +123,7 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             auto curPos{e.jhat.value};
 
             auto checkPos{[&](const auto& hatVal){
-                    auto dictKey{(HAT_BUTTON_OFFSET+hatVal)*10+deviceId()};
+                    auto dictKey{(HAT_BUTTON_OFFSET+hatVal)*100+deviceId()};
                     if(curPos & hatVal){
                         emit buttonDown(deviceId(),HAT_BUTTON_OFFSET+hatVal);
                         dpadDown[dictKey] = true;

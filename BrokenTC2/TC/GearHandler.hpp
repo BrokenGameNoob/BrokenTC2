@@ -93,12 +93,14 @@ public slots:
     void gearUp(){
         if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
             setGear(m_currentGear + 1);
+//            setGear(m_currentGear + (((m_currentGear+1)==tc::Gear::N_CLUTCH)?2:1));//skip neutral
         else//GearSwitchMode::SEQUENTIAL
             switchSeqGear(true);
     }
     void gearDown(){
         if(m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
             setGear(m_currentGear - 1);
+//            setGear(m_currentGear - ((((m_currentGear-1)==tc::Gear::N_CLUTCH)?2:1)));//skip neutral
         else//GearSwitchMode::SEQUENTIAL
             switchSeqGear(false);
     }

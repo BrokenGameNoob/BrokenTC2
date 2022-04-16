@@ -1,6 +1,5 @@
 # New Features
-- It is now possible to select on which screen the gear display should be displayed
-- You will be asked to confirm the restoration of default settings when requested by pressing the "Default settings" button.
+- Joysticks are now recognized as valid inputs for the software (They are considered as buttons)
 
 <br/><br/>
 

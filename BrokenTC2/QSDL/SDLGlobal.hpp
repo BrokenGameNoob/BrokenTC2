@@ -30,9 +30,18 @@ namespace qsdl {
 class EventHandlerSharedConfig
 {
 public:
-    EventHandlerSharedConfig(bool lowPerfMode = false): m_lowPerfMode{lowPerfMode}
+    EventHandlerSharedConfig(bool lowPerfMode = false):
+        m_joyAxisthreshold{20000},
+        m_lowPerfMode{lowPerfMode}
     {
 
+    }
+
+    void setJoyAxisthreshold(int32_t threshold){
+        m_joyAxisthreshold = threshold;
+    }
+    auto joyAxisthreshold()const{
+        return m_joyAxisthreshold;
     }
 
     bool lowPerfMode()const{
@@ -45,6 +54,8 @@ public:
 private:
     friend class SDLEventThread;
     friend class SDLEventHandler;
+
+    int32_t m_joyAxisthreshold;
 
     bool m_lowPerfMode;
 
