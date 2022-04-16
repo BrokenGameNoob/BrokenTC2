@@ -571,6 +571,13 @@ Sequential / Clutch</string>
               </property>
              </widget>
             </item>
+            <item row="7" column="0">
+             <widget class="QPushButton" name="pb_selectButton_firstGear">
+              <property name="text">
+               <string>1st gear</string>
+              </property>
+             </widget>
+            </item>
             <item row="8" column="0">
              <spacer name="verticalSpacer_7">
               <property name="orientation">
@@ -681,13 +688,6 @@ Sequential / Clutch</string>
              <widget class="QLabel" name="lbl_btn_firstGear">
               <property name="text">
                <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QPushButton" name="pb_selectButton_firstGear">
-              <property name="text">
-               <string>1st gear</string>
               </property>
              </widget>
             </item>
