@@ -1310,7 +1310,7 @@ Sequential / Clutch</string>
               <widget class="QLabel" name="lbl_disp_lowPerfMode">
                <property name="text">
                 <string>Enable low performance mode
-(reducing CPU Usage but slightly increase latency)</string>
+(reduce CPU Usage but slightly increase latency)</string>
                </property>
               </widget>
              </item>
