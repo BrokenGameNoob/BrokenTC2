@@ -47,6 +47,7 @@
 #include <QDesktopServices>
 #include <QScreen>
 #include <QWindow>
+#include <QCloseEvent>
 
 #include <QFile>
 #include <QFileInfo>
@@ -110,6 +111,7 @@ QString screenName(const QScreen* screen)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
+      m_trayIcon{QIcon{":/img/img/softPic.png"},this},
       m_updateManager{false,this},
       m_wasUpdated{updt::postUpdateFunction()},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -118,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_gearDisplay{new Widget_gearDisplay()},
       m_controller{}
 {
+    // UI Init
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
@@ -127,6 +130,25 @@ MainWindow::MainWindow(QWidget *parent)
     {
         e->setMidLineWidth(1);
     }
+
+    //tray icon
+    auto trayIconMenu{new QMenu(this)};
+    trayIconMenu->addAction(new QAction(tr("Exit program"),this));
+    connect(trayIconMenu->actions().back(),&QAction::triggered,this,[&](){
+        this->close();
+    });
+    trayIconMenu->addAction(new QAction(tr("Show window"),this));
+    connect(trayIconMenu->actions().back(),&QAction::triggered,this,[&](){
+        this->show();
+    });
+    m_trayIcon.setContextMenu(trayIconMenu);
+    m_trayIcon.show();
+    connect(&m_trayIcon,&QSystemTrayIcon::activated,this,[&](auto reason){
+        if(reason == QSystemTrayIcon::ActivationReason::Trigger)
+        {
+            this->show();
+        }});
+
 
 
     qDebug() << c_appDataFolder;
@@ -370,9 +392,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    m_gearDisplay->close();
+    this->hide();
 
-    QMainWindow::closeEvent(event);
+    qDebug() << __CURRENT_PLACE__ << " : " << event->spontaneous();
+
+    if(!event->spontaneous())//if the event is closed by something else than the top right closing icon
+    {
+        QMainWindow::closeEvent(event);
+        m_gearDisplay->close();
+    }
 }
 
 void MainWindow::showEvent(QShowEvent* event)//when the window is shown

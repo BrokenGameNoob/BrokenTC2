@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 
 #include "global.hpp"
 
@@ -107,6 +108,8 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon m_trayIcon;
+
     updt::UpdateManager m_updateManager;
     bool m_wasUpdated;
 
