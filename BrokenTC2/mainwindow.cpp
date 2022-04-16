@@ -133,21 +133,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     //tray icon
     auto trayIconMenu{new QMenu(this)};
-    trayIconMenu->addAction(new QAction(tr("Exit program"),this));
-    connect(trayIconMenu->actions().back(),&QAction::triggered,this,[&](){
-        this->close();
-    });
-    trayIconMenu->addAction(new QAction(tr("Show window"),this));
-    connect(trayIconMenu->actions().back(),&QAction::triggered,this,[&](){
+    auto tmpAction = trayIconMenu->addAction(tr("Show window"));
+    connect(tmpAction,&QAction::triggered,this,[&](){
         this->show();
+    });
+    tmpAction = trayIconMenu->addAction(tr("Exit program"));
+    connect(tmpAction,&QAction::triggered,this,[&](){
+        this->close();
     });
     m_trayIcon.setContextMenu(trayIconMenu);
     m_trayIcon.show();
     connect(&m_trayIcon,&QSystemTrayIcon::activated,this,[&](auto reason){
-        if(reason == QSystemTrayIcon::ActivationReason::Trigger)
-        {
-            this->show();
-        }});
+            if(reason == QSystemTrayIcon::ActivationReason::Trigger)
+            {
+                this->show();
+            }});
 
 
 
@@ -392,14 +392,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    this->hide();
-
-    qDebug() << __CURRENT_PLACE__ << " : " << event->spontaneous();
-
-    if(!event->spontaneous())//if the event is closed by something else than the top right closing icon
+    if(event->spontaneous())//if the window is closed by the top right closing icon
     {
-        QMainWindow::closeEvent(event);
+        this->hide();
+        m_trayIcon.show();
+        event->setAccepted(false);
+    }
+    else//closed programmatically (or expected to be so?)
+    {
         m_gearDisplay->close();
+        QMainWindow::closeEvent(event);
     }
 }
 
@@ -421,6 +423,8 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
             updt::showChangelog(this);
         },Qt::ConnectionType::QueuedConnection);
     }
+
+    m_trayIcon.hide();
 }
 
 //------------------------------------------------------------------
