@@ -18,8 +18,8 @@ cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 0)#incompatible update
-set(VERSIONING_MINOR 1)#new features added
-set(VERSIONING_PATCH 9)#bug fixed / minor change
+set(VERSIONING_MINOR 2)#new features added
+set(VERSIONING_PATCH 0)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")

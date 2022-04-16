@@ -153,7 +153,7 @@ struct Version
     int minor{PROJECT_V_MINOR};
     int patch{PROJECT_V_PATCH};
 };
-bool operator<(const Version& v0,const Version& v1);
+bool operator>(const Version& v0,const Version& v1);
 inline
 QDebug operator<<(QDebug dbg,const Version& v){
     dbg.nospace() << v.major << "." << v.minor << "." << v.patch;
