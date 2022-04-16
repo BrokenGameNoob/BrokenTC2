@@ -565,7 +565,7 @@ bool MainWindow::loadProfile(QString gamePadName)
 void MainWindow::refreshFromSettings()
 {
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
-    ui->cb_lowPerfMode->setChecked(m_softSettings.lowPerfMode());
+    ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};
     if(deviceIndex >= 0)
@@ -835,7 +835,7 @@ void MainWindow::on_action_about_triggered()
 }
 
 
-void MainWindow::on_cb_lowPerfMode_stateChanged(int arg1)
+void MainWindow::on_cb_lowPerfMode_currentIndexChanged(int arg1)
 {
     m_softSettings.setLowPerfMode(bool(arg1));
     saveSoftSettings();

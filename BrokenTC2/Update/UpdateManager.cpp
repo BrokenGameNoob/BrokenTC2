@@ -126,11 +126,12 @@ void UpdateManager::onApiRequestFinished(const QJsonDocument& doc)
     qDebug() << "---------- Update info ---------";
     qDebug() << "Running version : " << currVersion;
     qDebug() << "Dist version : " << distVerion;
+    qDebug() << "Should update ?" << ((distVerion > currVersion)?"Yes":"No");
     qDebug() << "Asset url : " << assetUrl;
 
     ui->lbl_availableVersion->setText(QString{"%0.%1.%2"}.arg(distVerion.major).arg(distVerion.minor).arg(distVerion.patch));
 
-    if(currVersion < distVerion)
+    if(distVerion > currVersion)
     {
         ui->pb_update->show();
         ui->lbl_feedback->setText(tr("A newer version is available. Hit the download button to get it"));

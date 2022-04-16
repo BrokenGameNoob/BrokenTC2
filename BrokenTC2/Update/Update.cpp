@@ -97,13 +97,20 @@ void DownloadRequest::fileDownloaded(QNetworkReply* pReply)
 
 namespace updt {
 
-bool operator<(const Version& r,const Version& d)
+bool operator>(const Version& r,const Version& d)
 {
-    if(r.major < d.major)
+    if(r.major > d.major)
         return true;
-    if(r.minor < d.minor)
+    else if(r.major < d.major)
+        return false;
+
+    if(r.minor > d.minor)
         return true;
-    if(r.patch < d.patch)
+    else if(r.minor < d.minor)
+        return false;
+
+
+    if(r.patch > d.patch)
         return true;
     return false;
 }
