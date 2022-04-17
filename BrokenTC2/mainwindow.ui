@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>883</width>
-    <height>732</height>
+    <width>773</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,40 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="2">
+     <widget class="QToolButton" name="toolB_help">
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="assets/resources.qrc">
+        <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="hlay_currentGearDisplay">
+      <item>
+       <widget class="QCheckBox" name="cb_showCurrentGear">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Display current gear engaged on screen</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="2" column="0" colspan="3">
      <widget class="QSplitter" name="splitter">
       <property name="minimumSize">
@@ -505,7 +539,7 @@ Sequential / Clutch</string>
               <x>0</x>
               <y>0</y>
               <width>596</width>
-              <height>384</height>
+              <height>303</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1019,7 +1053,7 @@ Sequential / Clutch</string>
               <x>0</x>
               <y>0</y>
               <width>579</width>
-              <height>408</height>
+              <height>425</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1228,6 +1262,20 @@ Sequential / Clutch</string>
                </item>
               </layout>
              </item>
+             <item row="11" column="2">
+              <widget class="QComboBox" name="cb_exitOnCloseEvent">
+               <item>
+                <property name="text">
+                 <string>Hide</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Exit</string>
+                </property>
+               </item>
+              </widget>
+             </item>
              <item row="6" column="0">
               <spacer name="verticalSpacer_13">
                <property name="orientation">
@@ -1243,6 +1291,13 @@ Sequential / Clutch</string>
                 </size>
                </property>
               </spacer>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="lbl_disp_exitOnCloseEvent">
+               <property name="text">
+                <string>Behavior when closing the program</string>
+               </property>
+              </widget>
              </item>
              <item row="3" column="2">
               <widget class="QSpinBox" name="sb_gearDelay">
@@ -1270,7 +1325,7 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="14" column="0">
+             <item row="15" column="0">
               <spacer name="verticalSpacer_12">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1283,14 +1338,14 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="10" column="1" rowspan="4">
+             <item row="10" column="1" rowspan="5">
               <widget class="Line" name="line_28">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
               </widget>
              </item>
-             <item row="13" column="0">
+             <item row="14" column="0">
               <widget class="QLabel" name="lbl_disp_launchOnStartup">
                <property name="text">
                 <string>Launch program on computer startup</string>
@@ -1321,7 +1376,7 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="13" column="2">
+             <item row="14" column="2">
               <widget class="QComboBox" name="cb_launchOnStartup">
                <item>
                 <property name="text">
@@ -1361,26 +1416,21 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="11" column="0">
-              <widget class="QLabel" name="lbl_disp_exitOnCloseEvent">
-               <property name="text">
-                <string>Behavior when closing the program</string>
+             <item row="13" column="0">
+              <spacer name="verticalSpacer_17">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
-              </widget>
-             </item>
-             <item row="11" column="2">
-              <widget class="QComboBox" name="cb_exitOnCloseEvent">
-               <item>
-                <property name="text">
-                 <string>Hide</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Exit</string>
-                </property>
-               </item>
-              </widget>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
@@ -1418,41 +1468,42 @@ Sequential / Clutch</string>
       </widget>
      </widget>
     </item>
-    <item row="3" column="2">
-     <widget class="QToolButton" name="toolB_help">
-      <property name="text">
-       <string>...</string>
+    <item row="1" column="0" colspan="3">
+     <widget class="QGroupBox" name="gb_profile">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="icon">
-       <iconset resource="assets/resources.qrc">
-        <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
+      <property name="title">
+       <string>User profiles</string>
       </property>
-      <property name="toolButtonStyle">
-       <enum>Qt::ToolButtonIconOnly</enum>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="hlay_profileComboBox">
+         <item>
+          <widget class="QLabel" name="lbl_disp_selectProfile">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Select profile :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cb_selectDevice"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="3" column="0" colspan="2">
-     <layout class="QHBoxLayout" name="hlay_currentGearDisplay">
-      <item>
-       <widget class="QCheckBox" name="cb_showCurrentGear">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Display current gear engaged on screen</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="0" colspan="2">
+    <item row="0" column="0" colspan="3">
      <layout class="QHBoxLayout" name="hlay_pad">
       <item>
        <widget class="QLabel" name="lbl_pad_LB">
@@ -1488,41 +1539,6 @@ Sequential / Clutch</string>
       </item>
      </layout>
     </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="gb_profile">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>User profiles</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QHBoxLayout" name="hlay_profileComboBox">
-         <item>
-          <widget class="QLabel" name="lbl_disp_selectProfile">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Select profile :</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="cb_selectDevice"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1530,7 +1546,7 @@ Sequential / Clutch</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>883</width>
+     <width>773</width>
      <height>25</height>
     </rect>
    </property>
