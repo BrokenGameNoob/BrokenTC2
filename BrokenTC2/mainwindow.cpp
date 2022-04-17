@@ -103,6 +103,99 @@ QString screenName(const QScreen* screen)
     return screen->name().remove(reToRemove);
 }
 
+//inline
+//std::unique_ptr<wchar_t[]> toWchar(const std::string& str){
+//    // required size
+//    int nChars = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+//    // allocate it
+//    std::unique_ptr<wchar_t[]> out{new WCHAR[nChars]};
+//    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, (LPWSTR)(out.get()), nChars);
+//    return out;
+//}
+
+bool reg_startOnStartupExist()
+{
+    constexpr auto cRunPath{"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"};
+    HKEY hKey{};
+    auto lResult{RegOpenKeyExA(HKEY_CURRENT_USER, cRunPath, 0, KEY_READ, &hKey)};
+    if(lResult == ERROR_SUCCESS)
+    {
+        lResult = RegQueryValueExA(hKey, PROJECT_NAME, NULL, NULL, NULL, NULL);
+        if (lResult == ERROR_SUCCESS)
+        {
+            RegCloseKey(hKey);
+            return true;
+        }
+    }
+//    if (lResult != ERROR_SUCCESS)
+//    {
+//        return false;
+//    }
+
+//    auto stdStrExePath{QCoreApplication::applicationFilePath().replace("/","\\").toStdString()};
+//    auto cExePath{stdStrExePath.c_str()};
+
+//    lResult = RegSetValueExA(hKey,PROJECT_NAME,0,REG_SZ,
+//                            reinterpret_cast<const BYTE*>(cExePath),
+//                            size(stdStrExePath)+1);
+//    if (lResult != ERROR_SUCCESS)
+//    {
+//        RegCloseKey(hKey);
+//        return false;
+//    }
+
+//    RegCloseKey(hKey);
+    return false;
+}
+bool reg_startOnStartup(bool enableAutoStart)
+{
+    constexpr auto runPath{L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"};
+    constexpr auto cRunPath{"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"};
+    HKEY hKey{};
+    auto lResult{RegOpenKeyEx(HKEY_CURRENT_USER, runPath, 0, KEY_READ | KEY_WRITE, &hKey)};
+
+    if (lResult != ERROR_SUCCESS)
+    {
+        if (lResult == ERROR_FILE_NOT_FOUND) {
+            qCritical() << __CURRENT_PLACE__ << ": Registry key not found : " << cRunPath;
+        }
+        else {
+            qCritical() << __CURRENT_PLACE__ << ": Error occured when opening registry key : " << cRunPath;
+        }
+        return false;
+    }
+
+    auto stdStrExePath{QCoreApplication::applicationFilePath().replace("/","\\").toStdString()};
+    auto cExePath{stdStrExePath.c_str()};
+
+    if(enableAutoStart)
+    {
+        lResult = RegSetValueExA(hKey,PROJECT_NAME,0,REG_SZ,
+                                reinterpret_cast<const BYTE*>(cExePath),
+                                size(stdStrExePath)+1);
+    }
+    else
+    {
+        lResult = RegDeleteKeyValueA(hKey,NULL,PROJECT_NAME);
+    }
+
+    if (lResult != ERROR_SUCCESS)
+    {
+        if (lResult == ERROR_FILE_NOT_FOUND) {
+            qCritical() << __CURRENT_PLACE__ << ": Registry key not found : " << cRunPath;
+        }
+        else {
+            qCritical() << __CURRENT_PLACE__ << ": Error occured when writing registry key : " << cRunPath;
+            qCritical() << "To : " << QCoreApplication::applicationFilePath();
+        }
+        RegCloseKey(hKey);
+        return false;
+    }
+
+    RegCloseKey(hKey);
+    return true;
+}
+
 }
 
 
@@ -217,10 +310,6 @@ MainWindow::MainWindow(QWidget *parent)
         setKey(key,ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
         saveProfileSettings();
     });
-    connect(ui->sb_gearDelay,&QSpinBox::valueChanged,this,[&](int val){
-        m_gearHandler.settings().keyDownTime = val;
-        saveProfileSettings();
-    });
 
 
 
@@ -281,6 +370,23 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    connect(ui->sb_gearDelay,&QSpinBox::valueChanged,this,[&](int val){
+        m_gearHandler.settings().keyDownTime = val;
+        saveProfileSettings();
+    });
+    connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
+        m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
+        this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
+        saveSoftSettings();
+    });
+    connect(ui->cb_launchOnStartup,&QComboBox::currentIndexChanged,this,[&](int valI){
+//        m_softSettings.launchOnComputerStartup = bool(valI);
+        reg_startOnStartup(bool(valI));
+        saveSoftSettings();
+    });
+
+
+
     connect(&m_gearHandler,&tc::GearHandler::gearChanged,m_gearDisplay,&Widget_gearDisplay::refreshGear);
     connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,m_gearDisplay,&Widget_gearDisplay::onSwitchGearModeChanged);
     connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,this,[&](auto){saveProfileSettings();});
@@ -315,10 +421,6 @@ MainWindow::MainWindow(QWidget *parent)
         ui->cb_gearDisplayScreen->addItem(screenName(e),i);
         ++i;
     }
-    connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
-        m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
-        this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
-    });
 
 
 
@@ -407,6 +509,8 @@ void MainWindow::updateSoftSettings()
     m_softSettings.currentDeviceName = ((ui->cb_selectDevice->currentText().isEmpty())?m_softSettings.currentDeviceName
                                                                                      :ui->cb_selectDevice->currentText());
     m_softSettings.gearDisplayed = ui->cb_showCurrentGear->isChecked();
+    m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
+//    m_softSettings.launchOnComputerStartup = bool(ui->cb_launchOnStartup->currentIndex());
 
     saveSoftSettings();
 }
@@ -419,6 +523,7 @@ bool MainWindow::saveSoftSettings()
     QJsonObject globObj{};
 
     QJsonObject settings{};
+//    settings.insert("launchOnComputerStartup",m_softSettings.launchOnComputerStartup);
     settings.insert("displayAboutOnStartup",m_softSettings.displayAboutOnStartup);
     settings.insert("lastProfile",m_softSettings.currentDeviceName);
     settings.insert("displayGear",m_softSettings.gearDisplayed);
@@ -455,6 +560,7 @@ bool MainWindow::loadSoftSettings()
     Settings out{};
 
     auto settings{docObj.value("settings").toObject()};
+//    out.launchOnComputerStartup = settings.value("launchOnComputerStartup").toBool(false);
     out.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
     out.currentDeviceName = settings.value("lastProfile").toString();
     out.gearDisplayed = settings.value("displayGear").toBool();
@@ -532,8 +638,11 @@ bool MainWindow::loadProfile(QString gamePadName)
 
 void MainWindow::refreshFromSettings()
 {
+    auto launchOnStartup{reg_startOnStartupExist()};
+    qDebug() << __CURRENT_PLACE__ << ":"<<launchOnStartup;
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
     ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
+    ui->cb_launchOnStartup->setCurrentIndex(int(launchOnStartup));
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};
     if(deviceIndex >= 0)

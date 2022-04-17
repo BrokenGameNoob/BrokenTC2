@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow
 struct Settings{
     bool isInit{false};
 
+//    bool launchOnComputerStartup{false};
     bool displayAboutOnStartup{true};
     QString currentDeviceName{};
     bool gearDisplayed{false};

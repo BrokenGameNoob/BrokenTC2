@@ -23,6 +23,8 @@
 #include <QMessageBox>
 #include <QString>
 
+//#include <QCommandLineParser>
+
 
 #ifdef WIN32
 int SDL_main(int argc, char *argv[])
@@ -32,6 +34,8 @@ int main(int argc,char* argv[])
 {
     int rCode{0};
     QApplication a(argc, argv);
+
+//    QCommandLineParser parser;
 
     try
     {
