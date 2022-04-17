@@ -19,6 +19,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 
 #include "global.hpp"
 
@@ -49,6 +50,8 @@ struct Settings{
     QString currentDeviceName{};
     bool gearDisplayed{false};
     QString displayGearScreen{};
+
+    bool exitOnCloseEvent{false};
 
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;
@@ -108,6 +111,8 @@ private:
 
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon m_trayIcon;
+
     updt::UpdateManager m_updateManager;
     bool m_wasUpdated;
 

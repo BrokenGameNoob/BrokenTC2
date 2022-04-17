@@ -47,6 +47,7 @@
 #include <QDesktopServices>
 #include <QScreen>
 #include <QWindow>
+#include <QCloseEvent>
 
 #include <QFile>
 #include <QFileInfo>
@@ -185,6 +186,7 @@ bool reg_startOnStartup(bool enableAutoStart)
 MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
+      m_trayIcon{QIcon{":/img/img/softPic.png"},this},
       m_updateManager{false,this},
       m_wasUpdated{updt::postUpdateFunction()},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -193,6 +195,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_gearDisplay{new Widget_gearDisplay()},
       m_controller{}
 {
+    // UI Init
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
 
@@ -203,16 +206,28 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         e->setMidLineWidth(1);
     }
 
-    if(hideOnStartup)
+    //tray icon
+    auto trayIconMenu{new QMenu(this)};
+    auto tmpAction = trayIconMenu->addAction(tr("Show window"));
+    connect(tmpAction,&QAction::triggered,this,[&](){
+        this->show();
+    });
+    tmpAction = trayIconMenu->addAction(tr("Exit program"));
+    connect(tmpAction,&QAction::triggered,this,[&](){
+        this->close();
+    });
+    m_trayIcon.setContextMenu(trayIconMenu);
+
+    connect(&m_trayIcon,&QSystemTrayIcon::activated,this,[&](auto reason){
+            if(reason == QSystemTrayIcon::ActivationReason::Trigger)
+            {
+                this->show();
+            }});
+    if(hideOnStartup)//through command line option
     {
-        qDebug() << __CURRENT_PLACE__<<"HIDE THIS SHIT";
-        auto l{new QLabel("YOU SHOULD HIDE IT")};
-        l->show();
+        m_trayIcon.hide();
+        m_trayIcon.show();
     }
-
-
-
-
 
 
 
@@ -373,8 +388,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
         saveSoftSettings();
     });
+    connect(ui->cb_exitOnCloseEvent,&QComboBox::currentIndexChanged,this,[&](int valI){
+        m_softSettings.exitOnCloseEvent = bool(valI);
+        saveSoftSettings();
+    });
     connect(ui->cb_launchOnStartup,&QComboBox::currentIndexChanged,this,[&](int valI){
-//        m_softSettings.launchOnComputerStartup = bool(valI);
         reg_startOnStartup(bool(valI));
         saveSoftSettings();
     });
@@ -466,9 +484,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    m_gearDisplay->close();
-
-    QMainWindow::closeEvent(event);
+    if(event->spontaneous() && !(m_softSettings.exitOnCloseEvent))//if the window is closed by the top right closing icon
+    {
+        this->hide();
+        m_trayIcon.show();
+        event->setAccepted(false);
+    }
+    else//closed programmatically (or expected to be so?)
+    {
+        m_gearDisplay->close();
+        QMainWindow::closeEvent(event);
+    }
 }
 
 void MainWindow::showEvent(QShowEvent* event)//when the window is shown
@@ -489,6 +515,8 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
             updt::showChangelog(this);
         },Qt::ConnectionType::QueuedConnection);
     }
+
+    m_trayIcon.hide();
 }
 
 //------------------------------------------------------------------
@@ -504,7 +532,6 @@ void MainWindow::updateSoftSettings()
                                                                                      :ui->cb_selectDevice->currentText());
     m_softSettings.gearDisplayed = ui->cb_showCurrentGear->isChecked();
     m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
-//    m_softSettings.launchOnComputerStartup = bool(ui->cb_launchOnStartup->currentIndex());
 
     saveSoftSettings();
 }
@@ -523,6 +550,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("displayGear",m_softSettings.gearDisplayed);
     settings.insert("displayGearScreen",m_softSettings.displayGearScreen);
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
+    settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
 
     globObj.insert("settings",settings);
 
@@ -560,6 +588,7 @@ bool MainWindow::loadSoftSettings()
     out.gearDisplayed = settings.value("displayGear").toBool();
     out.setLowPerfMode(settings.value("lowPerfMode").toBool());
     out.displayGearScreen = settings.value("displayGearScreen").toString();
+    out.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
 
     m_softSettings = out;
 
@@ -652,6 +681,8 @@ void MainWindow::refreshFromSettings()
     {
         ui->cb_gearDisplayScreen->setCurrentIndex(-1);
     }
+
+    ui->cb_exitOnCloseEvent->setCurrentIndex(int(m_softSettings.exitOnCloseEvent));
 }
 
 void MainWindow::populateDevicesComboBox()
