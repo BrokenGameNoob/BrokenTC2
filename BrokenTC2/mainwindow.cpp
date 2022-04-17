@@ -396,6 +396,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         reg_startOnStartup(bool(valI));
         saveSoftSettings();
     });
+    connect(ui->tb_settings,&QTabWidget::currentChanged,this,[&](int index){
+        m_softSettings.openedTab = index;
+    });
 
 
 
@@ -478,6 +481,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    m_softSettings.openedTab = ui->tb_settings->currentIndex();
+    saveSoftSettings();
+
     delete ui;
     delete m_gearDisplay;
 }
@@ -551,6 +557,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("displayGearScreen",m_softSettings.displayGearScreen);
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
     settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
+    settings.insert("openedTab",m_softSettings.openedTab);
 
     globObj.insert("settings",settings);
 
@@ -589,6 +596,7 @@ bool MainWindow::loadSoftSettings()
     out.setLowPerfMode(settings.value("lowPerfMode").toBool());
     out.displayGearScreen = settings.value("displayGearScreen").toString();
     out.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
+    out.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
 
     m_softSettings = out;
 
@@ -683,6 +691,8 @@ void MainWindow::refreshFromSettings()
     }
 
     ui->cb_exitOnCloseEvent->setCurrentIndex(int(m_softSettings.exitOnCloseEvent));
+
+    ui->tb_settings->setCurrentIndex(m_softSettings.openedTab);
 }
 
 void MainWindow::populateDevicesComboBox()

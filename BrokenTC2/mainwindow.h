@@ -53,6 +53,8 @@ struct Settings{
 
     bool exitOnCloseEvent{false};
 
+    int openedTab{2};
+
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;
         qsdl::SDLEventHandler::setLowPerfMode(m_lowPerfModeEnabled);

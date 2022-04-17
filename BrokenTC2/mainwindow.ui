@@ -74,7 +74,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QScrollArea" name="tb_settings_controller">
            <property name="sizePolicy">
