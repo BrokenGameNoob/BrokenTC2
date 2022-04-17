@@ -64,7 +64,7 @@ private:
 
 public:
 //    LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(bool hideOnStartup,QWidget *parent = nullptr);
     ~MainWindow();
 
 protected:

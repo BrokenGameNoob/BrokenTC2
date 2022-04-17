@@ -23,7 +23,7 @@
 #include <QMessageBox>
 #include <QString>
 
-//#include <QCommandLineParser>
+#include <QCommandLineParser>
 
 
 #ifdef WIN32
@@ -35,11 +35,17 @@ int main(int argc,char* argv[])
     int rCode{0};
     QApplication a(argc, argv);
 
-//    QCommandLineParser parser;
+    QCommandLineParser parser;
+    parser.addOptions({
+                          // A boolean option with a single name (--hide)
+                          {"hide",
+                           QCoreApplication::translate("main", "Hide program on startup")}
+                      });
+    parser.process(a);
 
     try
     {
-        MainWindow w;
+        MainWindow w{parser.isSet("hide")};
         w.show();
         rCode = a.exec();
     }

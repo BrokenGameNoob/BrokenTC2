@@ -127,24 +127,6 @@ bool reg_startOnStartupExist()
             return true;
         }
     }
-//    if (lResult != ERROR_SUCCESS)
-//    {
-//        return false;
-//    }
-
-//    auto stdStrExePath{QCoreApplication::applicationFilePath().replace("/","\\").toStdString()};
-//    auto cExePath{stdStrExePath.c_str()};
-
-//    lResult = RegSetValueExA(hKey,PROJECT_NAME,0,REG_SZ,
-//                            reinterpret_cast<const BYTE*>(cExePath),
-//                            size(stdStrExePath)+1);
-//    if (lResult != ERROR_SUCCESS)
-//    {
-//        RegCloseKey(hKey);
-//        return false;
-//    }
-
-//    RegCloseKey(hKey);
     return false;
 }
 bool reg_startOnStartup(bool enableAutoStart)
@@ -165,7 +147,7 @@ bool reg_startOnStartup(bool enableAutoStart)
         return false;
     }
 
-    auto stdStrExePath{QCoreApplication::applicationFilePath().replace("/","\\").toStdString()};
+    auto stdStrExePath{QCoreApplication::applicationFilePath().replace("/","\\").toStdString()+" --hide"};
     auto cExePath{stdStrExePath.c_str()};
 
     if(enableAutoStart)
@@ -200,7 +182,7 @@ bool reg_startOnStartup(bool enableAutoStart)
 
 
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_updateManager{false,this},
@@ -220,6 +202,18 @@ MainWindow::MainWindow(QWidget *parent)
     {
         e->setMidLineWidth(1);
     }
+
+    if(hideOnStartup)
+    {
+        qDebug() << __CURRENT_PLACE__<<"HIDE THIS SHIT";
+        auto l{new QLabel("YOU SHOULD HIDE IT")};
+        l->show();
+    }
+
+
+
+
+
 
 
     qDebug() << c_appDataFolder;
@@ -639,7 +633,6 @@ bool MainWindow::loadProfile(QString gamePadName)
 void MainWindow::refreshFromSettings()
 {
     auto launchOnStartup{reg_startOnStartupExist()};
-    qDebug() << __CURRENT_PLACE__ << ":"<<launchOnStartup;
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
     ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
     ui->cb_launchOnStartup->setCurrentIndex(int(launchOnStartup));
