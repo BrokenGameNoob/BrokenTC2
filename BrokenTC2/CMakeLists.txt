@@ -18,8 +18,8 @@ cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 0)#incompatible update
-set(VERSIONING_MINOR 2)#new features added
-set(VERSIONING_PATCH 0)#bug fixed / minor change
+set(VERSIONING_MINOR 1)#new features added
+set(VERSIONING_PATCH 99)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
@@ -36,7 +36,6 @@ add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
 add_definitions("-DPROJECT_NAME=\"${CMAKE_PROJECT_NAME}\"")
 add_definitions("-DWPROJECT_NAME=L\"${CMAKE_PROJECT_NAME}\"")
 
-set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
 
 if(UNIX)
     set(SDL2_INCLUDE_DIR "/usr/include/" CACHE BOOL "" FORCE)
@@ -70,6 +69,7 @@ if(WIN32)
     SET(PLATEFORM_DEPENDANT_SOURCES
             Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
             Windows/winextras.hpp Windows/winextras.cpp
+
 )
 endif(WIN32)
 if(UNIX)

@@ -33,7 +33,8 @@
 #ifdef Q_OS_WIN
     #include <windows.h>
 #else
-    #define Sleep(x) __asm("nop")
+    #include <unistd.h>
+    #define Sleep(x) sleep(x)
 #endif
 
 namespace qsdl{
@@ -65,29 +66,35 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
     //Button ID : (axis+OFFSET)*100+(value<0?1:2)
     //isDown : true/false
 
+    auto lambdaLowPerfDelay{[&](){
+        Sleep(5);
+        SDL_Delay(10);
+    }};
+
     while(m_continue)
     {
-//        if(controllerList.size() != i)
-//        {
-//            if(controllerList.size() > i)
-//                qDebug() << "NEW CONTROLLER";
-//            else
-//                qDebug() << "Removed CONTROLLER";
-//            i = controllerList.size();
-//        }
         m_continue = !(sharedConfig.get()->m_shouldStop);
         if(m_continue == false)
             qDebug() << __CURRENT_PLACE__ <<"  : WE SHOULD STOP NOW";
 
-        if(SDL_WaitEventTimeout(&e,100) == 0)
-//        isf(SDL_PollEvent(&e) == 0)
+        bool skipToNextIter{false};
+        if(sharedConfig.get()->lowPerfMode())
         {
-            if(sharedConfig.get()->lowPerfMode())
+            skipToNextIter = (SDL_PollEvent(&e) == 0);
+            if(skipToNextIter)
             {
-                Sleep(10);
+                lambdaLowPerfDelay();
             }
-            continue; //wait next iteration
         }
+        else
+        {
+            skipToNextIter = (SDL_WaitEventTimeout(&e,100) == 0);
+        }
+
+        if(skipToNextIter)
+            continue;
+
+        qDebug() << "EVENT";
         switch (e.type)
         {
         case SDL_JOYAXISMOTION:{
@@ -147,6 +154,11 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             emit controllerUnplugged(e.jdevice.which);
         default:
             break;
+        }
+
+        if(sharedConfig.get()->lowPerfMode())
+        {
+            lambdaLowPerfDelay();
         }
     }
 }

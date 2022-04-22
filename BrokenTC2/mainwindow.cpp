@@ -27,7 +27,10 @@
 #include "Utils/Dialog_About.hpp"
 #include "Utils/GUITools.hpp"
 
+#ifdef Q_OS_WIN
 #include "Windows/WinEventHandler.hpp"
+#include <windows.h>
+#endif
 
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
@@ -57,7 +60,7 @@
 #include <QDebug>
 #include <QProcess>
 
-#include <windows.h>
+
 
 
 namespace{
@@ -113,6 +116,8 @@ QString screenName(const QScreen* screen)
 //    MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, (LPWSTR)(out.get()), nChars);
 //    return out;
 //}
+
+#ifdef Q_OS_WIN
 
 bool reg_startOnStartupExist()
 {
@@ -178,6 +183,7 @@ bool reg_startOnStartup(bool enableAutoStart)
     RegCloseKey(hKey);
     return true;
 }
+#endif
 
 }
 
@@ -249,8 +255,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         }
     });
 
+#ifdef Q_OS_WIN
+
     //start keyboard event handler
     connect(windows::WindowsEventThread::ins(),&windows::WindowsEventThread::keyDown,this,&MainWindow::onKeyboardPressed);
+#endif
 
     qsdl::SDLEventHandler::start();
     qsdl::SDLEventHandler::registerController(&m_controller);
@@ -383,6 +392,12 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         m_gearHandler.settings().keyDownTime = val;
         saveProfileSettings();
     });
+    //init threshold slider (set max value to int16_t max val)
+    ui->hs_joyAxisThreshold->setMaximum(32767);//int16_t
+    connect(ui->hs_joyAxisThreshold,&QSlider::valueChanged,this,[&](int val){
+        m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(val));
+        saveSoftSettings();
+    });
     connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
         m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
         this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
@@ -392,10 +407,12 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         m_softSettings.exitOnCloseEvent = bool(valI);
         saveSoftSettings();
     });
+#ifdef Q_OS_WIN
     connect(ui->cb_launchOnStartup,&QComboBox::currentIndexChanged,this,[&](int valI){
         reg_startOnStartup(bool(valI));
         saveSoftSettings();
     });
+#endif
     connect(ui->tb_settings,&QTabWidget::currentChanged,this,[&](int index){
         m_softSettings.openedTab = index;
     });
@@ -500,6 +517,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     {
         m_gearDisplay->close();
         QMainWindow::closeEvent(event);
+        QApplication::exit(0);
     }
 }
 
@@ -558,6 +576,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
     settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
     settings.insert("openedTab",m_softSettings.openedTab);
+    settings.insert("joyAxisThreshold",m_softSettings.joyAxisThreshold());
 
     globObj.insert("settings",settings);
 
@@ -570,7 +589,7 @@ bool MainWindow::loadSoftSettings()
 
     if(!docOpt)//if we could not read the settings file
     {
-        if(QFileInfo(c_softSettingsFile).exists())//if the config file exist
+        if(QFileInfo::exists(c_softSettingsFile))//if the config file exist
             throw std::runtime_error{__CURRENT_PLACE__.toStdString()+" : "+
                                      std::string{"Cannot read settings file "}+c_softSettingsFile.toStdString()};
         if(!saveSoftSettings())//if we fail to create a settings file
@@ -597,6 +616,7 @@ bool MainWindow::loadSoftSettings()
     out.displayGearScreen = settings.value("displayGearScreen").toString();
     out.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
     out.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
+    out.setJoyAxisThreshold(settings.value("joyAxisThreshold").toVariant().value<int16_t>());
 
     m_softSettings = out;
 
@@ -669,10 +689,12 @@ bool MainWindow::loadProfile(QString gamePadName)
 
 void MainWindow::refreshFromSettings()
 {
+#ifdef Q_OS_WIN
     auto launchOnStartup{reg_startOnStartupExist()};
+    ui->cb_launchOnStartup->setCurrentIndex(int(launchOnStartup));
+#endif
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
     ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
-    ui->cb_launchOnStartup->setCurrentIndex(int(launchOnStartup));
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};
     if(deviceIndex >= 0)
@@ -693,6 +715,8 @@ void MainWindow::refreshFromSettings()
     ui->cb_exitOnCloseEvent->setCurrentIndex(int(m_softSettings.exitOnCloseEvent));
 
     ui->tb_settings->setCurrentIndex(m_softSettings.openedTab);
+
+    ui->hs_joyAxisThreshold->setValue(m_softSettings.joyAxisThreshold());
 }
 
 void MainWindow::populateDevicesComboBox()

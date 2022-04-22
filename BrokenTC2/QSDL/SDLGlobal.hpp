@@ -37,7 +37,7 @@ public:
 
     }
 
-    void setJoyAxisthreshold(int32_t threshold){
+    void setJoyAxisthreshold(int16_t threshold){
         m_joyAxisthreshold = threshold;
     }
     auto joyAxisthreshold()const{
@@ -55,7 +55,7 @@ private:
     friend class SDLEventThread;
     friend class SDLEventHandler;
 
-    int32_t m_joyAxisthreshold;
+    int16_t m_joyAxisthreshold;
 
     bool m_lowPerfMode;
 

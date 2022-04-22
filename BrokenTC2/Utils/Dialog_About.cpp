@@ -29,3 +29,9 @@ Dialog_About::~Dialog_About()
 {
     delete ui;
 }
+
+void Dialog_About::on_pb_qt_clicked()
+{
+    QApplication::aboutQt();
+}
+

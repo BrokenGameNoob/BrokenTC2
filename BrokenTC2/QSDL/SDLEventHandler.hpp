@@ -81,6 +81,10 @@ public:
         instance()->m_sharedConfig.get()->setLowPerfMode(enable);
     }
 
+    static void setJoyAxisThreshold(int16_t threshold){
+        instance()->m_sharedConfig.get()->setJoyAxisthreshold(threshold);
+    }
+
 signals:
     void operate(const QVector<qsdl::GameController*>&,std::shared_ptr<EventHandlerSharedConfig>);
 

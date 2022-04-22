@@ -19,11 +19,37 @@
   <property name="windowTitle">
    <string>About</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QPushButton" name="pb_qt">
+     <property name="text">
+      <string>About Qt</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
     <widget class="QLabel" name="lbl_pic">
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This project was created to make the redundant, boring game known under the name of &lt;a href=&quot;https://www.ubisoft.com/fr-fr/game/the-crew/the-crew-2&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;The Crew 2&lt;/span&gt;&lt;/a&gt; a bit more playable for all the people who doesn't want to spend a night trying to break the game in weird ways. I did it so you don't have to.&lt;/p&gt;&lt;p&gt;If you find a bug or would like to see a new functionality, you can submit it to the appropriate &lt;a href=&quot;https://github.com/BrokenGameNoob/BrokenTC2/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;github page&lt;/span&gt;&lt;/a&gt; or send an email at : &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;mailto:brokengamenoob@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;brokengamenoob@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Enjoy this freaking game ... &lt;/p&gt;&lt;p&gt;BrokenGameNoob&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:6pt;&quot;&gt;PS : Thanks to Terminator&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This project was created to make the redundant, boring game known under the name of &lt;a href=&quot;https://www.ubisoft.com/fr-fr/game/the-crew/the-crew-2&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;The Crew 2&lt;/span&gt;&lt;/a&gt; a bit more playable for all the people who doesn't want to spend a night trying to break the game in weird ways. I did it so you don't have to.&lt;/p&gt;&lt;p&gt;If you find a bug or would like to see a new functionality, you can submit it to the appropriate &lt;a href=&quot;https://github.com/BrokenGameNoob/BrokenTC2/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;github page&lt;/span&gt;&lt;/a&gt; or send an email at : &lt;/p&gt;&lt;p&gt;&lt;a href=&quot;mailto:brokengamenoob@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;brokengamenoob@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Enjoy this freaking game ... &lt;/p&gt;&lt;p&gt;BrokenGameNoob&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:6pt;&quot;&gt;PS : Thanks to all players that helped me developping this, giving me ideas, reporting bugs etc...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -36,18 +62,18 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
+   <item row="2" column="1">
+    <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
      </property>
-     <property name="centerButtons">
-      <bool>true</bool>
-     </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>

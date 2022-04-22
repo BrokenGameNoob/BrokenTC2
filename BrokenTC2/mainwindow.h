@@ -32,7 +32,9 @@
 
 #include "Update/UpdateManager.hpp"
 
+#ifdef Q_OS_WIN
 #include <windows.h>
+#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -63,8 +65,17 @@ struct Settings{
         return m_lowPerfModeEnabled;
     }
 
+    void setJoyAxisThreshold(int16_t threshold){
+        m_joyAxisthreshold = threshold;
+        qsdl::SDLEventHandler::setJoyAxisThreshold(threshold);
+    }
+    int16_t joyAxisThreshold()const{
+        return m_joyAxisthreshold;
+    }
+
 private:
     bool m_lowPerfModeEnabled{false};
+    int16_t m_joyAxisthreshold{20000};
 };
 
 public:
