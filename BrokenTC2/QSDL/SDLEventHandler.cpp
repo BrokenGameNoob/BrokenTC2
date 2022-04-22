@@ -67,7 +67,7 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
     //isDown : true/false
 
     auto lambdaLowPerfDelay{[&](){
-        Sleep(5);
+        Sleep(10);
         SDL_Delay(10);
     }};
 
@@ -94,7 +94,6 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
         if(skipToNextIter)
             continue;
 
-        qDebug() << "EVENT";
         switch (e.type)
         {
         case SDL_JOYAXISMOTION:{
@@ -109,10 +108,12 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             if(joyMove.at(dictKey) == false && curPos){
                 emit buttonDown(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
                 joyMove[dictKey] = true;
+                lambdaLowPerfDelay();
             }
             else if(joyMove.at(dictKey) == true && !curPos){
                 emit buttonUp(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
                 joyMove[dictKey] = false;
+                lambdaLowPerfDelay();
             }
             break;
         }case SDL_JOYBUTTONDOWN:
@@ -158,7 +159,7 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
 
         if(sharedConfig.get()->lowPerfMode())
         {
-            lambdaLowPerfDelay();
+//            lambdaLowPerfDelay();
         }
     }
 }
