@@ -616,7 +616,7 @@ bool MainWindow::loadSoftSettings()
     out.displayGearScreen = settings.value("displayGearScreen").toString();
     out.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
     out.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
-    out.setJoyAxisThreshold(settings.value("joyAxisThreshold").toVariant().value<int16_t>());
+    out.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
 
     m_softSettings = out;
 

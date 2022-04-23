@@ -177,8 +177,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>582</width>
-              <height>492</height>
+              <width>579</width>
+              <height>584</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -610,7 +610,7 @@ Sequential / Clutch</string>
               <x>0</x>
               <y>0</y>
               <width>596</width>
-              <height>358</height>
+              <height>303</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -761,8 +761,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>582</width>
-              <height>451</height>
+              <width>579</width>
+              <height>535</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1123,8 +1123,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>582</width>
-              <height>444</height>
+              <width>579</width>
+              <height>515</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1585,6 +1585,9 @@ Sequential / Clutch</string>
              </item>
              <item row="7" column="2">
               <widget class="QSlider" name="hs_joyAxisThreshold">
+               <property name="minimum">
+                <number>10</number>
+               </property>
                <property name="tracking">
                 <bool>true</bool>
                </property>
@@ -1643,7 +1646,7 @@ Sequential / Clutch</string>
      <x>0</x>
      <y>0</y>
      <width>773</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">

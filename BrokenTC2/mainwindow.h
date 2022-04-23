@@ -75,7 +75,7 @@ struct Settings{
 
 private:
     bool m_lowPerfModeEnabled{false};
-    int16_t m_joyAxisthreshold{20000};
+    int16_t m_joyAxisthreshold{};
 };
 
 public:
