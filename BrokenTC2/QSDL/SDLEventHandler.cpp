@@ -66,9 +66,8 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
     //Button ID : (axis+OFFSET)*100+(value<0?1:2)
     //isDown : true/false
 
-    auto lambdaLowPerfDelay{[&](){
-        Sleep(10);
-        SDL_Delay(10);
+    auto lambdaSleep{[&](int ms){
+        QThread::msleep(ms);
     }};
 
     while(m_continue)
@@ -83,7 +82,7 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             skipToNextIter = (SDL_PollEvent(&e) == 0);
             if(skipToNextIter)
             {
-                lambdaLowPerfDelay();
+                lambdaSleep(15);
             }
         }
         else
@@ -108,12 +107,12 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             if(joyMove.at(dictKey) == false && curPos){
                 emit buttonDown(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
                 joyMove[dictKey] = true;
-                lambdaLowPerfDelay();
+                lambdaSleep(15);
             }
             else if(joyMove.at(dictKey) == true && !curPos){
                 emit buttonUp(deviceId(),AXIS_BUTTON_OFFSET+axis*10+(e.jaxis.value<0?1:2));
                 joyMove[dictKey] = false;
-                lambdaLowPerfDelay();
+                lambdaSleep(15);
             }
             break;
         }case SDL_JOYBUTTONDOWN:
