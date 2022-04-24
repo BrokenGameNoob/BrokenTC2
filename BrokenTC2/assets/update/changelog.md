@@ -1,4 +1,4 @@
-# IMPROVED UI!!
+# 2.0 is here! IMPROVED UI!!
 
 # New Features
 - It is now possible to reduce the program in the system tray instead of fully closing it (this behavior is configurable)
