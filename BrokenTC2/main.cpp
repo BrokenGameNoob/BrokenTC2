@@ -55,6 +55,10 @@ int main(int argc,char* argv[])
 
         rCode = 1;
     }
+    catch(...)
+    {
+        QMessageBox::critical(nullptr,QObject::tr("Fatal error"),QObject::tr("Unknown error"));
+    }
 
     return rCode;
 }

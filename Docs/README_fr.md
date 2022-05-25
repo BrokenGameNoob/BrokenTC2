@@ -4,6 +4,35 @@
 - [Utilisation](#GUIDE-Usage)
 - [Problèmes connus (CPU Bloqué à 100%)](#FAQ-known-problems)
 
+
+<!--MARKDOWN_INDEX_BEGIN--># Table des matières
+
+**[Liens importants](#liens-importants)**<br/>
+**[Qu'est-ce que c'est que cette chose là ?](#quest-ce-que-cest-que-cette-chose-là-)**<br/>
+&emsp;*[Intro](#intro)*<br/>
+&emsp;*[Et donc ?](#et-donc-)*<br/>
+&emsp;*[Et le logiciel ?](#et-le-logiciel-)*<br/>
+**[Installation](#installation)**<br/>
+&emsp;*[Télécharger](#télécharger)*<br/>
+&emsp;*[Installer](#installer)*<br/>
+&emsp;*[Mises à jour](#mises-à-jour)*<br/>
+**[Utilisation](#utilisation)**<br/>
+&emsp;*[Configuration initiale](#configuration-initiale)*<br/>
+&emsp;*[Configurer le jeu](#configurer-le-jeu)*<br/>
+&emsp;&emsp;[Clavier](#clavier)<br/>
+&emsp;&emsp;[Manette / Contrôleur](#manette--contrôleur)<br/>
+&emsp;*[Configurer le logiciel](#configurer-le-logiciel)*<br/>
+&emsp;&emsp;[Présentation de l'interface](#présentation-de-linterface)<br/>
+&emsp;&emsp;[Configurer une touche](#configurer-une-touche)<br/>
+&emsp;&emsp;[Configurer un bouton du contrôleur](#configurer-un-bouton-du-contrôleur)<br/>
+**[FAQ](#faq)**<br/>
+&emsp;*[Quels sont les périphériques supportés ?](#quels-sont-les-périphériques-supportés-)*<br/>
+&emsp;*[A quoi sert chaque élément de l'interface ?](#a-quoi-sert-chaque-élément-de-linterface-)*<br/>
+&emsp;*[Que faire en cas d'échec de mise à jour ?](#que-faire-en-cas-déchec-de-mise-à-jour-)*<br/>
+&emsp;*[Problèmes connus](#problèmes-connus)*<br/>
+<!--MARKDOWN_INDEX_END-->
+
+
 # Qu'est-ce que c'est que cette chose là ?
 
 ## Intro
