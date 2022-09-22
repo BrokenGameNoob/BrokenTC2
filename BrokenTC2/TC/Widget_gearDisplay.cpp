@@ -20,6 +20,8 @@
 
 #include "TC/Profile.hpp"
 
+#include <QTimer>
+
 #include <QDebug>
 #include "../global.hpp"
 
@@ -35,6 +37,12 @@ Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
 
     ui->label->setText("0");
 //    this->showFullScreen();
+
+    m_tmpShowTimer.setSingleShot(true);
+    connect(&m_tmpShowTimer,&QTimer::timeout,this,[&](){
+        ui->lbl_clutchMode->hide();
+    });
+    m_tmpShowTimer.setInterval(1500);
 }
 
 Widget_gearDisplay::~Widget_gearDisplay()
@@ -49,15 +57,33 @@ void Widget_gearDisplay::refreshGear(int value)
 
 void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
 {
+    QColor lblColor{};
     auto toString{[&](QColor in)->QString{
             return QString{"rgb(%0,%1,%2)"}.arg(in.red()).arg(in.green()).arg(in.blue());
         }};
+
+    auto tmpShowLabel{[&](QLabel* lbl){
+            lbl->show();
+
+        }};
+
     if(newMode == tc::GearSwitchMode::CLUTCH)
     {
-        ui->label->setStyleSheet(QString{"color:%0;"}.arg(toString(m_clutchColor)));
+        lblColor = m_clutchColor;
+        ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
     }
     else
     {
-        ui->label->setStyleSheet(QString{"color:%0;"}.arg(toString(m_seqColor)));
+        lblColor = m_seqColor;
+        ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
     }
+    QString baseCss{"color:%0;background-color:rgba(79, 79, 79, 120);border-radius:20px"};
+    ui->label->setStyleSheet(baseCss.arg(toString(lblColor)));
+    ui->lbl_clutchMode->setStyleSheet(baseCss.arg(toString(lblColor)));
+
+    ui->lbl_clutchMode->show();
+
+    if(m_tmpShowTimer.isActive())
+        m_tmpShowTimer.stop();
+    m_tmpShowTimer.start();
 }

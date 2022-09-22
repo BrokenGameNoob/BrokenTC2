@@ -19,8 +19,10 @@
 #define WIDGET_GEARDISPLAY_H
 
 #include <QWidget>
+#include <QTimer>
 
 #include "TC/Profile.hpp"
+#include <unordered_map>
 
 namespace Ui {
 class Widget_gearDisplay;
@@ -29,6 +31,11 @@ class Widget_gearDisplay;
 class Widget_gearDisplay : public QWidget
 {
     Q_OBJECT
+
+std::unordered_map<decltype(tc::GearSwitchMode::CLUTCH),QString> m_gearModeText{
+    {tc::GearSwitchMode::CLUTCH,tr(" Sequential clutch ")},
+    {tc::GearSwitchMode::SEQUENTIAL,tr(" Classic sequential ")}
+};
 
 public:
     explicit Widget_gearDisplay(QWidget *parent = nullptr);
@@ -44,6 +51,8 @@ private:
 
     QColor m_clutchColor{255,255,255};
     QColor m_seqColor{255,0,0};
+
+    QTimer m_tmpShowTimer{this};
 };
 
 #endif // WIDGET_GEARDISPLAY_H
