@@ -400,7 +400,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     });
     connect(ui->cb_gearDisplayScreen,&QComboBox::currentIndexChanged,this,[&](int){
         m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
-        this->on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
+
+        m_gearDisplay->showOnScreen(ui->cb_gearDisplayScreen->currentData().toInt());
         saveSoftSettings();
     });
     connect(ui->cb_exitOnCloseEvent,&QComboBox::currentIndexChanged,this,[&](int valI){
@@ -474,6 +475,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     refreshDisplayFromGearHandlerSettings();
 
     m_softSettings.isInit = true;
+    on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
 
 
 
@@ -940,25 +942,14 @@ void MainWindow::on_cb_showCurrentGear_stateChanged(int checked)
 
     if(checked)
     {
-        auto screenList{QApplication::screens()};
         auto screenId{ui->cb_gearDisplayScreen->currentData().toInt()};
-        if(screenId >= 0  && screenId < screenList.size())
-        {
-            auto screen{screenList[screenId]};
 
-            m_gearDisplay->setScreen(screen);
-            m_gearDisplay->setGeometry(screen->geometry());
-        }
-        else
-        {
-            m_gearDisplay->showFullScreen();
-        }
-        if(!m_gearDisplay->isVisible())
-            m_gearDisplay->show();
+        m_gearDisplay->showOnScreen(screenId);
+        m_gearDisplay->setIndicatorVisible(true);
     }
     else
     {
-        m_gearDisplay->hide();
+        m_gearDisplay->setIndicatorVisible(false);
     }
 }
 

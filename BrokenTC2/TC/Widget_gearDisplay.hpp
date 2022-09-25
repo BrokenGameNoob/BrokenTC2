@@ -46,6 +46,10 @@ public slots:
 
     void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
 
+    void showOnScreen(int screenId);
+
+    void setIndicatorVisible(bool visible);
+
 private:
     Ui::Widget_gearDisplay *ui;
 

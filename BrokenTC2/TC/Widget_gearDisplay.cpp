@@ -22,6 +22,8 @@
 
 #include <QTimer>
 
+#include <QScreen>
+
 #include <QDebug>
 #include "../global.hpp"
 
@@ -86,4 +88,30 @@ void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
     if(m_tmpShowTimer.isActive())
         m_tmpShowTimer.stop();
     m_tmpShowTimer.start();
+}
+
+void Widget_gearDisplay::showOnScreen(int screenId){
+    auto screenList{QApplication::screens()};
+    auto screen{screenList[screenId]};
+
+    if(this->isVisible() && screen == this->screen())
+        return;
+    if(screenId >= 0  && screenId < screenList.size())
+    {
+
+        this->setScreen(screen);
+        this->setGeometry(screen->geometry());
+    }
+    else
+    {
+        this->showFullScreen();
+    }
+    if(!this->isVisible())
+        this->show();
+
+
+}
+
+void Widget_gearDisplay::setIndicatorVisible(bool visible){
+    ui->label->setVisible(visible);
 }
