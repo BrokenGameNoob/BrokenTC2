@@ -45,6 +45,8 @@ Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
         ui->lbl_clutchMode->hide();
     });
     m_tmpShowTimer.setInterval(1500);
+
+    ui->lbl_clutchMode->hide();
 }
 
 Widget_gearDisplay::~Widget_gearDisplay()
@@ -60,15 +62,21 @@ void Widget_gearDisplay::refreshGear(int value)
 void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
 {
     QColor lblColor{};
-    auto toString{[&](QColor in)->QString{
-            return QString{"rgb(%0,%1,%2)"}.arg(in.red()).arg(in.green()).arg(in.blue());
-        }};
+    if(newMode == tc::GearSwitchMode::CLUTCH)
+    {
+        lblColor = m_clutchColor;
+    }
+    else
+    {
+        lblColor = m_seqColor;
+    }
 
-    auto tmpShowLabel{[&](QLabel* lbl){
-            lbl->show();
+    ui->label->setStyleSheet(getStyleSheet(lblColor,m_backgroundColor));
+}
 
-        }};
-
+void Widget_gearDisplay::showGearModeChangeNotif(tc::GearSwitchMode newMode)
+{
+    QColor lblColor{};
     if(newMode == tc::GearSwitchMode::CLUTCH)
     {
         lblColor = m_clutchColor;
@@ -79,9 +87,8 @@ void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
         lblColor = m_seqColor;
         ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
     }
-    QString baseCss{"color:%0;background-color:rgba(79, 79, 79, 120);border-radius:20px"};
-    ui->label->setStyleSheet(baseCss.arg(toString(lblColor)));
-    ui->lbl_clutchMode->setStyleSheet(baseCss.arg(toString(lblColor)));
+
+    ui->lbl_clutchMode->setStyleSheet(getStyleSheet(lblColor,m_backgroundColor));
 
     ui->lbl_clutchMode->show();
 
@@ -114,4 +121,9 @@ void Widget_gearDisplay::showOnScreen(int screenId){
 
 void Widget_gearDisplay::setIndicatorVisible(bool visible){
     ui->label->setVisible(visible);
+}
+
+QString Widget_gearDisplay::getStyleSheet(const QColor& textColor,const QColor& backgroundColor){
+    QString baseCss{"color:%0;background-color:%1;border-radius:20px"};
+    return baseCss.arg(colorToString(textColor)).arg(colorToString(backgroundColor));
 }

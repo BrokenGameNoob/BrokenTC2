@@ -1,10 +1,10 @@
 # 2.1 is here!
 
 # New Features
-- A notification message is now displayed on the left of the screen when the gear mode is changed
+- You can now chose the background color of the gear indicator and notification message
 
 
 <br/><br/>
 
 # Bugs patched
-- Minor terminology changes in the UI
+- The gear mode switch notification is not triggered anymore when called unnoticeably by the program.

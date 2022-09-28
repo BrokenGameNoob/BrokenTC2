@@ -46,15 +46,24 @@ public slots:
 
     void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
 
+    void showGearModeChangeNotif(tc::GearSwitchMode newMode);
+
     void showOnScreen(int screenId);
 
     void setIndicatorVisible(bool visible);
+
+private:
+    QString getStyleSheet(const QColor &textColor, const QColor &backgroundColor);
+    QString colorToString(const QColor& in){
+        return QString{"rgba(%0,%1,%2,%3)"}.arg(in.red()).arg(in.green()).arg(in.blue()).arg(in.alpha());};
 
 private:
     Ui::Widget_gearDisplay *ui;
 
     QColor m_clutchColor{255,255,255};
     QColor m_seqColor{255,0,0};
+
+    QColor m_backgroundColor{79, 79, 79, 120};
 
     QTimer m_tmpShowTimer{this};
 };

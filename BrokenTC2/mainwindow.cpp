@@ -870,6 +870,7 @@ void MainWindow::onControllerButtonPressed(int button)
     else if(button == m_gearHandler.settings().switchMode)
     {
         m_gearHandler.switchGearSwitchMode();
+        m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
     }
 }
 
@@ -878,6 +879,7 @@ void MainWindow::onKeyboardPressed(int key)
     if(key == m_gearHandler.settings().kSwitchMode)
     {
         m_gearHandler.switchGearSwitchMode();
+        m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
     }
 }
 
