@@ -1,4 +1,4 @@
-# 2.1 is here!
+# 2.2 is here!
 
 # New Features
 - You can now chose the background color of the gear indicator and notification message
