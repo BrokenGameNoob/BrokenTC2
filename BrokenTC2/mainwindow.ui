@@ -32,20 +32,75 @@
     <item row="3" column="0" colspan="2">
      <layout class="QHBoxLayout" name="hlay_currentGearDisplay">
       <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QCheckBox" name="cb_showCurrentGear">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
         </property>
         <property name="text">
          <string>Display current gear engaged on screen</string>
         </property>
         <property name="checked">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_33">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_enableNotification">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Enable gear switch notifications</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -1122,9 +1177,9 @@ Sequential / Clutch</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-156</y>
               <width>582</width>
-              <height>522</height>
+              <height>514</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1492,9 +1547,12 @@ Sequential / Clutch</string>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QSpinBox" name="sb_bgHUDColorAlpha">
+                <widget class="QSlider" name="sb_bgHUDColorAlpha">
                  <property name="maximum">
                   <number>255</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>

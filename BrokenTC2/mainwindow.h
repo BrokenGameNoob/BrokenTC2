@@ -45,19 +45,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 struct Settings{
-    Ui::MainWindow *ui;
-    Widget_gearDisplay* m_gearDisplay;
-    Settings(Ui::MainWindow *i_ui,Widget_gearDisplay* gearDisplay):
-        ui{i_ui},m_gearDisplay{gearDisplay}
-    {}
-
-
     bool isInit{false};
 
 //    bool launchOnComputerStartup{false};
     bool displayAboutOnStartup{true};
     QString currentDeviceName{};
-    bool gearDisplayed{false};
+    bool gearDisplayed{false};//whether the current gear be displayed on screen or not
+    bool enableNotification{false};
     QString displayGearScreen{};
 
     bool exitOnCloseEvent{false};
@@ -73,7 +67,7 @@ struct Settings{
         return m_lowPerfModeEnabled;
     }
 
-    void setBgHUDColor(QColor c);
+    void setBgHUDColor(QColor c, Widget_gearDisplay *m_gearDisplay);
     QColor bgHUDColor()const{
         return m_bgHUDColor;
     }

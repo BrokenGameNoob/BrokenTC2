@@ -190,11 +190,9 @@ bool reg_startOnStartup(bool enableAutoStart)
 
 
 
-void MainWindow::Settings::setBgHUDColor(QColor c){
+void MainWindow::Settings::setBgHUDColor(QColor c,Widget_gearDisplay* m_gearDisplay){
     m_bgHUDColor = std::move(c);
     m_gearDisplay->setBgHUDColor(m_bgHUDColor);
-    ui->lbl_bgHUDColor->setStyleSheet(QString{"background-color:%0"}.arg(tc::colorToString(m_bgHUDColor)));
-    ui->sb_bgHUDColorAlpha->setValue(c.alpha());
 }
 
 MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
@@ -205,7 +203,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_wasUpdated{updt::postUpdateFunction()},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       m_gearDisplay{new Widget_gearDisplay()},
-      m_softSettings{ui,m_gearDisplay},
+      m_softSettings{},
       c_softSettingsFile{c_appDataFolder+"settings.conf"},
       m_controller{}
 {
@@ -412,6 +410,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         m_gearDisplay->showOnScreen(ui->cb_gearDisplayScreen->currentData().toInt());
         saveSoftSettings();
     });
+    connect(ui->cb_enableNotification,&QCheckBox::stateChanged,this,[&](int){
+        m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
+        saveSoftSettings();
+    });
     connect(ui->cb_exitOnCloseEvent,&QComboBox::currentIndexChanged,this,[&](int valI){
         m_softSettings.exitOnCloseEvent = bool(valI);
         saveSoftSettings();
@@ -466,6 +468,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
 
 
+    m_softSettings.setBgHUDColor(Settings{}.bgHUDColor(),m_gearDisplay);
     loadSoftSettings();
 
     //try to read settings profile
@@ -484,6 +487,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     m_softSettings.isInit = true;
     on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
+    updateSoftSettings();
 
 
 
@@ -517,6 +521,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
+    __asm("nop");
     if(event->spontaneous() && !(m_softSettings.exitOnCloseEvent))//if the window is closed by the top right closing icon
     {
         this->hide();
@@ -566,6 +571,7 @@ void MainWindow::updateSoftSettings()
     m_softSettings.currentDeviceName = ((ui->cb_selectDevice->currentText().isEmpty())?m_softSettings.currentDeviceName
                                                                                      :ui->cb_selectDevice->currentText());
     m_softSettings.gearDisplayed = ui->cb_showCurrentGear->isChecked();
+    m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
     m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
 
     saveSoftSettings();
@@ -583,6 +589,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("displayAboutOnStartup",m_softSettings.displayAboutOnStartup);
     settings.insert("lastProfile",m_softSettings.currentDeviceName);
     settings.insert("displayGear",m_softSettings.gearDisplayed);
+    settings.insert("enableNotification",m_softSettings.enableNotification);
     settings.insert("displayGearScreen",m_softSettings.displayGearScreen);
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
     settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
@@ -622,12 +629,13 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
     m_softSettings.currentDeviceName = settings.value("lastProfile").toString();
     m_softSettings.gearDisplayed = settings.value("displayGear").toBool();
+    m_softSettings.enableNotification = settings.value("enableNotification").toBool();
     m_softSettings.setLowPerfMode(settings.value("lowPerfMode").toBool());
     m_softSettings.displayGearScreen = settings.value("displayGearScreen").toString();
     m_softSettings.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
-    m_softSettings.openedTab = settings.value("openedTab").toInt(/*Settings{}.openedTab*/);
+    m_softSettings.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
     auto bgHUDColorStr{settings.value("bgHUDColor").toString()};
-    m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr));
+    m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr),m_gearDisplay);
     m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
 
     refreshFromSettings();
@@ -704,6 +712,7 @@ void MainWindow::refreshFromSettings()
     ui->cb_launchOnStartup->setCurrentIndex(int(launchOnStartup));
 #endif
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
+    ui->cb_enableNotification->setChecked(m_softSettings.enableNotification);
     ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};
@@ -727,6 +736,9 @@ void MainWindow::refreshFromSettings()
     ui->tb_settings->setCurrentIndex(m_softSettings.openedTab);
 
     ui->hs_joyAxisThreshold->setValue(m_softSettings.joyAxisThreshold());
+
+    ui->lbl_bgHUDColor->setStyleSheet(QString{"background-color:%0"}.arg(tc::colorToString(m_softSettings.bgHUDColor())));
+    ui->sb_bgHUDColorAlpha->setValue(m_softSettings.bgHUDColor().alpha());
 }
 
 void MainWindow::populateDevicesComboBox()
@@ -878,7 +890,8 @@ void MainWindow::onControllerButtonPressed(int button)
     else if(button == m_gearHandler.settings().switchMode)
     {
         m_gearHandler.switchGearSwitchMode();
-        m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
+        if(ui->cb_enableNotification->isChecked())
+            m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
     }
 }
 
@@ -887,7 +900,8 @@ void MainWindow::onKeyboardPressed(int key)
     if(key == m_gearHandler.settings().kSwitchMode)
     {
         m_gearHandler.switchGearSwitchMode();
-        m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
+        if(ui->cb_enableNotification->isChecked())
+            m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
     }
 }
 
@@ -987,9 +1001,10 @@ void MainWindow::on_pb_bgHUDColor_clicked()
         return;
     color.setAlpha(ui->sb_bgHUDColorAlpha->value());
 
-    qDebug() << color;
-    m_softSettings.setBgHUDColor(color);
+    m_softSettings.setBgHUDColor(color,m_gearDisplay);
     saveSoftSettings();
+
+    refreshFromSettings();
 }
 
 
@@ -997,7 +1012,8 @@ void MainWindow::on_sb_bgHUDColorAlpha_valueChanged(int arg1)
 {
     auto tmpColor{m_softSettings.bgHUDColor()};
     tmpColor.setAlpha(arg1);
-    m_softSettings.setBgHUDColor(tmpColor);
+    m_softSettings.setBgHUDColor(tmpColor,m_gearDisplay);
     saveSoftSettings();
+    refreshFromSettings();
 }
 

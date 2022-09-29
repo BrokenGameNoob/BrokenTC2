@@ -2,6 +2,7 @@
 
 # New Features
 - You can now chose the background color of the gear indicator and notification message
+- It is now possible to disable the notification
 
 
 <br/><br/>
