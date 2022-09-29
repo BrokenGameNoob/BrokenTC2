@@ -28,6 +28,16 @@ namespace Ui {
 class Widget_gearDisplay;
 }
 
+namespace tc{
+QString getStyleSheet(const QColor &textColor, const QColor &backgroundColor);
+inline
+QString colorToString(const QColor& in){
+    return QString{"rgba(%0,%1,%2,%3)"}.arg(in.red()).arg(in.green()).arg(in.blue()).arg(in.alpha());
+}
+QColor stringToColor(const QString& input);
+}
+
+
 class Widget_gearDisplay : public QWidget
 {
     Q_OBJECT
@@ -41,6 +51,8 @@ public:
     explicit Widget_gearDisplay(QWidget *parent = nullptr);
     ~Widget_gearDisplay();
 
+    void setBgHUDColor(QColor bgColor);
+
 public slots:
     void refreshGear(int value);
 
@@ -53,15 +65,16 @@ public slots:
     void setIndicatorVisible(bool visible);
 
 private:
-    QString getStyleSheet(const QColor &textColor, const QColor &backgroundColor);
-    QString colorToString(const QColor& in){
-        return QString{"rgba(%0,%1,%2,%3)"}.arg(in.red()).arg(in.green()).arg(in.blue()).arg(in.alpha());};
+    QColor colorFromMode(tc::GearSwitchMode mode){
+        return mode == tc::GearSwitchMode::CLUTCH ? m_clutchColor : m_seqColor;
+    }
 
 private:
     Ui::Widget_gearDisplay *ui;
 
     QColor m_clutchColor{255,255,255};
     QColor m_seqColor{255,0,0};
+    QColor m_currentColor{};
 
     QColor m_backgroundColor{79, 79, 79, 120};
 

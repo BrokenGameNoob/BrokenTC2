@@ -51,6 +51,7 @@
 #include <QScreen>
 #include <QWindow>
 #include <QCloseEvent>
+#include <QColorDialog>
 
 #include <QFile>
 #include <QFileInfo>
@@ -189,6 +190,13 @@ bool reg_startOnStartup(bool enableAutoStart)
 
 
 
+void MainWindow::Settings::setBgHUDColor(QColor c){
+    m_bgHUDColor = std::move(c);
+    m_gearDisplay->setBgHUDColor(m_bgHUDColor);
+    ui->lbl_bgHUDColor->setStyleSheet(QString{"background-color:%0"}.arg(tc::colorToString(m_bgHUDColor)));
+    ui->sb_bgHUDColorAlpha->setValue(c.alpha());
+}
+
 MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -196,9 +204,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_updateManager{false,this},
       m_wasUpdated{updt::postUpdateFunction()},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
-      m_softSettings{},
-      c_softSettingsFile{c_appDataFolder+"settings.conf"},
       m_gearDisplay{new Widget_gearDisplay()},
+      m_softSettings{ui,m_gearDisplay},
+      c_softSettingsFile{c_appDataFolder+"settings.conf"},
       m_controller{}
 {
     // UI Init
@@ -554,6 +562,7 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 
 void MainWindow::updateSoftSettings()
 {
+    //refresh settings from UI
     m_softSettings.currentDeviceName = ((ui->cb_selectDevice->currentText().isEmpty())?m_softSettings.currentDeviceName
                                                                                      :ui->cb_selectDevice->currentText());
     m_softSettings.gearDisplayed = ui->cb_showCurrentGear->isChecked();
@@ -578,6 +587,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
     settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
     settings.insert("openedTab",m_softSettings.openedTab);
+    settings.insert("bgHUDColor",tc::colorToString(m_softSettings.bgHUDColor()));
     settings.insert("joyAxisThreshold",m_softSettings.joyAxisThreshold());
 
     globObj.insert("settings",settings);
@@ -607,20 +617,18 @@ bool MainWindow::loadSoftSettings()
 
     auto docObj{docOpt.value().object()};
 
-    Settings out{};
-
     auto settings{docObj.value("settings").toObject()};
 //    out.launchOnComputerStartup = settings.value("launchOnComputerStartup").toBool(false);
-    out.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
-    out.currentDeviceName = settings.value("lastProfile").toString();
-    out.gearDisplayed = settings.value("displayGear").toBool();
-    out.setLowPerfMode(settings.value("lowPerfMode").toBool());
-    out.displayGearScreen = settings.value("displayGearScreen").toString();
-    out.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
-    out.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
-    out.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
-
-    m_softSettings = out;
+    m_softSettings.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
+    m_softSettings.currentDeviceName = settings.value("lastProfile").toString();
+    m_softSettings.gearDisplayed = settings.value("displayGear").toBool();
+    m_softSettings.setLowPerfMode(settings.value("lowPerfMode").toBool());
+    m_softSettings.displayGearScreen = settings.value("displayGearScreen").toString();
+    m_softSettings.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
+    m_softSettings.openedTab = settings.value("openedTab").toInt(/*Settings{}.openedTab*/);
+    auto bgHUDColorStr{settings.value("bgHUDColor").toString()};
+    m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr));
+    m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
 
     refreshFromSettings();
 
@@ -966,6 +974,30 @@ void MainWindow::on_action_about_triggered()
 void MainWindow::on_cb_lowPerfMode_currentIndexChanged(int arg1)
 {
     m_softSettings.setLowPerfMode(bool(arg1));
+    saveSoftSettings();
+}
+
+
+void MainWindow::on_pb_bgHUDColor_clicked()
+{
+//    m_softSettings.bgHUDColor
+
+    auto color{QColorDialog::getColor(m_softSettings.bgHUDColor(),this,tr("Select background HUD color"))};
+    if(!color.isValid())
+        return;
+    color.setAlpha(ui->sb_bgHUDColorAlpha->value());
+
+    qDebug() << color;
+    m_softSettings.setBgHUDColor(color);
+    saveSoftSettings();
+}
+
+
+void MainWindow::on_sb_bgHUDColorAlpha_valueChanged(int arg1)
+{
+    auto tmpColor{m_softSettings.bgHUDColor()};
+    tmpColor.setAlpha(arg1);
+    m_softSettings.setBgHUDColor(tmpColor);
     saveSoftSettings();
 }
 

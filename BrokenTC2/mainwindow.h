@@ -45,6 +45,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 struct Settings{
+    Ui::MainWindow *ui;
+    Widget_gearDisplay* m_gearDisplay;
+    Settings(Ui::MainWindow *i_ui,Widget_gearDisplay* gearDisplay):
+        ui{i_ui},m_gearDisplay{gearDisplay}
+    {}
+
+
     bool isInit{false};
 
 //    bool launchOnComputerStartup{false};
@@ -57,12 +64,18 @@ struct Settings{
 
     int openedTab{2};
 
+
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;
         qsdl::SDLEventHandler::setLowPerfMode(m_lowPerfModeEnabled);
     }
     bool lowPerfMode()const{
         return m_lowPerfModeEnabled;
+    }
+
+    void setBgHUDColor(QColor c);
+    QColor bgHUDColor()const{
+        return m_bgHUDColor;
     }
 
     void setJoyAxisThreshold(int16_t threshold){
@@ -76,6 +89,7 @@ struct Settings{
 private:
     bool m_lowPerfModeEnabled{false};
     int16_t m_joyAxisthreshold{};
+    QColor m_bgHUDColor{79, 79, 79, 120};
 };
 
 public:
@@ -107,6 +121,10 @@ private slots:
 
     void on_cb_lowPerfMode_currentIndexChanged(int arg1);
 
+    void on_pb_bgHUDColor_clicked();
+
+    void on_sb_bgHUDColorAlpha_valueChanged(int arg1);
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();
@@ -129,11 +147,12 @@ private:
     updt::UpdateManager m_updateManager;
     bool m_wasUpdated;
 
+    Widget_gearDisplay* m_gearDisplay;
+
     Settings m_softSettings;
     const QString c_appDataFolder;
     const QString c_softSettingsFile;
 
-    Widget_gearDisplay* m_gearDisplay;
 
     tc::GearHandler m_gearHandler;
     qsdl::GameController m_controller;

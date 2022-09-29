@@ -27,6 +27,22 @@
 #include <QDebug>
 #include "../global.hpp"
 
+namespace tc{
+QString getStyleSheet(const QColor& textColor,const QColor& backgroundColor){
+    QString baseCss{"color:%0;background-color:%1;border-radius:20px"};
+    return baseCss.arg(colorToString(textColor)).arg(colorToString(backgroundColor));
+}
+QColor stringToColor(const QString& input){
+    auto tmp{input.mid(5)};
+    tmp.remove(')');
+    auto colorList{tmp.split(',')};
+    if(colorList.size() != 4)
+        throw std::runtime_error{"Invalid color count for conversion (expected rgba)"};
+    return QColor{colorList[0].toInt(),colorList[1].toInt(),colorList[2].toInt(),colorList[3].toInt()};
+}
+}
+
+
 Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget_gearDisplay)
@@ -54,6 +70,12 @@ Widget_gearDisplay::~Widget_gearDisplay()
     delete ui;
 }
 
+void Widget_gearDisplay::setBgHUDColor(QColor bgColor){
+    m_backgroundColor = std::move(bgColor);
+    ui->label->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
+    ui->lbl_clutchMode->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
+}
+
 void Widget_gearDisplay::refreshGear(int value)
 {
     ui->label->setText(QString::number(value));
@@ -61,34 +83,23 @@ void Widget_gearDisplay::refreshGear(int value)
 
 void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
 {
-    QColor lblColor{};
-    if(newMode == tc::GearSwitchMode::CLUTCH)
-    {
-        lblColor = m_clutchColor;
-    }
-    else
-    {
-        lblColor = m_seqColor;
-    }
-
-    ui->label->setStyleSheet(getStyleSheet(lblColor,m_backgroundColor));
+    auto newColor{colorFromMode(newMode)};
+    ui->label->setStyleSheet(tc::getStyleSheet(newColor,m_backgroundColor));
+    m_currentColor = newColor;
 }
 
 void Widget_gearDisplay::showGearModeChangeNotif(tc::GearSwitchMode newMode)
 {
-    QColor lblColor{};
     if(newMode == tc::GearSwitchMode::CLUTCH)
     {
-        lblColor = m_clutchColor;
         ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
     }
     else
     {
-        lblColor = m_seqColor;
         ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
     }
 
-    ui->lbl_clutchMode->setStyleSheet(getStyleSheet(lblColor,m_backgroundColor));
+    ui->lbl_clutchMode->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
 
     ui->lbl_clutchMode->show();
 
@@ -121,9 +132,4 @@ void Widget_gearDisplay::showOnScreen(int screenId){
 
 void Widget_gearDisplay::setIndicatorVisible(bool visible){
     ui->label->setVisible(visible);
-}
-
-QString Widget_gearDisplay::getStyleSheet(const QColor& textColor,const QColor& backgroundColor){
-    QString baseCss{"color:%0;background-color:%1;border-radius:20px"};
-    return baseCss.arg(colorToString(textColor)).arg(colorToString(backgroundColor));
 }
