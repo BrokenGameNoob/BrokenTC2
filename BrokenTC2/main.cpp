@@ -22,8 +22,48 @@
 
 #include <QMessageBox>
 #include <QString>
+#include <QFile>
+#include <QDateTime>
 
 #include <QCommandLineParser>
+
+#include "Windows/WinUtils.hpp"
+
+namespace{
+
+void saveErrorMsg(const QString& err){
+    QDateTime now{QDateTime::currentDateTime()};
+    QFile f{QString{"CrashReport_%0.txt"}.arg(now.toString())};
+
+    if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        return;
+    }
+    QTextStream str{&f};
+
+    str << err;
+    f.close();
+}
+
+struct CanStart{
+    enum Code{
+        CAN_START,
+        ALREADY_RUNNING
+    };
+};
+
+CanStart::Code canStart(){
+    CanStart::Code rVal{CanStart::CAN_START};
+
+    if(win::isProcessRunning("BrokenTC2.exe"))
+    {
+        rVal = CanStart::ALREADY_RUNNING;
+    }
+
+    return rVal;
+}
+
+}
 
 
 #ifdef WIN32
@@ -34,6 +74,21 @@ int main(int argc,char* argv[])
 {
     int rCode{0};
     QApplication a(argc, argv);
+
+    auto canStart{::canStart()};
+    if(canStart != CanStart::CAN_START)
+    {
+        switch(canStart)
+        {
+        case CanStart::ALREADY_RUNNING:
+            QMessageBox::information(nullptr,QObject::tr("Info"),QObject::tr("BrokenTC2 is already running."));
+            break;
+        default:
+            break;
+        }
+
+        return 0;
+    }
 
     QCommandLineParser parser;
     parser.addOptions({
@@ -49,15 +104,15 @@ int main(int argc,char* argv[])
         w.show();
         rCode = a.exec();
     }
-    catch (const std::runtime_error& e)
+    catch (const std::exception& e)
     {
-        QMessageBox::critical(nullptr,"Fatal error",QString::fromStdString(e.what()));
+        saveErrorMsg(e.what());
 
         rCode = 1;
     }
     catch(...)
     {
-        QMessageBox::critical(nullptr,QObject::tr("Fatal error"),QObject::tr("Unknown error"));
+        saveErrorMsg("Unknown error");
     }
 
     return rCode;
