@@ -2,6 +2,7 @@
 
 # New Features
 - You can now easily configure the game (**you don't need to edit the configuration file manually anymore!**)
+- A splashscreen is now displayed at program startup
 
 
 <br/><br/>

@@ -24,6 +24,9 @@
 #include <QString>
 #include <QFile>
 #include <QDateTime>
+#include <QSplashScreen>
+#include <QPixmap>
+#include <QThread>
 
 #include <QCommandLineParser>
 
@@ -56,8 +59,10 @@ struct CanStart{
 
 void preStart(){
     auto pIdList{win::findProcessesId(PROCESS_NAME)};
+//    qDebug() << "Current pid:" << GetCurrentProcessId();
     for(const auto& e : pIdList)
     {
+        qDebug() << e;
         if(e != GetCurrentProcessId())
         {
             win::terminateProcess(e);
@@ -88,6 +93,9 @@ int main(int argc,char* argv[])
     int rCode{0};
     QApplication a(argc, argv);
 
+    QSplashScreen splash{QPixmap{":/img/img/spashScreen.png"}};
+    splash.show();
+
     ::preStart();
 
     auto canStart{::canStart()};
@@ -101,7 +109,7 @@ int main(int argc,char* argv[])
         default:
             break;
         }
-
+        splash.finish(nullptr);
         return 0;
     }
 
@@ -117,6 +125,7 @@ int main(int argc,char* argv[])
     {
         MainWindow w{parser.isSet("hide")};
         w.show();
+        splash.finish(&w);
         rCode = a.exec();
     }
     catch (const std::exception& e)

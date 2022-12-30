@@ -96,10 +96,6 @@ std::optional<DWORD> findProcessId(const QString& pName){
     return {};
 }
 
-int32_t processCount(const QString& pName){
-    return static_cast<int32_t>(findProcessesId(pName).size());
-}
-
 std::vector<DWORD> findProcessesId(const QString& pName){
     std::vector<DWORD> out{};
     out.reserve(100);
@@ -129,6 +125,38 @@ std::vector<DWORD> findProcessesId(const QString& pName){
     }
     out.shrink_to_fit();
     return out;
+}
+
+std::vector<DWORD> getAllProcesses(){
+    std::vector<DWORD> out{};
+    out.reserve(300);
+
+    DWORD aProcesses[1024], cbNeeded, cProcesses;
+    unsigned int i;
+
+    if ( !EnumProcesses( aProcesses, sizeof(aProcesses), &cbNeeded ) )
+    {
+        return {};
+    }
+
+    // Calculate how many process identifiers were returned.
+    cProcesses = cbNeeded / sizeof(DWORD);
+
+    // Print the name and process identifier for each process.
+    for ( i = 0; i < cProcesses; i++ )
+    {
+        auto id{aProcesses[i]};
+        if(id != 0)
+        {
+            out.emplace_back(id);
+        }
+    }
+    out.shrink_to_fit();
+    return out;
+}
+
+int32_t processCount(const QString& pName){
+    return static_cast<int32_t>(findProcessesId(pName).size());
 }
 
 } // namespace win
