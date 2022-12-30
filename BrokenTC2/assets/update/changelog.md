@@ -1,11 +1,10 @@
-# 2.2 is here!
+# 2.3 is here!
 
 # New Features
-- You can now chose the background color of the gear indicator and notification message
-- It is now possible to disable the notification
+- You can now easily configure the game (**you don't need to edit the configuration file manually anymore!**)
 
 
 <br/><br/>
 
 # Bugs patched
-- The gear mode switch notification is not triggered anymore when called unnoticeably by the program.
+- You won't be able to run two instances of the program anymore.
