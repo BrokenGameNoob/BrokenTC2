@@ -31,6 +31,8 @@
 
 namespace{
 
+static constexpr auto PROCESS_NAME{"BrokenTC2.exe"};
+
 void saveErrorMsg(const QString& err){
     QDateTime now{QDateTime::currentDateTime()};
     QFile f{QString{"CrashReport_%0.txt"}.arg(now.toString())};
@@ -52,10 +54,21 @@ struct CanStart{
     };
 };
 
+void preStart(){
+    auto pIdList{win::findProcessesId(PROCESS_NAME)};
+    for(const auto& e : pIdList)
+    {
+        if(e != GetCurrentProcessId())
+        {
+            win::terminateProcess(e);
+        }
+    }
+}
+
 CanStart::Code canStart(){
     CanStart::Code rVal{CanStart::CAN_START};
 
-    if(win::isProcessRunning("BrokenTC2.exe"))
+    if(win::processCount(PROCESS_NAME) > 1)
     {
         rVal = CanStart::ALREADY_RUNNING;
     }
@@ -74,6 +87,8 @@ int main(int argc,char* argv[])
 {
     int rCode{0};
     QApplication a(argc, argv);
+
+    ::preStart();
 
     auto canStart{::canStart()};
     if(canStart != CanStart::CAN_START)

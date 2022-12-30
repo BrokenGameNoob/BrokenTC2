@@ -5,6 +5,8 @@
 
 #include <windows.h>
 
+#include <vector>
+
 namespace win {
 
 std::string getProcessName(DWORD processID);
@@ -17,6 +19,9 @@ inline
 bool isProcessRunning(const QString& pName){
     return findProcessId(pName).has_value();
 }
+
+int32_t processCount(const QString& pName);
+std::vector<DWORD> findProcessesId(const QString& pName);
 
 } // namespace win
 
