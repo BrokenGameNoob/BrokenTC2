@@ -61,15 +61,15 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 find_package(SDL2 REQUIRED)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Xml REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml REQUIRED)
 
 
 if(WIN32)
     SET(PLATEFORM_DEPENDANT_SOURCES
             Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
             Windows/winextras.hpp Windows/winextras.cpp
-
+            Windows/WinUtils.hpp Windows/WinUtils.cpp
 )
 endif(WIN32)
 if(UNIX)
@@ -96,6 +96,8 @@ set(PROJECT_SOURCES
         TC/Profile.hpp TC/Profile.cpp
         TC/GearHandler.hpp TC/GearHandler.cpp
         TC/Widget_gearDisplay.hpp TC/Widget_gearDisplay.cpp TC/Widget_gearDisplay.ui
+        TC/Dialog_ConfigureGame.hpp TC/Dialog_ConfigureGame.cpp TC/Dialog_ConfigureGame.ui
+        TC/ConfigEditor.hpp TC/ConfigEditor.cpp
 
         QSDL/SDLGlobal.hpp QSDL/SDLGlobal.cpp
         QSDL/GameController.hpp QSDL/GameController.cpp
@@ -108,6 +110,7 @@ set(PROJECT_SOURCES
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
         Utils/JSONTools.hpp Utils/JSONTools.cpp
+        Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
 
         Debug/logConsole.cpp Debug/logConsole.hpp
@@ -144,6 +147,7 @@ endif()
 target_link_libraries(${EXE_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::Xml
     ${SDL2_LIBRARIES}
 )
 
