@@ -119,6 +119,8 @@ private slots:
 
     void on_sb_bgHUDColorAlpha_valueChanged(int arg1);
 
+    void on_pb_ezConf_clicked();
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();

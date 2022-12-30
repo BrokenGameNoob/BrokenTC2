@@ -34,6 +34,7 @@
 
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
+#include "TC/Dialog_ConfigureGame.hpp"
 
 #include "QSDL/SDLEventHandler.hpp"
 #include "QSDL/SDLGlobal.hpp"
@@ -1015,5 +1016,11 @@ void MainWindow::on_sb_bgHUDColorAlpha_valueChanged(int arg1)
     m_softSettings.setBgHUDColor(tmpColor,m_gearDisplay);
     saveSoftSettings();
     refreshFromSettings();
+}
+
+
+void MainWindow::on_pb_ezConf_clicked()
+{
+    Dialog_ConfigureGame::configure(this);
 }
 
