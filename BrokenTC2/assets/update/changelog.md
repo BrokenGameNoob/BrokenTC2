@@ -1,4 +1,4 @@
-# 2.3 is here!
+# 2.3 "Ez setup" is here!
 
 # New Features
 - You can now easily configure the game (**you don't need to edit the configuration file manually anymore!**)
