@@ -1,4 +1,4 @@
-# 2.3 "Ez setup" is here!
+# 2.4 "Ez setup" is here! (working)
 
 # New Features
 - You can now easily configure the game (**you don't need to edit the configuration file manually anymore!**)
@@ -9,3 +9,4 @@
 
 # Bugs patched
 - You won't be able to run two instances of the program anymore.
+- The easy setup feature is now working...

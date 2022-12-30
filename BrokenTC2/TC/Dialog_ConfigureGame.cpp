@@ -109,9 +109,15 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
 
         ui->stackedWidget->setCurrentIndex(2);
         break;}
-    case 2:
+    case 2:{
+        auto bindingList{tc::getBindingsFiles(tc::getConfigPath())};
+        for(const auto& f : bindingList)
+        {
+            qDebug() << __PRETTY_FUNCTION__ << " edit config file -> " << f;
+            tc::xml::editXmlConf(tc::getConfigPath()+"/"+f);
+        }
         this->done(QDialog::Accepted);
-        break;
+        break;}
     default:
         break;
     }
