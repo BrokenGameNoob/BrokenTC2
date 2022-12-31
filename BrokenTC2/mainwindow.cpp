@@ -552,13 +552,12 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 
         QMetaObject::invokeMethod(this, "on_action_about_triggered", Qt::ConnectionType::QueuedConnection);//call it after function terminated
 
-        Dialog_ConfigureGame::configure(this);
+        on_pb_ezConf_clicked();
     }
     if(m_wasUpdated)
     {
         QMetaObject::invokeMethod(this,[this](){
             updt::showChangelog(this);
-            on_pb_ezConf_clicked();
         },Qt::ConnectionType::QueuedConnection);
     }
 
