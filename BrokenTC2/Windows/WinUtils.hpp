@@ -9,6 +9,8 @@
 
 namespace win {
 
+//GetCurrentProcessId()
+
 std::string getProcessName(DWORD processID);
 
 bool terminateProcess(DWORD processID);
@@ -30,6 +32,10 @@ bool isProcessRunning(DWORD pId){
 }
 
 int32_t processCount(const QString& pName);
+
+int32_t getCoreCount();
+
+bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose = false);
 
 } // namespace win
 

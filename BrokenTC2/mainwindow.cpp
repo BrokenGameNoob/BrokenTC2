@@ -29,6 +29,7 @@
 
 #ifdef Q_OS_WIN
 #include "Windows/WinEventHandler.hpp"
+#include "Windows/WinUtils.hpp"
 #include <windows.h>
 #endif
 
@@ -472,6 +473,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.setBgHUDColor(Settings{}.bgHUDColor(),m_gearDisplay);
     loadSoftSettings();
 
+    win::setCoreCountAffinity(m_softSettings.preferredCoreCount,true);
+
     //try to read settings profile
     if(!QFileInfo::exists(getCurrentProfileFilePath()))
     {
@@ -598,6 +601,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("lowPerfMode",m_softSettings.lowPerfMode());
     settings.insert("exitOnCloseEvent",m_softSettings.exitOnCloseEvent);
     settings.insert("openedTab",m_softSettings.openedTab);
+    settings.insert("preferredCoreCount",m_softSettings.preferredCoreCount);
     settings.insert("bgHUDColor",tc::colorToString(m_softSettings.bgHUDColor()));
     settings.insert("joyAxisThreshold",m_softSettings.joyAxisThreshold());
 
@@ -628,6 +632,8 @@ bool MainWindow::loadSoftSettings()
 
     auto docObj{docOpt.value().object()};
 
+    Settings def{};
+
     auto settings{docObj.value("settings").toObject()};
 //    out.launchOnComputerStartup = settings.value("launchOnComputerStartup").toBool(false);
     m_softSettings.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
@@ -637,7 +643,8 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.setLowPerfMode(settings.value("lowPerfMode").toBool());
     m_softSettings.displayGearScreen = settings.value("displayGearScreen").toString();
     m_softSettings.exitOnCloseEvent = settings.value("exitOnCloseEvent").toBool(false);
-    m_softSettings.openedTab = settings.value("openedTab").toInt(Settings{}.openedTab);
+    m_softSettings.openedTab = settings.value("openedTab").toInt(def.openedTab);
+    m_softSettings.preferredCoreCount = settings.value("preferredCoreCount").toInt(def.preferredCoreCount);
     auto bgHUDColorStr{settings.value("bgHUDColor").toString()};
     m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr),m_gearDisplay);
     m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));

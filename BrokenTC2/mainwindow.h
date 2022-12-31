@@ -58,6 +58,7 @@ struct Settings{
 
     int openedTab{2};
 
+    int preferredCoreCount{2};
 
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;

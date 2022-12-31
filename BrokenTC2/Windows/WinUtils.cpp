@@ -7,6 +7,8 @@
 #include <optional>
 
 #include <QDebug>
+#include <bitset>
+#include <iostream>
 
 namespace{
 
@@ -21,6 +23,18 @@ std::string to_string(wchar_t const* wcstr){
     auto str = std::string(target_char_count, '\0');
     std::wcsrtombs(str.data(), &wcstr, str.size() + 1, &s);
     return str;
+}
+
+template<typename T>
+std::bitset<sizeof(T)*8> tob(const T& v){
+    std::bitset<sizeof(T)*8> rVal{v};
+    return rVal;
+}
+
+template<typename T>
+QString tobs(const T& v){
+    auto bin{tob(v)};
+    return QString::fromStdString(bin.to_string());
 }
 
 }
@@ -157,6 +171,62 @@ std::vector<DWORD> getAllProcesses(){
 
 int32_t processCount(const QString& pName){
     return static_cast<int32_t>(findProcessesId(pName).size());
+}
+
+int32_t getCoreCount(){
+    SYSTEM_INFO SystemInfo;
+    GetSystemInfo(&SystemInfo);
+    return static_cast<int32_t>(SystemInfo.dwNumberOfProcessors);
+}
+
+bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose){
+    if(coreCountToUse > getCoreCount() || coreCountToUse < 0)
+    {
+        QString err{QString{"%0 : Invalid coreCountToUse=%1, its value must be 0 < coreCountToUse > %2"}.arg(__PRETTY_FUNCTION__).arg(coreCountToUse).arg(getCoreCount())};
+        throw std::runtime_error{err.toStdString()};
+    }
+
+    HANDLE hProcess = GetCurrentProcess();
+    ULONG_PTR appAff;
+    ULONG_PTR sysAff;
+    if(!GetProcessAffinityMask(hProcess,&appAff,&sysAff))
+        throw std::runtime_error{std::string{__PRETTY_FUNCTION__}+std::string{" - Can't get processor core affinity"}};
+
+    ULONG_PTR aff{};
+    for(int32_t i{}; i < coreCountToUse; ++i){
+        aff = (aff<<1u) | 1u;
+//        qDebug() << "   " << aff;
+    }
+    ULONG_PTR curAff = aff & appAff;
+
+//    qDebug() << tobs(appAff) << "  " << appAff;
+//    qDebug() << tobs(sysAff) << "  " << sysAff;
+//    qDebug() << tobs(aff) << "  " << aff;
+//    qDebug() << tobs(curAff);
+
+    if (!curAff)
+    {
+        CloseHandle(hProcess);
+        QString err{QString{"%0 : Invalid processor core affinity mask <%1> | app : <%2> | system : <%3>"}.
+                    arg(__PRETTY_FUNCTION__,tobs(aff),tobs(appAff),tobs(sysAff))};
+        throw std::runtime_error(err.toStdString());
+    }
+
+    auto success{SetProcessAffinityMask(hProcess,curAff)};
+    CloseHandle(hProcess);
+
+    if(!success)
+    {
+        QString err{QString{"%0 : Can't set processor core affinity to <%1> cores"}.arg(__PRETTY_FUNCTION__).arg(coreCountToUse)};
+        throw std::runtime_error(err.toStdString());
+    }
+
+    if(verbose)
+    {
+        qDebug() << __PRETTY_FUNCTION__ << " : Successfully set core count affinity to" << coreCountToUse << "cores";
+    }
+
+    return true;
 }
 
 } // namespace win
