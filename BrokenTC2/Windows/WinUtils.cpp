@@ -179,18 +179,26 @@ int32_t getCoreCount(){
     return static_cast<int32_t>(SystemInfo.dwNumberOfProcessors);
 }
 
-bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose){
+bool setCoreCountAffinity(int32_t coreCountToUse, bool throwOnFail, bool verbose){
+    auto lambdaFail{[&](const QString& err)->bool{
+            if(throwOnFail)
+            {
+                throw std::runtime_error(err.toStdString());
+            }
+            return false;
+        }};
+
     if(coreCountToUse > getCoreCount() || coreCountToUse < 0)
     {
         QString err{QString{"%0 : Invalid coreCountToUse=%1, its value must be 0 < coreCountToUse > %2"}.arg(__PRETTY_FUNCTION__).arg(coreCountToUse).arg(getCoreCount())};
-        throw std::runtime_error{err.toStdString()};
+        return lambdaFail(err);
     }
 
     HANDLE hProcess = GetCurrentProcess();
     ULONG_PTR appAff;
     ULONG_PTR sysAff;
     if(!GetProcessAffinityMask(hProcess,&appAff,&sysAff))
-        throw std::runtime_error{std::string{__PRETTY_FUNCTION__}+std::string{" - Can't get processor core affinity"}};
+        return lambdaFail(QString{"%0 : Can't get processor core affinity"}.arg(__PRETTY_FUNCTION__));
 
     ULONG_PTR aff{};
     for(int32_t i{}; i < coreCountToUse; ++i){
@@ -207,9 +215,13 @@ bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose){
     if (!curAff)
     {
         CloseHandle(hProcess);
-        QString err{QString{"%0 : Invalid processor core affinity mask <%1> | app : <%2> | system : <%3>"}.
-                    arg(__PRETTY_FUNCTION__,tobs(aff),tobs(appAff),tobs(sysAff))};
-        throw std::runtime_error(err.toStdString());
+        if(throwOnFail)
+        {
+            QString err{QString{"%0 : Invalid processor core affinity mask <%1> | app : <%2> | system : <%3>"}.
+                        arg(__PRETTY_FUNCTION__,tobs(aff),tobs(appAff),tobs(sysAff))};
+            return lambdaFail(err);
+        }
+        return false;
     }
 
     auto success{SetProcessAffinityMask(hProcess,curAff)};
@@ -218,7 +230,7 @@ bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose){
     if(!success)
     {
         QString err{QString{"%0 : Can't set processor core affinity to <%1> cores"}.arg(__PRETTY_FUNCTION__).arg(coreCountToUse)};
-        throw std::runtime_error(err.toStdString());
+        return lambdaFail(err);
     }
 
     if(verbose)
@@ -227,6 +239,10 @@ bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose){
     }
 
     return true;
+}
+
+QString vkCodeToStr(int32_t keyCode){
+
 }
 
 } // namespace win

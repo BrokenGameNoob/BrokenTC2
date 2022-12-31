@@ -59,13 +59,15 @@ struct CanStart{
 
 void preStart(){
     auto pIdList{win::findProcessesId(PROCESS_NAME)};
-//    qDebug() << "Current pid:" << GetCurrentProcessId();
+    auto curPId{GetCurrentProcessId()};
+    qDebug() << "Current pid:" << curPId;
     for(const auto& e : pIdList)
     {
-        qDebug() << e;
-        if(e != GetCurrentProcessId())
+        if(e != curPId)
         {
-            win::terminateProcess(e);
+            qDebug() << "Should terminate " << e;
+            while(win::isProcessRunning(e))
+                win::terminateProcess(e);
         }
     }
 }

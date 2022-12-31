@@ -1,11 +1,11 @@
-# 2.5 is here! (Technical update)
+# 2.6 is here! (Technical update)
 
 # New Features
-- The program should now run on only 2 cores.
-- A bug report mey be created when the program crash in the installation folder.
+- *Not this time, sorry*
 
 
 <br/><br/>
 
 # Bugs patched
-- *Not this time, sorry*
+- The program will now be able to start if another instance is already running
+- The program won't crash anymore if it can't set the preferred core count to use

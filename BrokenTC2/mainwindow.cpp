@@ -473,7 +473,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.setBgHUDColor(Settings{}.bgHUDColor(),m_gearDisplay);
     loadSoftSettings();
 
-    win::setCoreCountAffinity(m_softSettings.preferredCoreCount,true);
+    if(!win::setCoreCountAffinity(m_softSettings.preferredCoreCount,false,true))
+    {
+        qCritical() << __PRETTY_FUNCTION__ << " Can't set cpu cores affinity";
+    }
 
     //try to read settings profile
     if(!QFileInfo::exists(getCurrentProfileFilePath()))

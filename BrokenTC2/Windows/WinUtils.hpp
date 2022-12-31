@@ -35,7 +35,9 @@ int32_t processCount(const QString& pName);
 
 int32_t getCoreCount();
 
-bool setCoreCountAffinity(int32_t coreCountToUse,bool verbose = false);
+bool setCoreCountAffinity(int32_t coreCountToUse,bool throwOnFail = false,bool verbose = false);
+
+QString vkCodeToStr(int32_t keyCode);
 
 } // namespace win
 
