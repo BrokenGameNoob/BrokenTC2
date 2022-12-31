@@ -1,12 +1,11 @@
-# 2.4 "Ez setup" is here! (working)
+# 2.5 is here! (Technical update)
 
 # New Features
-- You can now easily configure the game (**you don't need to edit the configuration file manually anymore!**)
-- A splashscreen is now displayed at program startup
+- The program should now run on only 2 cores.
+- A bug report mey be created when the program crash in the installation folder.
 
 
 <br/><br/>
 
 # Bugs patched
-- You won't be able to run two instances of the program anymore.
-- The easy setup feature is now working...
+- *Not this time, sorry*
