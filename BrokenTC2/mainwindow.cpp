@@ -786,7 +786,9 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
             if(newCode < 0)
                 lbl->setText("-");
             else
-                lbl->setText(QString::number(newCode));
+            {
+                lbl->setText(win::vkCodeToStr(newCode).toUpper());
+            }
         }
     };
 

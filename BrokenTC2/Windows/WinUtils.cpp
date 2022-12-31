@@ -242,7 +242,56 @@ bool setCoreCountAffinity(int32_t coreCountToUse, bool throwOnFail, bool verbose
 }
 
 QString vkCodeToStr(int32_t keyCode){
+    static bool firstCall{true};
+    static bool canProceed{false};
 
+    static HKL lpList[2];
+    static HKL kb;
+    static BYTE uKeyboardState[256];
+    WCHAR oBuffer[5] = {};
+
+    if(firstCall)
+    {
+        auto kbCount = GetKeyboardLayoutList(2, lpList);
+        if(kbCount != 0)
+        {
+            canProceed = true;
+        }
+        else
+        {
+            return {};
+        }
+        kb = lpList[0];
+
+        //Initialization of KeyBoardState
+        for (int i = 0; i < 256; ++i)
+        {
+            uKeyboardState[i] = 0;
+        }
+    }
+    if(!canProceed)
+        return {};
+
+    auto ScanCode = MapVirtualKeyExW(keyCode, MAPVK_VK_TO_VSC, kb);
+    auto VKCode2 = MapVirtualKeyExW(ScanCode, MAPVK_VSC_TO_VK, kb);
+    TCHAR ch1 = MapVirtualKeyExW(VKCode2, MAPVK_VK_TO_CHAR, kb);
+
+    TCHAR buffer[1024];
+    auto charCount = ToUnicodeEx(keyCode, ScanCode, uKeyboardState, buffer, 1024, 0, kb);
+    if(charCount < 1)
+    {
+        return {};
+    }
+    else if(charCount > 2)
+    {
+        QString out{};
+        for(int i{}; i < charCount;++i)
+        {
+            out.append(buffer[i]);
+        }
+        return out;
+    }
+    return QString{buffer[0]};
 }
 
 } // namespace win
