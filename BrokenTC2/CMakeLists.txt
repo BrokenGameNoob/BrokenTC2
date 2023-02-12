@@ -37,12 +37,14 @@ add_definitions("-DPROJECT_NAME=\"${CMAKE_PROJECT_NAME}\"")
 add_definitions("-DWPROJECT_NAME=L\"${CMAKE_PROJECT_NAME}\"")
 
 
+#SDL: Place the x86_64-w64-mingw32 included in the SDL2-devel-{version}-mingw package into C:/Libs/
 if(UNIX)
     set(SDL2_INCLUDE_DIR "/usr/include/" CACHE BOOL "" FORCE)
     set(SDL2_LIBRARY "/usr/local/lib/libSDL2.so")
     message(STATUS "FOUND LINUX")
 else()
     set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
+    set(SDL2_INCLUDE_DIR "C:\\Libs\\x86_64-w64-mingw32\\include\\" CACHE BOOL "" FORCE)
     message(STATUS "Found Windows")
 endif()
 

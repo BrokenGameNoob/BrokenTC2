@@ -17,3 +17,11 @@
 ## Select language
 - [Français](https://github.com/BrokenGameNoob/BrokenTC2/blob/master/Docs/README_fr.md)
 - [English - auto translated via google translate](https://github-com.translate.goog/BrokenGameNoob/BrokenTC2/blob/master/Docs/README_fr.md?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp)
+
+
+## Build
+
+### SDL
+
+Setup SDL by downloading the `SDL2-devel-{version}-mingw` package from [github/SDL](https://github.com/libsdl-org/SDL/releases)
+Then extract the folder `x86_64-w64-mingw32` into `C:/Libs/` so that the final include directory for the SDL is `C:/Libs/x86_64-w64-mingw32/include`
