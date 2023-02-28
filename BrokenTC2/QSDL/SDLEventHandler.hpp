@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <QVector>
+#include <atomic>
 
 #include <QDebug>
 
@@ -49,7 +50,7 @@ signals:
     void controllerUnplugged(int controllerId);
 
 private:
-    bool m_continue{true};
+    std::atomic_bool m_continue{true};
 };
 
 

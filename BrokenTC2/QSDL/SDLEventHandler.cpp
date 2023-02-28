@@ -167,7 +167,7 @@ SDLEventHandler::SDLEventHandler() : QObject(),m_controllerList()
 {
     if(!initSDL(SDL_INIT_JOYSTICK))
     {
-        throw std::runtime_error(__CURRENT_PLACE__.toStdString()+" : Cannot initialize SDL2_Joystick");
+        throw std::runtime_error(__CURRENT_PLACE_std_+" : Cannot initialize SDL2_Joystick");
     }
 
     auto worker{new SDLEventThread};

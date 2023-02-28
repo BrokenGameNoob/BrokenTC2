@@ -34,7 +34,7 @@ bool saveFromRc(const QString rcPath,const QString& filePath)
     QFile scriptRc{rcPath};
     if(!scriptRc.open(QIODevice::ReadOnly)){
 //        throw std::runtime_error(__CURRENT_PLACE__.toStdString()+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath).toStdString());
-        qCritical() << __CURRENT_PLACE__+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath);
+        qCritical() << __CURRENT_PLACE_q_+" :\nCannot open prog resource "+QString{"<%0>"}.arg(rcPath);
         return false;
     }
     auto scriptRcContent{scriptRc.readAll()};

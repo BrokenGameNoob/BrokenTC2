@@ -18,25 +18,20 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+#include <QStringLiteral>
 #include <QString>
+#include <string_view>
 #include <algorithm>
 
-
-#pragma clang diagnostic ignored "-Wstring-plus-int"
-#define __FILENAME_PRIVATE__ (__FILE__ + SOURCE_PATH_SIZE)
-
-#ifndef __LINE__
-#error "Line macro used for debugging purpose is not defined"
-#endif
-
-#ifndef __FILE__
-#error "File macro used for debugging purpose is not defined"
+#ifdef __PRETTY_FUNCTION__
+#define __CURRENT_PLACE__ __PRETTY_FUNCTION__
 #else
-#define _LINE_ QString::number(__LINE__)
+#define __CURRENT_PLACE__ __FUNCTION__
 #endif
 
+#define __CURRENT_PLACE_std_ std::string{__CURRENT_PLACE__}
+#define __CURRENT_PLACE_q_ QString{__CURRENT_PLACE__}
 
-#define __CURRENT_PLACE__ QString{"%0 : <%1> : l.%2"}.arg(__FILENAME_PRIVATE__,__func__,_LINE_)
 
 
 inline

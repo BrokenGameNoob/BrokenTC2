@@ -44,7 +44,7 @@ bool save(const QJsonDocument& doc,const QString& fileName)
     QFile f(fileName);
     if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate)){
         if constexpr(throwErrorOnFileFail)
-            throw std::runtime_error{__CURRENT_PLACE__.toStdString()+" : Cannot open file (w) "+fileName.toStdString()};
+            throw std::runtime_error{__CURRENT_PLACE_std_+" : Cannot open file (w) "+fileName.toStdString()};
         else
             return false;
     }

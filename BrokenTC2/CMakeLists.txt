@@ -27,6 +27,12 @@ add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
 add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
 add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
 
+
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_compile_definitions(CMAKE_DEBUG_MODE)
+ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
+
+
 set(EXE_NAME "BrokenTC2")
 
 
@@ -35,6 +41,10 @@ project(BrokenTC2 VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_P
 add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
 add_definitions("-DPROJECT_NAME=\"${CMAKE_PROJECT_NAME}\"")
 add_definitions("-DWPROJECT_NAME=L\"${CMAKE_PROJECT_NAME}\"")
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
 #SDL: Place the x86_64-w64-mingw32 included in the SDL2-devel-{version}-mingw package into C:/Libs/
@@ -82,7 +92,10 @@ endif(UNIX)
 
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/iconResource.rc")
 
+add_subdirectory(Libs)
+
 set(PROJECT_SOURCES
+        LoggerHandler.hpp
         assets/resources.qrc
         Update/Update.hpp Update/Update.cpp
         Update/PostUpdate.hpp Update/PostUpdate.cpp
@@ -115,10 +128,10 @@ set(PROJECT_SOURCES
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
 
-        Debug/logConsole.cpp Debug/logConsole.hpp
-
         ${PLATEFORM_DEPENDANT_SOURCES}
 )
+
+add_compile_options(-Wall -Wextra -Wpedantic)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${EXE_NAME}

@@ -47,7 +47,7 @@ void showMarkdown(QWidget* parent,const QString& changelogMdFile)
     lay->addWidget(tb);
 
     auto buttonBox{new QDialogButtonBox(QDialogButtonBox::StandardButton::Ok,&dial)};
-    QObject::connect(buttonBox,&QDialogButtonBox::clicked,&dial,[&](auto bp){
+    QObject::connect(buttonBox,&QDialogButtonBox::clicked,&dial,[&](auto){
         dial.done(0);
     });
     lay->addWidget(buttonBox);

@@ -80,7 +80,7 @@ void setKey(int keyCode,QLabel* lblDisp,tc::ProfileSettings::Key& settingsKeyToC
     }
     else
     {
-        lblDisp->setText(QString::number(keyCode));
+        lblDisp->setText(win::vkCodeToStr(keyCode));
     }
     settingsKeyToChange = keyCode;//if key == -1, it will never be matched = Unbind
 }
@@ -203,9 +203,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
       m_updateManager{false,this},
       m_wasUpdated{updt::postUpdateFunction()},
-      c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
+      c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       c_softSettingsFile{c_appDataFolder+"settings.conf"},
       m_controller{}
 {
@@ -250,8 +250,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     qDebug() << "UPDATED ? " << m_wasUpdated;
 
-    ui->dockConsole->setVisible(false);
-    connect(ui->action_ShowDevconsole,&QAction::triggered,this,[&](bool){ui->dockConsole->setVisible(true);});
 
     connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
         constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2"};
@@ -450,7 +448,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     {
         if(!QDir::root().mkpath(c_appDataFolder))
         {
-            throw std::runtime_error{__CURRENT_PLACE__.toStdString() + " : Cannot create appData folder : <" + c_appDataFolder.toStdString() + ">"};
+            throw std::runtime_error{__CURRENT_PLACE_std_ + " : Cannot create appData folder : <" + c_appDataFolder.toStdString() + ">"};
         }
     }
 
@@ -514,7 +512,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_updateManager.checkUpdate();
 
 //    Dialog_getGameControllerButton::getButton(&m_controller,this);
-
 }
 
 MainWindow::~MainWindow()
@@ -619,11 +616,11 @@ bool MainWindow::loadSoftSettings()
     if(!docOpt)//if we could not read the settings file
     {
         if(QFileInfo::exists(c_softSettingsFile))//if the config file exist
-            throw std::runtime_error{__CURRENT_PLACE__.toStdString()+" : "+
+            throw std::runtime_error{__CURRENT_PLACE_std_+" : "+
                                      std::string{"Cannot read settings file "}+c_softSettingsFile.toStdString()};
         if(!saveSoftSettings())//if we fail to create a settings file
         {
-            throw std::runtime_error{__CURRENT_PLACE__.toStdString()+" : "+
+            throw std::runtime_error{__CURRENT_PLACE_std_+" : "+
                                      std::string{"Cannot create settings file "}+c_softSettingsFile.toStdString()};
         }
         else//if we saved new settings
@@ -830,10 +827,12 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
 
 void MainWindow::onControllerPluggedIn(int id)
 {
+    std::ignore = id;
     populateDevicesComboBox();
 }
 void MainWindow::onControllerUnplugged(int id)
 {
+    std::ignore = id;
     populateDevicesComboBox();
 }
 
@@ -957,7 +956,7 @@ void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
         {
             if(!loadProfile(deviceName))//and we can't load the profile corresponding to the device
             {
-                throw std::runtime_error{__CURRENT_PLACE__.toStdString() + " : Cannot load profile for <"+getProfileFilePath(deviceName).toStdString()+">"};
+                throw std::runtime_error{__CURRENT_PLACE_std_ + " : Cannot load profile for <"+getProfileFilePath(deviceName).toStdString()+">"};
                 return;
             }
         }

@@ -72,7 +72,7 @@ void GearHandler::setGear(int gear){
     if(m_settings.gearSwitchMode == GearSwitchMode::SEQUENTIAL)
     {
         throw std::runtime_error{
-            __CURRENT_PLACE__.toStdString() + " : You must not use setGear when in Sequential Mode!"
+            __CURRENT_PLACE_std_ + " : You must not use setGear when in Sequential Mode!"
         };
     }
 

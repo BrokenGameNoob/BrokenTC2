@@ -72,8 +72,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>579</width>
-              <height>584</height>
+              <width>713</width>
+              <height>492</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -504,8 +504,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>596</width>
-              <height>267</height>
+              <width>727</width>
+              <height>328</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -656,8 +656,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>579</width>
-              <height>535</height>
+              <width>713</width>
+              <height>451</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1018,8 +1018,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>579</width>
-              <height>597</height>
+              <width>713</width>
+              <height>514</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1570,26 +1570,6 @@ background color</string>
         </item>
        </layout>
       </widget>
-      <widget class="QDockWidget" name="dockConsole">
-       <widget class="QWidget" name="dockWidgetContents">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QGroupBox" name="groupBox">
-           <property name="title">
-            <string>GroupBox</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="debug::LogConsole" name="consoleLog">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
      </widget>
     </item>
     <item row="1" column="0" colspan="3">
@@ -1770,7 +1750,7 @@ background color</string>
      <x>0</x>
      <y>0</y>
      <width>773</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">
@@ -1781,7 +1761,6 @@ background color</string>
      <property name="title">
       <string>Advanced</string>
      </property>
-     <addaction name="action_ShowDevconsole"/>
     </widget>
     <addaction name="menuAdvanced"/>
     <addaction name="separator"/>
@@ -1793,17 +1772,6 @@ background color</string>
    <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_ShowDevconsole">
-   <property name="text">
-    <string>Show Dev console</string>
-   </property>
-   <property name="toolTip">
-    <string>Display developper console</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+D</string>
-   </property>
-  </action>
   <action name="action_about">
    <property name="text">
     <string>About</string>
@@ -1815,13 +1783,6 @@ background color</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>debug::LogConsole</class>
-   <extends>QTextBrowser</extends>
-   <header>Debug/logConsole.hpp</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="assets/resources.qrc"/>
  </resources>
