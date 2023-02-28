@@ -70,3 +70,5 @@ deployLog.txt
 *.exe
 *.update
 *.log
+
+*.private
