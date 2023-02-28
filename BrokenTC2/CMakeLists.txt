@@ -99,7 +99,6 @@ set(PROJECT_SOURCES
         assets/resources.qrc
         Update/Update.hpp Update/Update.cpp
         Update/PostUpdate.hpp Update/PostUpdate.cpp
-        Update/UpdateManager.hpp Update/UpdateManager.cpp Update/UpdateManager.ui
 
         main.cpp
         mainwindow.cpp
@@ -117,9 +116,6 @@ set(PROJECT_SOURCES
         QSDL/SDLGlobal.hpp QSDL/SDLGlobal.cpp
         QSDL/GameController.hpp QSDL/GameController.cpp
         QSDL/SDLEventHandler.hpp QSDL/SDLEventHandler.cpp
-
-#        Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
-#        Windows/winextras.hpp Windows/winextras.cpp
 
         Utils/Dialog_getKeyCode.hpp Utils/Dialog_getKeyCode.cpp Utils/Dialog_getKeyCode.ui
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
@@ -164,6 +160,7 @@ target_link_libraries(${EXE_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Xml
     ${SDL2_LIBRARIES}
+    libSimpleUpdater::libSimpleUpdater
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES

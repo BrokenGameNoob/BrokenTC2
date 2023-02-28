@@ -39,7 +39,7 @@ struct DownloadStatus{
 };
 
 //the "onFinished" callback tells whether everything was a success or not
-void downloadFileList(QWidget *parent, const QStringList& files, const QString &outputPath, bool showProgressBar = false, std::function<void(bool)> onFinished = [](bool success){});
+void downloadFileList(QWidget *parent, const QStringList& files, const QString &outputPath, bool showProgressBar = false, std::function<void(bool)> onFinished = [](bool success){std::ignore = success;});
 
 
 class APIRequest : public QObject

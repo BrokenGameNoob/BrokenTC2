@@ -201,7 +201,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
-      m_updateManager{false,this},
       m_wasUpdated{updt::postUpdateFunction()},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
@@ -494,24 +493,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
     updateSoftSettings();
 
-
-
     //UPDATES
-    connect(ui->action_checkUpdates,&QAction::triggered,&m_updateManager,&updt::UpdateManager::checkUpdate);
-
-    connect(&m_updateManager,&updt::UpdateManager::hiddenUpdateAvailable,this,[&](){
-        auto ans = QMessageBox::question(this,tr("Update available"),tr("A new update is available. Do you want to download it ?"));
-        if(ans == QMessageBox::Yes)
-        {
-            m_updateManager.exec();
-        }
-    });
-    connect(&m_updateManager,&updt::UpdateManager::hiddenNoUpdateAvailable,this,[&](){
-        ui->statusbar->showMessage(tr("No available update found"),10000);
-    });
-    m_updateManager.checkUpdate();
-
-//    Dialog_getGameControllerButton::getButton(&m_controller,this);
 }
 
 MainWindow::~MainWindow()

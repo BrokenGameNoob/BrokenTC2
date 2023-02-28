@@ -30,8 +30,6 @@
 #include "QSDL/GameController.hpp"
 #include "QSDL/SDLEventHandler.hpp"
 
-#include "Update/UpdateManager.hpp"
-
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -141,7 +139,6 @@ private:
     Ui::MainWindow *ui;
     QSystemTrayIcon m_trayIcon;
 
-    updt::UpdateManager m_updateManager;
     bool m_wasUpdated;
 
     Widget_gearDisplay* m_gearDisplay;
