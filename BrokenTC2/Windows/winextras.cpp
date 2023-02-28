@@ -42,7 +42,7 @@ typedef DWORD(WINAPI *MYPROC)(HANDLE, DWORD, LPTSTR, PDWORD);
 // Check if QueryFullProcessImageNameW function exists in kernel32.dll.
 // Function does not exist in Windows XP.
 static MYPROC pQueryFullProcessImageNameW =
-    (MYPROC)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "QueryFullProcessImageNameW");
+    reinterpret_cast<MYPROC>(GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "QueryFullProcessImageNameW"));
 
 /*static bool isWindowsVistaOrHigher()
 {
@@ -548,6 +548,7 @@ QString VirtualKeyCodeToString(UCHAR virtualKey)
         case VK_DIVIDE:
         case VK_NUMLOCK:
             scanCode |= KF_EXTENDED;
+            // fall through
         default:
             result = GetKeyNameTextA(scanCode << 16, szName, 128);
     }

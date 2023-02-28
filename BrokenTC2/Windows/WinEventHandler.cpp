@@ -59,6 +59,7 @@ LRESULT CALLBACK WindowsEventThread::LowLevelKeyboardProc(int nCode, WPARAM wPar
 WindowsEventThread::WindowsEventThread() : QObject()
 {
     HHOOK hhkLowLevelKybd = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsEventThread::LowLevelKeyboardProc, 0, 0);
+    std::ignore = hhkLowLevelKybd;
 }
 
 WindowsEventThread::~WindowsEventThread()

@@ -248,7 +248,6 @@ QString vkCodeToStr(int32_t keyCode){
     static HKL lpList[2];
     static HKL kb;
     static BYTE uKeyboardState[256];
-    WCHAR oBuffer[5] = {};
 
     if(firstCall)
     {
@@ -275,6 +274,7 @@ QString vkCodeToStr(int32_t keyCode){
     auto ScanCode = MapVirtualKeyExW(keyCode, MAPVK_VK_TO_VSC, kb);
     auto VKCode2 = MapVirtualKeyExW(ScanCode, MAPVK_VSC_TO_VK, kb);
     TCHAR ch1 = MapVirtualKeyExW(VKCode2, MAPVK_VK_TO_CHAR, kb);
+    std::ignore = ch1;
 
     TCHAR buffer[1024];
     auto charCount = ToUnicodeEx(keyCode, ScanCode, uKeyboardState, buffer, 1024, 0, kb);
