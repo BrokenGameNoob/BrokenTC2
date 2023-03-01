@@ -1,9 +1,17 @@
 #pragma once
 
 #include <functional>
+#include <source_location>
 
 #include "Signing.hpp"
 #include "Global.hpp"
+
+namespace {
+
+static bool acquireUpdatedAlreadyCalled{false};
+static std::string acquireUpdatedFirstCaller{};
+
+}
 
 namespace updt {
 
@@ -45,14 +53,35 @@ ShouldInstall shouldInstall(const Version& curVersion,const QString& updtPackage
  * \param updatedTagName: file that should exists if the program was updated. It should be deleted if found.
  * \return true if the program was updated, false otherwise
  */
-template<typename... Args_t>
+
+#define MACRO_GET_CALLER_LAMBDA_TEMPLATE_TYPENAME auto GetCaller = []() {return std::string{std::source_location::current().function_name()};}
+
+template<typename... Args_t,MACRO_GET_CALLER_LAMBDA_TEMPLATE_TYPENAME>
 bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& updatedTagName,Args_t...args){
+    if(::acquireUpdatedAlreadyCalled)
+    {
+        qCritical() << __PRETTY_FUNCTION__ << ": This function must be called only once.";
+        throw std::runtime_error{
+            std::string{"Function "}+__PRETTY_FUNCTION__+
+                    std::string{" has already be called by "+::acquireUpdatedFirstCaller+
+                    ".\nIt must be called only once to prevent unknown behavior.\nLastly called by:\n"
+                    +GetCaller()}};
+    }
+    ::acquireUpdatedFirstCaller = GetCaller();
+    ::acquireUpdatedAlreadyCalled = true;
+
     if(!QFileInfo::exists(updatedTagName))
     {
         return false;
     }
 
     funcToCall(args...);
+
+    if(!QFile::remove(updatedTagName))
+    {
+        qWarning() << "Failed to remove the updated tag file at:" << updatedTagName;
+        qWarning() << "Even though it was found.";
+    }
 
     return true;
 }

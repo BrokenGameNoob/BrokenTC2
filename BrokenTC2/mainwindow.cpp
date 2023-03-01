@@ -19,6 +19,7 @@
 #include "./ui_mainwindow.h"
 
 #include "global.hpp"
+#include "Update/Update.hpp"
 #include "Update/PostUpdate.hpp"
 #include <QTimer>
 
@@ -201,7 +202,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
-      m_wasUpdated{updt::postUpdateFunction()},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -494,6 +494,13 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     updateSoftSettings();
 
     //UPDATES
+
+    std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
+        help->m_gearHandler.gearUp();
+        help->m_gearHandler.gearUp();
+        qDebug() << static_cast<int32_t>(help->m_gearHandler.gear());
+    };
+    m_wasUpdated = updt::acquireUpdated(toCallIfUpdated,lupdt::UPDATED_TAG_FILENAME,this);
 }
 
 MainWindow::~MainWindow()
@@ -536,6 +543,7 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 
         on_pb_ezConf_clicked();
     }
+
     if(m_wasUpdated)
     {
         QMetaObject::invokeMethod(this,[this](){

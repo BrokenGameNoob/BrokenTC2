@@ -17,9 +17,12 @@
 
 #pragma once
 
+
 #include <SimpleUpdater.hpp>
 
 namespace lupdt{//local update
+
+constexpr auto UPDATED_TAG_FILENAME{"UPDATED.TAG"};
 
 struct Info
 {

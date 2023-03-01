@@ -18,10 +18,12 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+#include <QDebug>
 #include <QStringLiteral>
 #include <QString>
 #include <string_view>
 #include <algorithm>
+#include <stdexcept>
 
 #ifdef __PRETTY_FUNCTION__
 #define __CURRENT_PLACE__ __PRETTY_FUNCTION__
@@ -32,7 +34,28 @@
 #define __CURRENT_PLACE_std_ std::string{__CURRENT_PLACE__}
 #define __CURRENT_PLACE_q_ QString{__CURRENT_PLACE__}
 
+//namespace formatting{
 
+//just keep it because I like it but should really not be used...
+
+//template<typename T,typename... Ts>
+//QString recursiveQStringFormat(const QString& out, const T& firstArg, const Ts&... rest) {
+//    if constexpr (sizeof...(rest) > 0) {
+//        // this line will only be instantiated if there are further
+//        // arguments. if rest... is empty, there will be no recursive call
+//        return recursiveQStringFormat(out.arg(firstArg),rest...);
+//    }
+//    return out.arg(firstArg);
+//}
+
+//}// namespace formatting
+
+class ContextualRuntimeErrorq : public std::runtime_error{
+public:
+    ContextualRuntimeErrorq(const QString context, const QString errMessage):
+        std::runtime_error{QString{"from: %0 -> %1"}.arg(context,errMessage).toStdString()}
+    {}
+};
 
 inline
 QString removeSpecialChars(QString str){

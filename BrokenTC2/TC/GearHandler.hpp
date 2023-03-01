@@ -62,6 +62,9 @@ public:
     void setGear(Gear gear){
         setGear(static_cast<int>(gear));
     }
+    const auto& gear()const{
+        return m_currentGear;
+    }
 
     void setGearNoAction(int gear){
         gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
