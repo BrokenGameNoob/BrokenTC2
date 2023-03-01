@@ -243,13 +243,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     }
 
 
-
-    qDebug() << c_appDataFolder;
-    qDebug() << c_softSettingsFile;
-
-    qDebug() << "UPDATED ? " << m_wasUpdated;
-
-
     connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
         constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2"};
         qDebug() << __CURRENT_PLACE__ << " : open " << helpLink;
@@ -501,6 +494,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         qDebug() << static_cast<int32_t>(help->m_gearHandler.gear());
     };
     m_wasUpdated = updt::acquireUpdated(toCallIfUpdated,lupdt::UPDATED_TAG_FILENAME,this);
+
+    qInfo() << "------------" << "Program state:";
+    qInfo() << "\tAppData folder (storing profiles):" << c_appDataFolder;
+    qInfo() << "\tCurrently loaded settings file:" << c_softSettingsFile;
+    qInfo() << "\tWas updated?" << m_wasUpdated;
 }
 
 MainWindow::~MainWindow()
