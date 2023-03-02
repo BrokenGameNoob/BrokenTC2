@@ -23,6 +23,8 @@
 #include "Update/PostUpdate.hpp"
 #include <QTimer>
 
+#include <SimpleUpdater.hpp>
+
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_About.hpp"
@@ -487,6 +489,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     updateSoftSettings();
 
     //UPDATES
+
+
 
     std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
         help->m_gearHandler.gearUp();
