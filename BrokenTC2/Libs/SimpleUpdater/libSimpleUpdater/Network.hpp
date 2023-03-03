@@ -21,9 +21,9 @@
 
 namespace updt {
 
-//ask online and get it in callback
-void getLatestReleaseInfo(std::function<void (std::optional<ReleaseInfo>)> callback,
-                          const QString& projectGithubRelease);
+////ask online and get it in callback
+//void getLatestReleaseInfo(std::function<void (std::optional<ReleaseInfo>)> callback,
+//                          const QString& projectGithubRelease);
 
 namespace net {
 
@@ -171,24 +171,24 @@ private:
 } // namespace net
 
 
-inline
-void getLatestReleaseInfo(std::function<void (std::optional<ReleaseInfo>)> callback,
-                          const QString& projectGithubRelease){
-    auto parent{new QObject{}};
-    net::getJsonFromAPI(parent,projectGithubRelease,[callback](std::optional<QJsonDocument> optDoc){
-        if(!optDoc)
-        {
-            qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve latest release info from network";
-            callback({});
-        }
-        else //we retrieved the Github API json containing everything
-        {
+//inline
+//void getLatestReleaseInfo(std::function<void (std::optional<ReleaseInfo>)> callback,
+//                          const QString& projectGithubRelease){
+//    auto parent{new QObject{}};
+//    net::getJsonFromAPI(parent,projectGithubRelease,[callback](std::optional<QJsonDocument> optDoc){
+//        if(!optDoc)
+//        {
+//            qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve latest release info from network";
+//            callback({});
+//        }
+//        else //we retrieved the Github API json containing everything
+//        {
 
-            callback(getLatestReleaseInfo(optDoc.value()));
-//            getLatestReleaseUpdateFile(optDoc.value());
-        }
-    });
-};
+//            callback(getLatestReleaseInfo(optDoc.value()));
+////            getLatestReleaseUpdateFile(optDoc.value());
+//        }
+//    });
+//};
 
 
 } // namespace updt

@@ -490,7 +490,17 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     //UPDATES
 
-
+    std::function<void(std::optional<updt::ReleaseInfo>,int)> callback2{[=](std::optional<updt::ReleaseInfo> releaseInfoOpt,int){
+            if(!releaseInfoOpt)
+            {
+                return;
+            }
+            const auto& releaseInfo{releaseInfoOpt.value()};
+            qDebug() << "Github:";
+            qDebug() << releaseInfo.assetsURLs;
+            qDebug() << releaseInfo.versionAvailable;
+        }};
+    updt::getLatestReleaseInfo(QString{PROJECT_GITHUB_RELEASE},callback2,10);
 
     std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
         help->m_gearHandler.gearUp();

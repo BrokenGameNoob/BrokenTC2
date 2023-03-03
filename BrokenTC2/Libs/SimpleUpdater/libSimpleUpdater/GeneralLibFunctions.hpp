@@ -3,6 +3,7 @@
 #include <functional>
 #include <source_location>
 
+#include "Network.hpp"
 #include "Signing.hpp"
 #include "Global.hpp"
 
@@ -15,6 +16,26 @@ static std::string acquireUpdatedFirstCaller{};
 
 namespace updt {
 
+//Retrieve latest update info online
+//template<typename... Args_t>
+//void getLatestReleaseInfo(const QString& projectGithubRelease,std::function<void(std::optional<updt::ReleaseInfo>,Args_t...)> funcToCall,Args_t...args);
+
+//Run a given function if the program was updated and reset the tag to notify that the update was taken into account
+//template<typename... Args_t>
+//bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& updatedTagName,Args_t...args);
+
+//Retrieve latest update info online
+inline
+ShouldInstall shouldInstall(const Version& curVersion,const QString& updtPackageToCheck,const QString& manifestPath, const QString& verifierPath);
+
+/*!
+ * \brief Test whether a package should be installed considering a signature from a manifest, a public key and a version
+ * \param curVersion
+ * \param updtPackageToCheck
+ * \param manifestPath
+ * \param verifierPath
+ * \return
+ */
 inline
 ShouldInstall shouldInstall(const Version& curVersion,const QString& updtPackageToCheck,const QString& manifestPath, const QString& verifierPath){
     auto manifest_opt{updt::getManifest(manifestPath)};
@@ -46,6 +67,9 @@ ShouldInstall shouldInstall(const Version& curVersion,const QString& updtPackage
     return {.code=ShouldInstall::VALID,.mustNotUpdate=false};
 }
 
+
+
+#define MACRO_GET_CALLER_LAMBDA_TEMPLATE_TYPENAME auto GetCaller = []() {return std::string{std::source_location::current().function_name()};}
 /*!
  * \brief Run a given function if the program was updated and reset the tag to notify that the update was taken into account
  * \param funcToCall: function to call. Note that its signature is void(...). All arguments must be given through args
@@ -53,9 +77,6 @@ ShouldInstall shouldInstall(const Version& curVersion,const QString& updtPackage
  * \param updatedTagName: file that should exists if the program was updated. It should be deleted if found.
  * \return true if the program was updated, false otherwise
  */
-
-#define MACRO_GET_CALLER_LAMBDA_TEMPLATE_TYPENAME auto GetCaller = []() {return std::string{std::source_location::current().function_name()};}
-
 template<typename... Args_t,MACRO_GET_CALLER_LAMBDA_TEMPLATE_TYPENAME>
 bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& updatedTagName,Args_t...args){
     if(::acquireUpdatedAlreadyCalled)
@@ -84,6 +105,29 @@ bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& upd
     }
 
     return true;
+}
+
+/*!
+ * \brief Retrieve latest update info online
+ * \param projectGithubRelease
+ * \param funcToCall
+ * \param args
+ */
+template<typename... Args_t>
+void getLatestReleaseInfo(const QString& projectGithubRelease,std::function<void(std::optional<updt::ReleaseInfo>,Args_t...)> funcToCall,Args_t...args){
+    auto parent{new QObject{}};
+    net::getJsonFromAPI(parent,projectGithubRelease,[=](std::optional<QJsonDocument> optDoc){
+        if(!optDoc)
+        {
+            qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve latest release info from network";
+            funcToCall({},args...);
+        }
+        else //we retrieved the Github API json containing everything
+        {
+
+            funcToCall(getLatestReleaseInfo(optDoc.value()),args...);
+        }
+    });
 }
 
 }//namespace updt
