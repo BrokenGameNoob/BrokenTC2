@@ -48,9 +48,9 @@ QString getGithubReleaseApiUrl(const Str_t0& userSlug, const Str_t1& projectSlug
 }
 
 
-inline //ask online and get it in callback. Get a "ReleaseInfo"
-void getLatestReleaseInfo(std::function<void(std::optional<ReleaseInfo>)> callback,
-                          const QString& projectGithubRelease);
+//inline //ask online and get it in callback. Get a "ReleaseInfo"
+//void getLatestReleaseInfo(std::function<void(std::optional<ReleaseInfo>)> callback,
+//                          const QString& projectGithubRelease);
 std::optional<ReleaseInfo> getLatestReleaseInfo(QJsonDocument doc);
 
 QStringList getLatestReleaseAssetsURLs(const QJsonDocument& doc);

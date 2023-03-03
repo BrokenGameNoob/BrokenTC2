@@ -1,7 +1,7 @@
 #ifndef UPDT_NET_NETWORK_HPP
 #define UPDT_NET_NETWORK_HPP
 
-#include "Global.hpp"
+#include "UpdtGlobal.hpp"
 #include <QString>
 #include <algorithm>
 

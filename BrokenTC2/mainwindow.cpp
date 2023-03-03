@@ -23,12 +23,12 @@
 #include "Update/PostUpdate.hpp"
 #include <QTimer>
 
-#include <SimpleUpdater.hpp>
 
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_About.hpp"
-#include "Utils/GUITools.hpp"
+
+#include <SimpleUpdater.hpp>
 
 #ifdef Q_OS_WIN
 #include "Windows/WinEventHandler.hpp"
@@ -204,6 +204,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
+      m_updateHandler{new updt::UpdateHandler(updt::Version{
+                                                  PROJECT_V_MAJOR,
+                                                  PROJECT_V_MINOR,
+                                                  PROJECT_V_PATCH},
+                                              PROJECT_GITHUB_RELEASE,true,this)},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -490,18 +495,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     //UPDATES
 
-    std::function<void(std::optional<updt::ReleaseInfo>,int)> callback2{[=](std::optional<updt::ReleaseInfo> releaseInfoOpt,int){
-            if(!releaseInfoOpt)
-            {
-                return;
-            }
-            const auto& releaseInfo{releaseInfoOpt.value()};
-            qDebug() << "Github:";
-            qDebug() << releaseInfo.assetsURLs;
-            qDebug() << releaseInfo.versionAvailable;
-        }};
-    updt::getLatestReleaseInfo(QString{PROJECT_GITHUB_RELEASE},callback2,10);
-
     std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
         help->m_gearHandler.gearUp();
         help->m_gearHandler.gearUp();
@@ -613,6 +606,7 @@ bool MainWindow::saveSoftSettings()
 
 bool MainWindow::loadSoftSettings()
 {
+    utils::json::read(c_softSettingsFile);
     auto docOpt{utils::json::read(c_softSettingsFile)};
 
     if(!docOpt)//if we could not read the settings file

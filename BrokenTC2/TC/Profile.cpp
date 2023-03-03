@@ -16,7 +16,6 @@
  */
 
 #include "Profile.hpp"
-#include "../global.hpp"
 
 #include <QString>
 

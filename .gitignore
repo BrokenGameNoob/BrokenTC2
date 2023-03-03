@@ -72,3 +72,5 @@ deployLog.txt
 *.log
 
 *.private
+
+AutoDoc/

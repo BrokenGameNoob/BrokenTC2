@@ -1,4 +1,4 @@
-#include "Global.hpp"
+#include "UpdtGlobal.hpp"
 
 #include <QJsonDocument>
 #include <QJsonArray>

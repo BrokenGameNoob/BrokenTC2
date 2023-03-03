@@ -1,7 +1,7 @@
 #pragma once
 
-#include "JSONTools.hpp"
-#include "Global.hpp"
+#include "UpdtJSONTools.hpp"
+#include "UpdtGlobal.hpp"
 
 #include <QStringList>
 
@@ -22,11 +22,11 @@ QDebug operator<<(QDebug stream,const Manifest& manifest){
                            << manifest.updatedTagFile << "}";
 }
 
+//Retrieve manifest from a dedicated json file
 std::optional<Manifest> getManifest(const QJsonDocument& jDoc);
 inline
 std::optional<Manifest> getManifest(const QString& filePath){
-    using namespace utils;
-    auto docOpt{json::read(filePath)};
+    auto docOpt{utils::json::read(filePath)};
     if(!docOpt)
     {
         return {};

@@ -21,6 +21,9 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 
+
+#include "Utils/JSONTools.hpp"
+
 #include "global.hpp"
 
 #include "TC/Profile.hpp"
@@ -29,6 +32,8 @@
 
 #include "QSDL/GameController.hpp"
 #include "QSDL/SDLEventHandler.hpp"
+
+#include "Update/UpdateHandler.hpp"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -140,6 +145,7 @@ private:
     QSystemTrayIcon m_trayIcon;
 
     bool m_wasUpdated;
+    updt::UpdateHandler* m_updateHandler;
 
     Widget_gearDisplay* m_gearDisplay;
 

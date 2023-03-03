@@ -28,7 +28,7 @@ namespace updt {
 inline
 void showChangelog(QWidget *parent)
 {
-    utils::gui::showMarkdown(parent,":/update/update/changelog.md");
+    ::utils::gui::showMarkdown(parent,":/update/update/changelog.md");
 }
 
 } // namespace updt

@@ -5,7 +5,7 @@
 
 #include "Network.hpp"
 #include "Signing.hpp"
-#include "Global.hpp"
+#include "UpdtGlobal.hpp"
 
 namespace {
 
@@ -114,7 +114,7 @@ bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& upd
  * \param args
  */
 template<typename... Args_t>
-void getLatestReleaseInfo(const QString& projectGithubRelease,std::function<void(std::optional<updt::ReleaseInfo>,Args_t...)> funcToCall,Args_t...args){
+void getLatestReleaseInfoRq(const QString& projectGithubRelease,std::function<void(std::optional<updt::ReleaseInfo>,Args_t...)> funcToCall,Args_t...args){
     auto parent{new QObject{}};
     net::getJsonFromAPI(parent,projectGithubRelease,[=](std::optional<QJsonDocument> optDoc){
         if(!optDoc)

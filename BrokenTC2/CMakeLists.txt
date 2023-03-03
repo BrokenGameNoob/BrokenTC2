@@ -17,7 +17,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
-set(VERSIONING_MAJOR 1)#incompatible update
+set(VERSIONING_MAJOR 0)#incompatible update
 set(VERSIONING_MINOR 0)#new features added
 set(VERSIONING_PATCH 0)#bug fixed / minor change
 
@@ -97,8 +97,10 @@ add_subdirectory(Libs)
 set(PROJECT_SOURCES
         LoggerHandler.hpp
         assets/resources.qrc
+        Utils/JSONTools.hpp Utils/JSONTools.cpp
         Update/Update.hpp Update/Update.cpp
         Update/PostUpdate.hpp Update/PostUpdate.cpp
+        Update/UpdateHandler.hpp Update/UpdateHandler.cpp Update/UpdateHandler.ui
 
         main.cpp
         mainwindow.cpp
@@ -120,7 +122,6 @@ set(PROJECT_SOURCES
         Utils/Dialog_getKeyCode.hpp Utils/Dialog_getKeyCode.cpp Utils/Dialog_getKeyCode.ui
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
-        Utils/JSONTools.hpp Utils/JSONTools.cpp
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
 
