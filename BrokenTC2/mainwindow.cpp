@@ -208,7 +208,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
                                                   PROJECT_V_MAJOR,
                                                   PROJECT_V_MINOR,
                                                   PROJECT_V_PATCH},
-                                              PROJECT_GITHUB_RELEASE,true,this)},
+                                              PROJECT_GITHUB_RELEASE,true,true,this)},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},

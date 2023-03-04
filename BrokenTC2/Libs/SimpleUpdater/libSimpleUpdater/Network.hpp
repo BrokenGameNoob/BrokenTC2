@@ -28,7 +28,7 @@ namespace updt {
 namespace net {
 
 //parent must not be null to avoid memory leaks
-void getJsonFromAPI(QObject* parent, const QString &url, std::function<void (std::optional<QJsonDocument>)> callback);
+void getJsonFromAPI(QObject* parent, const QString &url, std::function<void (std::optional<QJsonDocument>)> callback, bool deleteParent = true);
 
 
 

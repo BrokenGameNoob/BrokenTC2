@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QMessageBox>
 
+#include <QCloseEvent>
+
 #include <SimpleUpdater.hpp>
 
 namespace updt {
@@ -12,13 +14,18 @@ namespace Ui {
 class UpdateHandler;
 }
 
+//singleton
 class UpdateHandler : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,bool searchAvailableOnCreation = true,QWidget *parent = nullptr);
+    explicit UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
+                           bool searchAvailableOnCreation, bool showInstallPropositionOnNextOccasion,
+                           QWidget *parent);
     ~UpdateHandler();
+
+    void showInstallPropositionOnNextOccasion(){m_showInstallPropositionOnNextOccasion = true;}
 
 private slots:
     void on_pb_checkAvailable_clicked();
@@ -26,14 +33,7 @@ private slots:
     void on_pb_downloadAndInstall_clicked();
 
 private:
-    void doNotUpdate(const QString& errMsg = {}){
-        m_readyToUpdate = false;
-        m_latestReleaseInfoOpt = {};
-        if(!errMsg.isEmpty())
-        {
-            QMessageBox::warning(this,tr("Error when trying to update"),errMsg);
-        }
-    }
+    void doNotUpdate(const QString& errMsg = {});
     void setReadyToUpdate(bool state = true){if(!state)doNotUpdate();else m_readyToUpdate = true;}
 
     void checkAvailableOnline(bool installAfterward);
@@ -48,6 +48,7 @@ private:
 
     bool m_readyToUpdate{false};
     std::optional<ReleaseInfo> m_latestReleaseInfoOpt{};
+    bool m_showInstallPropositionOnNextOccasion;/*!< Propose the user to install the updated  */
 };
 
 

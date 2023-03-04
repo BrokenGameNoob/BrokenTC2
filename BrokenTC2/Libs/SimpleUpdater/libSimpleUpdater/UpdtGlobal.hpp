@@ -67,6 +67,10 @@ QDebug operator<<(QDebug dbg,const Version& v){
     dbg.nospace() << v.major << "." << v.minor << "." << v.patch;
     return dbg;
 }
+inline
+QString to_string(const Version& v){
+    return QString{"%0.%1.%2"}.arg(v.major).arg(v.minor).arg(v.patch);
+}
 
 inline
 QJsonObject toJson(const Version& v){

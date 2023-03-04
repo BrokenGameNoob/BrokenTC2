@@ -1,14 +1,16 @@
 #include "UpdateHandler.hpp"
-#include "Utils/JSONTools.hpp"
 #include "ui_UpdateHandler.h"
 
 namespace updt {
 
-UpdateHandler::UpdateHandler(Version progRunningVersion, QString githubReleaseApiAddress, bool searchAvailableOnCreation, QWidget *parent) :
+UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
+                             bool searchAvailableOnCreation, bool showInstallPropositionOnNextOccasion,
+                             QWidget *parent) :
     QDialog(parent),
     ui(new Ui::UpdateHandler),
     m_runningVersion{std::move(progRunningVersion)},
-    m_githubReleaseApiAddress{std::move(githubReleaseApiAddress)}
+    m_githubReleaseApiAddress{std::move(githubReleaseApiAddress)},
+    m_showInstallPropositionOnNextOccasion{showInstallPropositionOnNextOccasion}
 {
     ui->setupUi(this);
 
@@ -16,9 +18,15 @@ UpdateHandler::UpdateHandler(Version progRunningVersion, QString githubReleaseAp
     {
         on_pb_checkAvailable_clicked();
     }
+
+    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
+    this->setModal(true);
+    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
+    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
 }
 
 UpdateHandler::~UpdateHandler(){
+    qWarning() << "DELETED UpdateHandler";
     delete ui;
 }
 
@@ -55,9 +63,18 @@ void UpdateHandler::on_pb_downloadAndInstall_clicked()
 
     net::getJsonFromAPI(this,manifestUrl,[this](std::optional<QJsonDocument> docOpt){
         this->onManifestRetrieved(std::move(docOpt));
-    });
+    },false);
 }
 
+
+void UpdateHandler::doNotUpdate(const QString& errMsg){
+    m_readyToUpdate = false;
+    m_latestReleaseInfoOpt = {};
+    if(!errMsg.isEmpty())
+    {
+        QMessageBox::warning(this,tr("Error when trying to update"),errMsg);
+    }
+}
 
 void UpdateHandler::checkAvailableOnline(bool installAfterward){
     std::function<void(std::optional<updt::ReleaseInfo>)> callback{[=,this](std::optional<updt::ReleaseInfo> releaseInfoOpt){
@@ -75,10 +92,32 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
         return;
     }
     m_latestReleaseInfoOpt = std::move(releaseInfoOpt.value());
-    const auto& releaseInfo{m_latestReleaseInfoOpt};
+    const auto& releaseInfo{m_latestReleaseInfoOpt.value()};
     qDebug() << "Github:";
-    qDebug() << releaseInfo->assetsURLs;
-    qDebug() << releaseInfo->versionAvailable;
+    qDebug() << releaseInfo.assetsURLs;
+    qDebug() << releaseInfo.versionAvailable;
+
+    if(m_showInstallPropositionOnNextOccasion)
+    {
+        auto ans{QMessageBox::question(this,tr("Update installation"),
+                                       tr("A new update is available (%0). Would you like to install it?")
+                                       .arg(to_string(releaseInfo.versionAvailable)))};
+        if(ans == QMessageBox::Yes)
+        {
+            qInfo() << "User chose to install the new version:" << releaseInfo.versionAvailable;
+            on_pb_downloadAndInstall_clicked();
+//            if(!this->isVisible())
+//            {
+//                this->show();
+//            }
+        }
+        else
+        {
+            qInfo() << "User chose NOT to install the new version:" << releaseInfo.versionAvailable;
+        }
+        m_showInstallPropositionOnNextOccasion = false;
+        return;//give priority to user reply
+    }
 
     if(installAfterwards)
     {
