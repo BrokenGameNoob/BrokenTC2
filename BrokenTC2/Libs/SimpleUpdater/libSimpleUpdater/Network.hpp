@@ -28,7 +28,7 @@ namespace updt {
 namespace net {
 
 //parent must not be null to avoid memory leaks
-void getJsonFromAPI(QObject* parent, const QString &url, std::function<void (std::optional<QJsonDocument>)> callback, bool deleteParent = true);
+void getJsonFromAPI(const QString &url, std::function<void (std::optional<QJsonDocument>)> callback);
 
 
 
@@ -41,58 +41,6 @@ struct DownloadStatus{
 //the "onFinished" callback tells whether everything was a success or not
 void downloadFileList(QWidget *parent, const QStringList& files, const QString &outputPath, bool showProgressBar = false, std::function<void(bool)> onFinished = [](bool success){std::ignore = success;});
 
-
-class APIRequest : public QObject
-{
-Q_OBJECT
-
-public:
-    explicit APIRequest(QString url = {},QObject* parent = nullptr) : QObject(parent),m_errStr{},m_url{},m_doc{},m_jsonObject{}
-    {
-        sendRequest(std::move(url));
-    }
-
-    void sendRequest(QString url){
-        m_url = std::move(url);
-        if(m_url.isEmpty())
-            return;
-        getJsonFromAPI(this,m_url,[this](std::optional<QJsonDocument> doc){
-            this->onAPIRequestFinished(doc);
-        });
-    }
-
-    const QString& error(){return m_errStr;}
-    const QString& url(){return m_url;}
-    const QJsonDocument& doc(){return m_doc;}
-    const QJsonObject& obj(){return m_jsonObject;}
-
-signals:
-    void ready(const QJsonDocument&);
-
-private:
-    void onAPIRequestFinished(std::optional<QJsonDocument> docOpt){
-        if(!docOpt)
-        {
-            m_errStr = QString{"%0 : Cannot retrieve information from url <%1>"}.arg(__PRETTY_FUNCTION__,m_url);
-            m_doc = {};
-            m_jsonObject = {};
-        }
-        else
-        {
-            m_errStr = {};
-            m_doc = docOpt.value();
-            m_jsonObject = m_doc.object();
-        }
-        emit ready(m_doc);
-    }
-
-
-private:
-    QString m_errStr;
-    QString m_url;
-    QJsonDocument m_doc;
-    QJsonObject m_jsonObject;
-};
 
 class DownloadRequest : public QObject
 {

@@ -115,8 +115,7 @@ bool acquireUpdated(std::function<void(Args_t...)> funcToCall,const QString& upd
  */
 template<typename... Args_t>
 void getLatestReleaseInfoRq(const QString& projectGithubRelease,std::function<void(std::optional<updt::ReleaseInfo>,Args_t...)> funcToCall,Args_t...args){
-    auto parent{new QObject{}};
-    net::getJsonFromAPI(parent,projectGithubRelease,[=](std::optional<QJsonDocument> optDoc){
+    net::getJsonFromAPI(projectGithubRelease,[=](std::optional<QJsonDocument> optDoc){
         if(!optDoc)
         {
             qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve latest release info from network";

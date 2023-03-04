@@ -8,10 +8,11 @@
 
 namespace updt {
 namespace net {
-void getJsonFromAPI(QObject* parent,const QString& url,std::function<void(std::optional<QJsonDocument>)> callback, bool deleteParent)
+void getJsonFromAPI(const QString& url, std::function<void(std::optional<QJsonDocument>)> callback)
 {
+    auto parent{new QObject{}};
     auto netManager{new QNetworkAccessManager(parent)};
-    QObject::connect(netManager,&QNetworkAccessManager::finished,parent,[netManager,callback,url,parent,deleteParent](QNetworkReply* rep){
+    QObject::connect(netManager,&QNetworkAccessManager::finished,parent,[netManager,callback,url,parent](QNetworkReply* rep){
         if(rep->error() != QNetworkReply::NoError)
         {
             qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve informations from"<<url;
@@ -36,8 +37,7 @@ void getJsonFromAPI(QObject* parent,const QString& url,std::function<void(std::o
         }
         netManager->deleteLater();
         rep->deleteLater();
-        if(deleteParent)
-            parent->deleteLater();
+        parent->deleteLater();
     });
     netManager->get(QNetworkRequest{QUrl{url}});
 }

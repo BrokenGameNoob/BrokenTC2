@@ -61,9 +61,9 @@ void UpdateHandler::on_pb_downloadAndInstall_clicked()
 
     qInfo() << __PRETTY_FUNCTION__ << ": Manifest url:" << manifestUrl;
 
-    net::getJsonFromAPI(this,manifestUrl,[this](std::optional<QJsonDocument> docOpt){
+    net::getJsonFromAPI(manifestUrl,[this](std::optional<QJsonDocument> docOpt){
         this->onManifestRetrieved(std::move(docOpt));
-    },false);
+    });
 }
 
 
