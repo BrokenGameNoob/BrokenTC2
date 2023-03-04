@@ -90,6 +90,11 @@ void DownloadManager::slot_onDownloadProgress(){
 }
 
 void DownloadManager::slot_onAllDlCompleted(){
+    if(m_progress)
+    {
+//        m_progress->close();
+        slot_onDownloadProgress();
+    }
     emit allDlCompleted(m_successCount,failedDlsToVector());
 }
 
