@@ -19,6 +19,7 @@
 #include "./ui_mainwindow.h"
 
 #include "global.hpp"
+#include "Constants.hpp"
 #include "Update/Update.hpp"
 #include "Update/PostUpdate.hpp"
 #include <QTimer>
@@ -204,11 +205,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
-      m_updateHandler{new updt::UpdateHandler(updt::Version{
-                                                  PROJECT_V_MAJOR,
-                                                  PROJECT_V_MINOR,
-                                                  PROJECT_V_PATCH},
-                                              PROJECT_GITHUB_RELEASE,true,true,this)},
+      m_updateHandler{new updt::UpdateHandler(consts::CURRENT_VERSION,consts::PROJECT_GITHUB_RELEASE,
+                                              consts::PUBLIC_VERIFIER_KEY_FILE,true,true,this)},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -513,8 +511,8 @@ MainWindow::~MainWindow()
     m_softSettings.openedTab = ui->tb_settings->currentIndex();
     saveSoftSettings();
 
+    m_gearDisplay->deleteLater();
     delete ui;
-    delete m_gearDisplay;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

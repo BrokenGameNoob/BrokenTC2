@@ -25,7 +25,7 @@ set(VERSIONING_PATCH 0)#bug fixed / minor change
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
 add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
 add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
-add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
+add_definitions("-DPROJECT_GITHUB_RELEASE_DEFINE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
 
 
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -108,6 +108,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
 
         global.hpp global.cpp
+        Constants.hpp
 
         TC/Profile.hpp TC/Profile.cpp
         TC/GearHandler.hpp TC/GearHandler.cpp

@@ -4,12 +4,13 @@
 namespace updt {
 
 UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
-                             bool searchAvailableOnCreation, bool showInstallPropositionOnNextOccasion,
-                             QWidget *parent) :
-    QDialog(parent),
+                             QString publicVerifierKeyFile, bool searchAvailableOnCreation,
+                             bool showInstallPropositionOnNextOccasion, QWidget *parent) :
+    QWidget(),
     ui(new Ui::UpdateHandler),
     m_runningVersion{std::move(progRunningVersion)},
     m_githubReleaseApiAddress{std::move(githubReleaseApiAddress)},
+    m_publicVerifierKeyFile{std::move(publicVerifierKeyFile)},
     m_showInstallPropositionOnNextOccasion{showInstallPropositionOnNextOccasion}
 {
     ui->setupUi(this);
@@ -19,15 +20,23 @@ UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApi
         on_pb_checkAvailable_clicked();
     }
 
-    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
-    this->setModal(true);
-    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
-    qDebug() << this->testAttribute(Qt::WA_DeleteOnClose);
+    if(parent)
+    {
+        connect(parent,&QObject::destroyed,this,[this](){
+            delete this;
+        });
+    }
 }
 
 UpdateHandler::~UpdateHandler(){
-    qWarning() << "DELETED UpdateHandler";
     delete ui;
+}
+
+
+void UpdateHandler::on_pb_close_clicked()
+{
+    this->close();
+
 }
 
 
@@ -38,10 +47,11 @@ void UpdateHandler::on_pb_checkAvailable_clicked(){
 
 void UpdateHandler::on_pb_downloadAndInstall_clicked()
 {
+    setState(States::kRetrievingManifest);
     if(!m_latestReleaseInfoOpt)
     {
         doNotUpdate(tr("Failed to retrieve update information online.\nRetrying..."));
-        on_pb_checkAvailable_clicked();
+        checkAvailableOnline(true);
         return;
     }
     QString manifestUrl{};
@@ -74,9 +84,37 @@ void UpdateHandler::doNotUpdate(const QString& errMsg){
     {
         QMessageBox::warning(this,tr("Error when trying to update"),errMsg);
     }
+    setState(States::kReset);
 }
 
+
+void UpdateHandler::setState(States::State newState){
+    if(newState == m_state)
+        return;
+
+    auto lambdaSetAllPBEnabled{[&](bool state){
+            ui->pb_checkAvailable->setEnabled(state);
+            ui->pb_downloadAndInstall->setEnabled(state);
+        }};
+
+    switch (newState) {
+    case States::kReset://error occured
+        lambdaSetAllPBEnabled(true);
+        break;
+    case States::kRetrievingManifest://downloading something that we can't cancel
+    case States::kRetrievingReleaseInfo:
+        lambdaSetAllPBEnabled(false);
+        break;
+    default:
+        qWarning() << "Unhandled UpdateHandler state:" << newState;
+        break;
+    }
+    m_state = newState;
+}
+
+
 void UpdateHandler::checkAvailableOnline(bool installAfterward){
+    setState(States::kRetrievingReleaseInfo);
     std::function<void(std::optional<updt::ReleaseInfo>)> callback{[=,this](std::optional<updt::ReleaseInfo> releaseInfoOpt){
             this->onLatestUpdateRetrieved(releaseInfoOpt,installAfterward);
         }};
@@ -106,10 +144,10 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
         {
             qInfo() << "User chose to install the new version:" << releaseInfo.versionAvailable;
             on_pb_downloadAndInstall_clicked();
-//            if(!this->isVisible())
-//            {
-//                this->show();
-//            }
+            if(!this->isVisible())
+            {
+                this->show();
+            }
         }
         else
         {
@@ -122,7 +160,11 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     if(installAfterwards)
     {
         on_pb_downloadAndInstall_clicked();
+        return;
     }
+
+    //if we are finished here
+    setState(States::kReset);
 }
 
 void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
@@ -154,6 +196,11 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
         qInfo() << "Can't install the update given the manifest file: reason: minimal version requirement is not met:";
         qInfo() << "Current version:" << m_runningVersion << " whereas minimum required is:" << minVersion;
     }
+
+
+    //download & install update
+
+    setState(States::kReset);
 }
 
 } // namespace updt
