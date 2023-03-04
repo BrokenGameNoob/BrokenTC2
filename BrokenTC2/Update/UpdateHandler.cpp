@@ -1,6 +1,10 @@
 #include "UpdateHandler.hpp"
 #include "ui_UpdateHandler.h"
 
+#include <QPixmap>
+
+#include <QTimer>
+
 namespace updt {
 
 UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
@@ -15,6 +19,10 @@ UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApi
 {
     ui->setupUi(this);
 
+    hideInfoMessage();
+
+    ui->lbl_runningVersion->setText(to_string(m_runningVersion));
+
     if(searchAvailableOnCreation)
     {
         on_pb_checkAvailable_clicked();
@@ -26,10 +34,54 @@ UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApi
             delete this;
         });
     }
+
+    ui->lbl_disp_infoPic->setPixmap(QPixmap{":/img/img/warning.png"});
+    ui->lbl_disp_infoPic->hide();
 }
 
 UpdateHandler::~UpdateHandler(){
     delete ui;
+}
+
+void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& message,int32_t timeout){
+    auto getColorStrA{[&](const QColor& in){
+            return in.name(QColor::HexArgb);
+        }};
+    auto getColorStr{[&](const QColor& in){
+            return in.name(QColor::HexRgb);
+        }};
+
+    auto setColor{[&](const QColor& bg,const QColor& txtColor){
+            ui->widget_infoBox->setStyleSheet(QString{"background-color: %0;"}.arg(getColorStrA(bg)));
+            ui->lbl_disp_infoBox->setStyleSheet(QString{"QLabel{color: %0;}"}.arg(getColorStr(txtColor)));
+        }};
+
+    if(!ui->widget_infoBox->isVisible())
+    {
+        ui->widget_infoBox->show();
+    }
+
+    switch (type) {
+    case InfoBoxMsgType::Type::kWarning:
+        setColor(InfoBoxMsgType::kWarningColor,InfoBoxMsgType::kWarningTextColor);
+        break;
+    case InfoBoxMsgType::Type::kUnknown:
+    default:
+        setColor(InfoBoxMsgType::kUnknownColor,InfoBoxMsgType::kUnknownTextColor);
+        qCritical() << "Unknown InfoBoxMsgType::Type:" << type;
+        break;
+    }
+    ui->lbl_infoBox->setText(message);
+
+    if(timeout > 0)
+    {
+        QTimer::singleShot(timeout,this,[this](){
+            this->hideInfoMessage();
+        });
+    }
+}
+void UpdateHandler::hideInfoMessage(){
+    ui->widget_infoBox->hide();
 }
 
 
@@ -89,6 +141,8 @@ void UpdateHandler::doNotUpdate(const QString& errMsg){
 
 
 void UpdateHandler::setState(States::State newState){
+    qDebug() << newState;
+
     if(newState == m_state)
         return;
 
@@ -100,15 +154,26 @@ void UpdateHandler::setState(States::State newState){
     switch (newState) {
     case States::kReset://error occured
         lambdaSetAllPBEnabled(true);
+        ui->pb_downloadAndInstall->setEnabled(false);
         break;
     case States::kRetrievingManifest://downloading something that we can't cancel
     case States::kRetrievingReleaseInfo:
         lambdaSetAllPBEnabled(false);
         break;
+    case States::kReleaseInfoRetrieved:
+        // fall through
+    case States::kManifestRetrieved:
+        lambdaSetAllPBEnabled(true);
+        break;
     default:
         qWarning() << "Unhandled UpdateHandler state:" << newState;
         break;
     }
+    if(newState != States::kReset)
+    {
+        hideInfoMessage();
+    }
+
     m_state = newState;
 }
 
@@ -131,9 +196,12 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     }
     m_latestReleaseInfoOpt = std::move(releaseInfoOpt.value());
     const auto& releaseInfo{m_latestReleaseInfoOpt.value()};
+    ui->lbl_distVersion->setText(to_string(releaseInfo.versionAvailable));
     qDebug() << "Github:";
     qDebug() << releaseInfo.assetsURLs;
     qDebug() << releaseInfo.versionAvailable;
+
+    setState(States::kReleaseInfoRetrieved);
 
     if(m_showInstallPropositionOnNextOccasion)
     {
@@ -164,7 +232,7 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     }
 
     //if we are finished here
-    setState(States::kReset);
+//    setState(States::kReset);
 }
 
 void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
@@ -190,17 +258,24 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
     }
 
     auto minVersion{manifestOpt.value().minVersionRequired};
+    minVersion = Version{3,10,2};
     if(minVersion > m_runningVersion) //if we can't install the update
     {
         doNotUpdate();
-        qInfo() << "Can't install the update given the manifest file: reason: minimal version requirement is not met:";
-        qInfo() << "Current version:" << m_runningVersion << " whereas minimum required is:" << minVersion;
+        qWarning() << "Can't install the update given the manifest file: reason: minimal version requirement is not met:";
+        qWarning() << "Current version:" << m_runningVersion << " whereas minimum required is:" << minVersion;
+//        QMessageBox::warning(this,tr("Could not update"),);
+        showInfoMessage(InfoBoxMsgType::kWarning,tr("Sorry, your running version is not suitable for an automatic update.\n"
+                                                    "(Min required running version is: %1)\n\n"
+                                                    "Please reinstall the software manually.").arg(to_string(minVersion)));
+        return;
     }
 
+    setState(States::kManifestRetrieved);
 
     //download & install update
 
-    setState(States::kReset);
+//    setState(States::kReset);
 }
 
 } // namespace updt

@@ -25,6 +25,8 @@ set(SOURCE_FILES
 
     Signing.hpp
     GeneralLibFunctions.hpp
+
+    libSimpleUpdaterAssets.qrc
 )
 
 # We declare the project as a static library and add all the source code files to it.

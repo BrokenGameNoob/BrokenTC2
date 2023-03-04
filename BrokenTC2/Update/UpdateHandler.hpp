@@ -22,9 +22,24 @@ public:
         enum State{
             kReset,
             kRetrievingReleaseInfo,
+            kReleaseInfoRetrieved,
             kRetrievingManifest,
+            kManifestRetrieved,
             kDownloading
         };
+    };
+
+    struct InfoBoxMsgType{
+        enum Type{
+            kUnknown,
+            kWarning,
+        };
+
+        static constexpr QColor kUnknownColor{255,255,255,255};
+        static constexpr QColor kUnknownTextColor{243,166,0};
+
+        static constexpr QColor kWarningColor{250,243,216};
+        static constexpr QColor kWarningTextColor{243,166,0};
     };
 
 public:
@@ -34,6 +49,9 @@ public:
     ~UpdateHandler();
 
     void showInstallPropositionOnNextOccasion(){m_showInstallPropositionOnNextOccasion = true;}
+
+    void showInfoMessage(InfoBoxMsgType::Type type,const QString& message,int32_t timeout = 0);
+    void hideInfoMessage();
 
 private slots:
     void on_pb_close_clicked();
