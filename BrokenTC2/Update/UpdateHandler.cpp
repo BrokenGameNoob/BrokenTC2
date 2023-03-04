@@ -65,6 +65,9 @@ void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& mes
     case InfoBoxMsgType::Type::kWarning:
         setColor(InfoBoxMsgType::kWarningColor,InfoBoxMsgType::kWarningTextColor);
         break;
+    case InfoBoxMsgType::Type::kOk:
+        setColor(InfoBoxMsgType::kOkColor,InfoBoxMsgType::kOkTextColor);
+        break;
     case InfoBoxMsgType::Type::kUnknown:
     default:
         setColor(InfoBoxMsgType::kUnknownColor,InfoBoxMsgType::kUnknownTextColor);
@@ -99,33 +102,7 @@ void UpdateHandler::on_pb_checkAvailable_clicked(){
 
 void UpdateHandler::on_pb_downloadAndInstall_clicked()
 {
-    setState(States::kRetrievingManifest);
-    if(!m_latestReleaseInfoOpt)
-    {
-        doNotUpdate(tr("Failed to retrieve update information online.\nRetrying..."));
-        checkAvailableOnline(true);
-        return;
-    }
-    QString manifestUrl{};
-    for(const auto& asset: m_latestReleaseInfoOpt->assetsURLs)
-    {
-        if(asset.contains("manifest.json"))
-        {
-            manifestUrl = asset;
-        }
-    }
-    if(manifestUrl.isEmpty())
-    {
-        doNotUpdate();
-        qCritical() << __PRETTY_FUNCTION__ << ": Could not retrieve manifest url from github";
-        return;
-    }
-
-    qInfo() << __PRETTY_FUNCTION__ << ": Manifest url:" << manifestUrl;
-
-    net::getJsonFromAPI(manifestUrl,[this](std::optional<QJsonDocument> docOpt){
-        this->onManifestRetrieved(std::move(docOpt));
-    });
+    downloadAndInstall(false);
 }
 
 
@@ -165,6 +142,10 @@ void UpdateHandler::setState(States::State newState){
     case States::kManifestRetrieved:
         lambdaSetAllPBEnabled(true);
         break;
+    case States::kDownloadingUpdatePackage:
+    case States::kUpdatePackageRetrieved:
+        lambdaSetAllPBEnabled(false);
+        break;
     default:
         qWarning() << "Unhandled UpdateHandler state:" << newState;
         break;
@@ -177,6 +158,36 @@ void UpdateHandler::setState(States::State newState){
     m_state = newState;
 }
 
+
+void UpdateHandler::downloadAndInstall(bool onlyRetrieveManifest){
+    setState(States::kRetrievingManifest);
+    if(!m_latestReleaseInfoOpt)
+    {
+        doNotUpdate(tr("Failed to retrieve update information online.\nRetrying..."));
+        checkAvailableOnline(true);
+        return;
+    }
+    QString manifestUrl{};
+    for(const auto& asset: m_latestReleaseInfoOpt->assetsURLs)
+    {
+        if(asset.contains("manifest.json"))
+        {
+            manifestUrl = asset;
+        }
+    }
+    if(manifestUrl.isEmpty())
+    {
+        doNotUpdate();
+        qCritical() << __PRETTY_FUNCTION__ << ": Could not retrieve manifest url from github";
+        return;
+    }
+
+    qInfo() << __PRETTY_FUNCTION__ << ": Manifest url:" << manifestUrl;
+
+    net::getJsonFromAPI(manifestUrl,[this,onlyRetrieveManifest](std::optional<QJsonDocument> docOpt){
+        this->onManifestRetrieved(std::move(docOpt),!onlyRetrieveManifest);
+    });
+}
 
 void UpdateHandler::checkAvailableOnline(bool installAfterward){
     setState(States::kRetrievingReleaseInfo);
@@ -211,7 +222,7 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
         if(ans == QMessageBox::Yes)
         {
             qInfo() << "User chose to install the new version:" << releaseInfo.versionAvailable;
-            on_pb_downloadAndInstall_clicked();
+            downloadAndInstall(false);
             if(!this->isVisible())
             {
                 this->show();
@@ -227,7 +238,7 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
 
     if(installAfterwards)
     {
-        on_pb_downloadAndInstall_clicked();
+        downloadAndInstall(false);
         return;
     }
 
@@ -235,7 +246,8 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
 //    setState(States::kReset);
 }
 
-void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
+void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool install){
+    //we must enter this function only when m_latestReleaseInfoOpt has a value
     if(!docOpt)
     {
         doNotUpdate();
@@ -258,7 +270,7 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
     }
 
     auto minVersion{manifestOpt.value().minVersionRequired};
-    minVersion = Version{3,10,2};
+//    minVersion = Version{3,10,2};
     if(minVersion > m_runningVersion) //if we can't install the update
     {
         doNotUpdate();
@@ -275,7 +287,59 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt){
 
     //download & install update
 
+    if(!install)
+    {
+        return;
+    }
+
+    if(!m_latestReleaseInfoOpt)
+    {
+        qCritical() << "Tried to download an archive package without having release information (m_latestReleaseInfoOpt doesn't hold a value)";
+    }
+
+    QString updatePackageLink{};
+    for(const auto& link : m_latestReleaseInfoOpt.value().assetsURLs)
+    {
+        if(link.contains(m_updatePackageName))
+            updatePackageLink = link;
+    }
+    if(updatePackageLink.isEmpty())
+    {
+        qCritical() << "Could not find update archive link";
+        showInfoMessage(InfoBoxMsgType::kWarning,tr("Sorry, we could not find the update package.\n"
+                                                    "Please retry or contact support"));
+        doNotUpdate();
+        return;
+    }
+
+    qInfo() << "Downloading update package at:" << updatePackageLink;
+
+    auto dlManager{new updt::net::DownloadManager({updatePackageLink},"tmpDownloads/",true,this)};
+    connect(dlManager,&updt::net::DownloadManager::allDlCompleted,this,[&,this](int32_t successCount,const QVector<updt::net::FailedDownload>& fails){
+        qDebug() << "Success: " << successCount << "  Fails:" << fails.size();
+        for(const auto& e : fails)
+        {
+            qWarning().nospace() << "Failed to dl " << e.url << " because of " << e.errMsg;
+        }
+        if(fails.size() != 0)
+        {
+            this->doNotUpdate();
+            this->showInfoMessage(InfoBoxMsgType::kWarning,tr("Failed to download the update package.\n"
+                                                              "Retry or contact support"));
+            return;
+        }
+
+        this->setState(States::kUpdatePackageRetrieved);
+        this->showInfoMessage(InfoBoxMsgType::kOk,tr("Successfully downloaded the update package.\n"
+                                                     "Starting installation..."));
+    });
+    dlManager->startAllDownloads();
+
 //    setState(States::kReset);
+}
+
+void UpdateHandler::onUpdatePackageRetrieved(){
+
 }
 
 } // namespace updt

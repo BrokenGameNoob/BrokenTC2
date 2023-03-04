@@ -25,7 +25,8 @@ public:
             kReleaseInfoRetrieved,
             kRetrievingManifest,
             kManifestRetrieved,
-            kDownloading
+            kDownloadingUpdatePackage,
+            kUpdatePackageRetrieved,
         };
     };
 
@@ -33,6 +34,7 @@ public:
         enum Type{
             kUnknown,
             kWarning,
+            kOk
         };
 
         static constexpr QColor kUnknownColor{255,255,255,255};
@@ -40,6 +42,9 @@ public:
 
         static constexpr QColor kWarningColor{250,243,216};
         static constexpr QColor kWarningTextColor{243,166,0};
+
+        static constexpr QColor kOkColor{216,241,227};
+        static constexpr QColor kOkTextColor{68,184,111};
     };
 
 public:
@@ -64,9 +69,11 @@ private:
 
     void setState(States::State newState);
 
+    void downloadAndInstall(bool onlyRetrieveManifest);
     void checkAvailableOnline(bool installAfterward);
     void onLatestUpdateRetrieved(std::optional<updt::ReleaseInfo> releaseInfoOpt, bool installAfterwards);
-    void onManifestRetrieved(std::optional<QJsonDocument> docOpt);
+    void onManifestRetrieved(std::optional<QJsonDocument> docOpt, bool install);
+    void onUpdatePackageRetrieved();
 
 private:
     Ui::UpdateHandler *ui;
@@ -77,6 +84,8 @@ private:
     const Version m_runningVersion;
     const QString m_githubReleaseApiAddress;
     const QString m_publicVerifierKeyFile;
+    const QString m_updatePackageName{"Update.pck"};
+    const QString downloadDir{"tmpDownloads/"};
 
     bool m_readyToUpdate{false};
     std::optional<ReleaseInfo> m_latestReleaseInfoOpt{};
