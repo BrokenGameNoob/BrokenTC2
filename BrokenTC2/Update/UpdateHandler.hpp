@@ -1,5 +1,4 @@
-#ifndef UPDT_UPDATEHANDLER_HPP
-#define UPDT_UPDATEHANDLER_HPP
+#pragma once
 
 #include <QDialog>
 #include <QMessageBox>
@@ -51,6 +50,4 @@ private:
     bool m_showInstallPropositionOnNextOccasion;/*!< Propose the user to install the updated  */
 };
 
-
 } // namespace updt
-#endif // UPDT_UPDATEHANDLER_HPP
