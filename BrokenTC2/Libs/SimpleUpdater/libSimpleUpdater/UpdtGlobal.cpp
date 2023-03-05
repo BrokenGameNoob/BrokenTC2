@@ -23,6 +23,24 @@ bool operator>(const Version& r,const Version& d)
     return false;
 }
 
+bool operator>=(const Version& r,const Version& d)
+{
+    if(r.major >= d.major)
+        return true;
+    else
+        return false;
+
+    if(r.minor >= d.minor)
+        return true;
+    else
+        return false;
+
+
+    if(r.patch >= d.patch)
+        return true;
+    return false;
+}
+
 
 std::optional<ReleaseInfo> getLatestReleaseInfo(QJsonDocument doc){
 

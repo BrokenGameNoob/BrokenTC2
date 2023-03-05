@@ -62,6 +62,7 @@ std::optional<Version> getLatestReleaseVersion(const QJsonDocument& doc);
 
 
 bool operator>(const Version& v0,const Version& v1);
+bool operator>=(const Version& v0,const Version& v1);
 inline
 QDebug operator<<(QDebug dbg,const Version& v){
     dbg.nospace() << v.major << "." << v.minor << "." << v.patch;

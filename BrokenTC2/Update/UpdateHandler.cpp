@@ -226,7 +226,7 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     qInfo() << " --- Update status ---";
     qInfo().noquote().nospace() << "\tRunning version: " << m_kRunningVersion;
     qInfo().noquote().nospace() << "\tDistant version: " << releaseInfo.versionAvailable;
-    if(m_kRunningVersion > releaseInfo.versionAvailable)
+    if(m_kRunningVersion >= releaseInfo.versionAvailable)
     {
         qInfo().noquote().nospace() << "\tNo installation candidate found (distant version <= running version)";
         showInfoMessage(InfoBoxMsgType::kOk,tr("You are already running the latest available version"));
@@ -239,7 +239,7 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     }
 
 
-    qInfo().noquote().nospace() << "\tInstallation candidate found (distant version <= running version)";
+    qInfo().noquote().nospace() << "\tInstallation candidate found (distant version > running version)";
     showInfoMessage(InfoBoxMsgType::kWarning,tr("A newer version is available, you should install it"));
 
     setState(States::kReleaseInfoRetrieved);
