@@ -16,6 +16,54 @@
 
 #include <QDebug>
 
+namespace {
+
+bool createEmptyFile(const QString& f,bool overwrite = true){
+    QFileInfo fInfo{f};
+    if(fInfo.exists() && !overwrite)
+    {
+        return true;
+    }
+
+    if(!fInfo.absoluteDir().exists())
+    {
+        fInfo.absoluteDir().mkpath(".");
+    }
+
+    QFile file{fInfo.absoluteFilePath()};
+    if(!file.open(QIODevice::Truncate | QIODevice::WriteOnly))
+    {
+        qCritical() << "Could not create file:" << fInfo.absoluteFilePath();
+        return false;
+    }
+    file.close();
+    return true;
+}
+
+bool deleteFile(const QString& f){
+    if(f.isEmpty())
+        return true;
+    if(QFileInfo::exists(f))
+        return QFile::remove(f);
+    else
+        return true;
+}
+
+bool deleteUpdatedTag(const QString& path)
+{
+    auto success{deleteFile(path)};
+    if(!success)
+    {
+        qCritical() << __PRETTY_FUNCTION__ << ": Failed to remove the updated tag... Aïe aïe aïe...";
+    }
+    return success;
+}
+
+}//namespace
+
+
+
+
 inline
 std::optional<bool> signPackage(const ProgArgs& args,const QString& updatePck){
     if(args.signerKeyFile.isEmpty())//if empty key file, consider we did not ask for signature
@@ -192,6 +240,32 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         }
     }
 
+    QString updatedTagFilePath{};
+    if(!args.manifestFile.isEmpty())
+    {
+        auto manifestOpt{updt::getManifest(args.manifestFile)};
+        if(!manifestOpt)
+        {
+            qCritical() << "Invalid manifest file";
+            return false;
+        }
+        const auto& manifest{manifestOpt.value()};
+        updatedTagFilePath = manifest.updatedTagFile;
+    }
+
+    if(!updatedTagFilePath.isEmpty())
+    {
+        if(!createEmptyFile(updatedTagFilePath))
+        {
+            qCritical() << __PRETTY_FUNCTION__ << "Failed to create the update tag";
+            return false;
+        }
+    }
+    else
+    {
+        qWarning() << "Installing an update without updated tag file";
+    }
+
 
     auto updtPckDir{fInfo.absoluteDir()};
     auto baseFolder{(args.outputFolder.isEmpty())?updtPckDir.absolutePath():QDir{args.outputFolder}.absolutePath()};
@@ -199,7 +273,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
     updt::fs::Compressor c{};
     QProgressDialog extractionProgress{QObject::tr("Installation progress"),"",0,100};
     extractionProgress.setCancelButton(nullptr);
-    extractionProgress.connect(&c,&updt::fs::Compressor::progress,[&](int progress){
+    extractionProgress.connect(&c,&updt::fs::Compressor::progress,&extractionProgress,[&](int progress){
         extractionProgress.setValue(progress);
     });
     extractionProgress.show();
@@ -208,9 +282,12 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
     if(!success)
     {
         qCritical() << __PRETTY_FUNCTION__ << ": Failed to extract update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
+        deleteUpdatedTag(updatedTagFilePath);
         return false;
     }
     qInfo() << "Successfully extracted update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
+
+
 
     if(!args.postUpdateCmd.isEmpty())
     {
@@ -225,9 +302,14 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         {
             qCritical() << "Could not start the post update command (" << __PRETTY_FUNCTION__ << ")";
             qCritical() << args.postUpdateCmd;
+            deleteUpdatedTag(updatedTagFilePath);
             return false;
         }
         qInfo() << "Started post update with PID:" << pid;
+    }
+    else
+    {
+        qWarning() << __PRETTY_FUNCTION__ << ": No post-update command specified... Doesn't seem normal";
     }
 
     return true;
