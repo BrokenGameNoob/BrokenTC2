@@ -72,20 +72,38 @@
 
 namespace{
 
+QString getKeyOrButtonText(int keyCode,bool useVkCodeChar){
+    if(keyCode < 0)
+        return "- -";
+
+    QString text{};
+    if(useVkCodeChar)
+        text = win::vkCodeToStr(keyCode).toUpper();
+    else
+    {
+        if(keyCode >= 1000)//gamepad axis
+        {
+            qDebug() << "keyCode > 1000";
+            text = "Axis: ";
+            text += QString::number((keyCode-1000)/10);
+            text += " Dir: ";
+            text += QString::number(keyCode%10);
+        }
+        else
+        {
+            text = QString::number(keyCode);
+        }
+    }
+    return text;
+}
+
 void setKey(int keyCode,QLabel* lblDisp,tc::ProfileSettings::Key& settingsKeyToChange)
 {
     if(keyCode == 0)//means do nothing
     {
         return;
     }
-    else if(keyCode < 0)//means unbind key
-    {
-        lblDisp->setText("-");
-    }
-    else
-    {
-        lblDisp->setText(win::vkCodeToStr(keyCode));
-    }
+    lblDisp->setText(getKeyOrButtonText(keyCode,true));
     settingsKeyToChange = keyCode;//if key == -1, it will never be matched = Unbind
 }
 
@@ -96,14 +114,7 @@ void setButton(int button,QLabel* lblDisp,tc::ProfileSettings::Key& settingsBtnT
     {
         return;
     }
-    else if(button == -1)//means unbind key
-    {
-        lblDisp->setText("-");
-    }
-    else
-    {
-        lblDisp->setText(QString::number(button));
-    }
+    lblDisp->setText(getKeyOrButtonText(button,false));
     settingsBtnToChange = button;//if button == -1, it will never be matched = Unbind
 }
 
@@ -774,13 +785,8 @@ void MainWindow::populateDevicesComboBox()
 void MainWindow::refreshDisplayFromGearHandlerSettings()
 {
     auto lambdaUpdateText{
-        [&](QLabel* lbl,auto newCode){
-            if(newCode < 0)
-                lbl->setText("-");
-            else
-            {
-                lbl->setText(win::vkCodeToStr(newCode).toUpper());
-            }
+        [&](QLabel* lbl,auto newCode, bool useVkCodeChar = true){
+            lbl->setText(getKeyOrButtonText(newCode,useVkCodeChar));
         }
     };
 
@@ -799,18 +805,18 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
     ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
-    lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp);
-    lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown);
+    lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp,false);
+    lambdaUpdateText(ui->lbl_btn_GDown,m_gearHandler.settings().gearDown,false);
 
-    lambdaUpdateText(ui->lbl_btn_gearR,m_gearHandler.settings().setReverseGear);
-    lambdaUpdateText(ui->lbl_btn_gear1,m_gearHandler.settings().setFirstGear);
-    lambdaUpdateText(ui->lbl_btn_gear2,m_gearHandler.settings().setSecondGear);
-    lambdaUpdateText(ui->lbl_btn_gear3,m_gearHandler.settings().setThirdGear);
-    lambdaUpdateText(ui->lbl_btn_gear4,m_gearHandler.settings().setFourthGear);
-    lambdaUpdateText(ui->lbl_btn_gear5,m_gearHandler.settings().setFifthGear);
-    lambdaUpdateText(ui->lbl_btn_gear6,m_gearHandler.settings().setSixthGear);
+    lambdaUpdateText(ui->lbl_btn_gearR,m_gearHandler.settings().setReverseGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear1,m_gearHandler.settings().setFirstGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear2,m_gearHandler.settings().setSecondGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear3,m_gearHandler.settings().setThirdGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear4,m_gearHandler.settings().setFourthGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear5,m_gearHandler.settings().setFifthGear,false);
+    lambdaUpdateText(ui->lbl_btn_gear6,m_gearHandler.settings().setSixthGear,false);
 
-    lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
+    lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode,false);
 }
 
 //------------------------------------------------------------------
