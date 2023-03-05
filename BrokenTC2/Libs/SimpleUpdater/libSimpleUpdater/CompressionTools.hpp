@@ -111,9 +111,9 @@ public:
     bool uncompress(const QString& path, const QString& outFolderPath = ".");
 
 private:
-    void compressToStream(const QString& path, QDataStream &stream);
-    void compressFolder(const QString &root, const QString& path, QDataStream &stream);
-    void compressFile(const QString& path, QDataStream &stream);
+    bool compressToStream(const QString& path, QDataStream &stream);
+    bool compressFolder(const QString &root, const QString& path, QDataStream &stream);
+    bool compressFile(const QString& path, QDataStream &stream);
 
 signals:
     void progress(int percentage);

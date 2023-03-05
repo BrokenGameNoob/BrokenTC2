@@ -2,10 +2,13 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "BrokenTC2"
-#define MyAppVersion "0.X.X"
+#define MyAppVersion "1.X.X"
 #define MyAppPublisher "BrokenGameNoob"
 #define MyAppURL "https://github.com/BrokenGameNoob/BrokenTC2"
 #define MyAppExeName "BrokenTC2.exe"
+
+#define DEPLOY_OUTPUT_DIR "./DEPLOY_OUTPUT"
+#define RELEASE_DIR DEPLOY_OUTPUT_DIR+"/BrokenTC2_release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -21,10 +24,10 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=.\LICENSE
+LicenseFile=..\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
-OutputDir=.
+OutputDir={#DEPLOY_OUTPUT_DIR}
 OutputBaseFilename=BrokenTC2_setup_x64
 Compression=lzma
 SolidCompression=yes
@@ -38,8 +41,8 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: ".\BrokenTC2_release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\BrokenTC2_release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#RELEASE_DIR}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#RELEASE_DIR}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 

@@ -1,0 +1,12 @@
+{
+    "finalizeUpdateCommand": "",
+    "minVersionRequired": {
+        "major": 1,
+        "minor": 0,
+        "patch": 0
+    },
+    "updateFileList": [
+        "BrokenTC2.exe"
+    ],
+    "updatedTagFile": "UPDATED.TAG"
+}

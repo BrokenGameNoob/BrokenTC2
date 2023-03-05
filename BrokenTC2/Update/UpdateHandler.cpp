@@ -4,24 +4,27 @@
 #include <QPixmap>
 
 #include <QTimer>
+#include <QProcess>
 
 namespace updt {
 
 UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
                              QString publicVerifierKeyFile, bool searchAvailableOnCreation,
+                             QString postUpdateCmd,
                              bool showInstallPropositionOnNextOccasion, QWidget *parent) :
     QWidget(),
     ui(new Ui::UpdateHandler),
-    m_runningVersion{std::move(progRunningVersion)},
-    m_githubReleaseApiAddress{std::move(githubReleaseApiAddress)},
-    m_publicVerifierKeyFile{std::move(publicVerifierKeyFile)},
+    m_kRunningVersion{std::move(progRunningVersion)},
+    m_kGithubReleaseApiAddress{std::move(githubReleaseApiAddress)},
+    m_kPblicVerifierKeyFile{std::move(publicVerifierKeyFile)},
+    m_kPostUpdateCmd{std::move(postUpdateCmd)},
     m_showInstallPropositionOnNextOccasion{showInstallPropositionOnNextOccasion}
 {
     ui->setupUi(this);
 
     hideInfoMessage();
 
-    ui->lbl_runningVersion->setText(to_string(m_runningVersion));
+    ui->lbl_runningVersion->setText(to_string(m_kRunningVersion));
 
     if(searchAvailableOnCreation)
     {
@@ -68,6 +71,9 @@ void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& mes
     case InfoBoxMsgType::Type::kOk:
         setColor(InfoBoxMsgType::kOkColor,InfoBoxMsgType::kOkTextColor);
         break;
+    case InfoBoxMsgType::Type::kCritical:
+        setColor(InfoBoxMsgType::kCriticalColor,InfoBoxMsgType::kCriticalTextColor);
+        break;
     case InfoBoxMsgType::Type::kUnknown:
     default:
         setColor(InfoBoxMsgType::kUnknownColor,InfoBoxMsgType::kUnknownTextColor);
@@ -106,7 +112,7 @@ void UpdateHandler::on_pb_downloadAndInstall_clicked()
 }
 
 
-void UpdateHandler::doNotUpdate(const QString& errMsg){
+void UpdateHandler::resetState(const QString& errMsg){
     m_readyToUpdate = false;
     m_latestReleaseInfoOpt = {};
     if(!errMsg.isEmpty())
@@ -163,22 +169,24 @@ void UpdateHandler::downloadAndInstall(bool onlyRetrieveManifest){
     setState(States::kRetrievingManifest);
     if(!m_latestReleaseInfoOpt)
     {
-        doNotUpdate(tr("Failed to retrieve update information online.\nRetrying..."));
+        resetState();
+        showInfoMessage(InfoBoxMsgType::kWarning,tr("Failed to retrieve update information online.\nRetrying..."));
         checkAvailableOnline(true);
         return;
     }
     QString manifestUrl{};
     for(const auto& asset: m_latestReleaseInfoOpt->assetsURLs)
     {
-        if(asset.contains("manifest.json"))
+        if(asset.contains(m_kDistantManifestName))
         {
             manifestUrl = asset;
         }
     }
     if(manifestUrl.isEmpty())
     {
-        doNotUpdate();
+        resetState();
         qCritical() << __PRETTY_FUNCTION__ << ": Could not retrieve manifest url from github";
+        showInfoMessage(InfoBoxMsgType::kWarning,tr("Could not retrieve manifest url from github"));
         return;
     }
 
@@ -194,7 +202,7 @@ void UpdateHandler::checkAvailableOnline(bool installAfterward){
     std::function<void(std::optional<updt::ReleaseInfo>)> callback{[=,this](std::optional<updt::ReleaseInfo> releaseInfoOpt){
             this->onLatestUpdateRetrieved(releaseInfoOpt,installAfterward);
         }};
-    updt::getLatestReleaseInfoRq(m_githubReleaseApiAddress,callback);
+    updt::getLatestReleaseInfoRq(m_kGithubReleaseApiAddress,callback);
 }
 
 //NO dialog should be showed here
@@ -202,7 +210,7 @@ void UpdateHandler::checkAvailableOnline(bool installAfterward){
 void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseInfoOpt, bool installAfterwards){
     if(!releaseInfoOpt)
     {
-        doNotUpdate();
+        resetState();
         return;
     }
     m_latestReleaseInfoOpt = std::move(releaseInfoOpt.value());
@@ -250,32 +258,32 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
     //we must enter this function only when m_latestReleaseInfoOpt has a value
     if(!docOpt)
     {
-        doNotUpdate();
+        resetState();
         qCritical() << __PRETTY_FUNCTION__ << ": Could not retrieve manifest JSON document";
         return;
     }
     qInfo() << "Successfully retrieved manifest JSON document";
-    if(!utils::json::save(docOpt.value(),"manifest.json"))
+    if(!utils::json::save(docOpt.value(),m_kDistantManifestName))
     {
-        doNotUpdate();
+        resetState();
         qCritical() << "Could not save manifest file";
         return;
     }
     auto manifestOpt{getManifest(docOpt.value())};
     if(!manifestOpt)
     {
-        doNotUpdate();
+        resetState();
         qCritical() << "Could not read a valid manifest file from the retrieved manifest";
         return;
     }
 
     auto minVersion{manifestOpt.value().minVersionRequired};
 //    minVersion = Version{3,10,2};
-    if(minVersion > m_runningVersion) //if we can't install the update
+    if(minVersion > m_kRunningVersion) //if we can't install the update
     {
-        doNotUpdate();
+        resetState();
         qWarning() << "Can't install the update given the manifest file: reason: minimal version requirement is not met:";
-        qWarning() << "Current version:" << m_runningVersion << " whereas minimum required is:" << minVersion;
+        qWarning() << "Current version:" << m_kRunningVersion << " whereas minimum required is:" << minVersion;
 //        QMessageBox::warning(this,tr("Could not update"),);
         showInfoMessage(InfoBoxMsgType::kWarning,tr("Sorry, your running version is not suitable for an automatic update.\n"
                                                     "(Min required running version is: %1)\n\n"
@@ -300,7 +308,7 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
     QString updatePackageLink{};
     for(const auto& link : m_latestReleaseInfoOpt.value().assetsURLs)
     {
-        if(link.contains(m_updatePackageName))
+        if(link.contains(m_kUpdatePackageName))
             updatePackageLink = link;
     }
     if(updatePackageLink.isEmpty())
@@ -308,13 +316,13 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
         qCritical() << "Could not find update archive link";
         showInfoMessage(InfoBoxMsgType::kWarning,tr("Sorry, we could not find the update package.\n"
                                                     "Please retry or contact support"));
-        doNotUpdate();
+        resetState();
         return;
     }
 
     qInfo() << "Downloading update package at:" << updatePackageLink;
 
-    auto dlManager{new updt::net::DownloadManager({updatePackageLink},"tmpDownloads/",true,this)};
+    auto dlManager{new updt::net::DownloadManager({updatePackageLink},m_kDownloadDir,true,this)};
     connect(dlManager,&updt::net::DownloadManager::allDlCompleted,this,[&,this](int32_t successCount,const QVector<updt::net::FailedDownload>& fails){
         qDebug() << "Success: " << successCount << "  Fails:" << fails.size();
         for(const auto& e : fails)
@@ -323,7 +331,7 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
         }
         if(fails.size() != 0)
         {
-            this->doNotUpdate();
+            this->resetState();
             this->showInfoMessage(InfoBoxMsgType::kWarning,tr("Failed to download the update package.\n"
                                                               "Retry or contact support"));
             return;
@@ -332,14 +340,35 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
         this->setState(States::kUpdatePackageRetrieved);
         this->showInfoMessage(InfoBoxMsgType::kOk,tr("Successfully downloaded the update package.\n"
                                                      "Starting installation..."));
+        onUpdatePackageRetrieved();
     });
     dlManager->startAllDownloads();
-
-//    setState(States::kReset);
 }
 
 void UpdateHandler::onUpdatePackageRetrieved(){
+    constexpr auto kStartCommand{"SimpleUpdater.exe"};
+//#ifdef Q_OS_WINDOWS
+//    #define UPDATE_OPT_ARG "/c",
+//#else
+//    #define UPDATE_OPT_ARG
+//#endif
 
+    qint64 pid{};
+    // -i
+    auto success = QProcess::startDetached(kStartCommand,
+    {"-i",m_kDownloadDir+m_kUpdatePackageName,
+     "-v",m_kPblicVerifierKeyFile,
+     "-m",m_kDistantManifestName,
+     "-o","."},QApplication::applicationDirPath(),&pid);
+    if(pid == 0 || !success)
+    {
+        qCritical() << "Could not start the update process (" << __PRETTY_FUNCTION__ << ")";
+        showInfoMessage(InfoBoxMsgType::kCritical,tr("Cannot start the update process for an unknown reason"));
+        resetState();
+        return;
+    }
+    qInfo() << "Started update with PID:" << pid;
+    QApplication::exit(0);
 }
 
 } // namespace updt

@@ -34,7 +34,8 @@ public:
         enum Type{
             kUnknown,
             kWarning,
-            kOk
+            kOk,
+            kCritical
         };
 
         static constexpr QColor kUnknownColor{255,255,255,255};
@@ -45,11 +46,15 @@ public:
 
         static constexpr QColor kOkColor{216,241,227};
         static constexpr QColor kOkTextColor{68,184,111};
+
+        static constexpr QColor kCriticalColor{248,209,204};
+        static constexpr QColor kCriticalTextColor{182,24,37};
     };
 
 public:
     explicit UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
                            QString publicVerifierKeyFile, bool searchAvailableOnCreation,
+                           QString postUpdateCmd,
                            bool showInstallPropositionOnNextOccasion, QWidget *parent);
     ~UpdateHandler();
 
@@ -64,8 +69,8 @@ private slots:
     void on_pb_downloadAndInstall_clicked();
 
 private:
-    void doNotUpdate(const QString& errMsg = {});//use in case an error occurs. Reset everything
-    void setReadyToUpdate(bool state = true){if(!state)doNotUpdate();else m_readyToUpdate = true;}
+    void resetState(const QString& errMsg = {});//use in case an error occurs. Reset everything
+    void setReadyToUpdate(bool state = true){if(!state)resetState();else m_readyToUpdate = true;}
 
     void setState(States::State newState);
 
@@ -81,11 +86,13 @@ private:
     States::State m_state{States::kReset};
     bool m_askedToReset{false};
 
-    const Version m_runningVersion;
-    const QString m_githubReleaseApiAddress;
-    const QString m_publicVerifierKeyFile;
-    const QString m_updatePackageName{"Update.pck"};
-    const QString downloadDir{"tmpDownloads/"};
+    const Version m_kRunningVersion;
+    const QString m_kGithubReleaseApiAddress;
+    const QString m_kPblicVerifierKeyFile;
+    const QString m_kPostUpdateCmd;
+    const QString m_kUpdatePackageName{"Update.pck"};
+    const QString m_kDistantManifestName{"UpdateManifest.json"};
+    const QString m_kDownloadDir{"tmpDownloads/"};
 
     bool m_readyToUpdate{false};
     std::optional<ReleaseInfo> m_latestReleaseInfoOpt{};

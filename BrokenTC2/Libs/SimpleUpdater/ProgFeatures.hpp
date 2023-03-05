@@ -82,7 +82,22 @@ auto createPackage(const ProgArgs& args){
     qDebug() << "manifest in:" << manifestDir;
 
     updt::fs::Compressor compressor{INSTALLER_PACKAGE_EXTENSION};
-    compressor.paths() = manifest.updateFileList;
+
+    auto targetList{manifest.updateFileList};
+    if(!args.manifestReferenceFolder.isEmpty())
+    {
+        for(auto& f: targetList)
+        {
+            QFileInfo fInfo{f};
+            if(fInfo.isAbsolute())
+            {
+                continue;
+            }
+            f = QString{"%0/%1"}.arg(args.manifestReferenceFolder,f);
+        }
+    }
+
+    compressor.paths() = targetList;
     auto baseFolder{(args.outputFolder.isEmpty())?(manifestDir.absolutePath()):(QDir{args.outputFolder}.absolutePath())};
     auto outFile{QString{"%0/%1%2"}.arg(baseFolder,UPDATE_PACKAGE_FILENAME,INSTALLER_PACKAGE_EXTENSION)};
     auto trueOutput{compressor.compress(outFile,fInfo.absoluteDir().absolutePath())};
@@ -162,7 +177,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
             {
                 QMessageBox::critical(parent,QObject::tr("Error during installation"),
                                       QObject::tr("Failed to verify the update package.\n"
-                                                  "As it is a serious security ceoncern, the installation was cancelled\n\n"
+                                                  "As it is a serious security concern, the installation was cancelled\n\n"
                                                   "Please try to reinstall the software or reach support"));
             }
             qCritical() << "Failed to verify the update package.";

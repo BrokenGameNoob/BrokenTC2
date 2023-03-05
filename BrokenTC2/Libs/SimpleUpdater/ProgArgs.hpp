@@ -45,6 +45,7 @@ struct ProgArgs{
 
     //create archive
     QString manifestFile{}; //Giving this argument means creating a new update archive
+    QString manifestReferenceFolder{};
     QString signerKeyFile{};
 };
 
@@ -85,6 +86,9 @@ void addArgsOption(QCommandLineParser& parser){
                           {{"m", "manifest"},
                            QCoreApplication::translate("main", "Create an update archive based on the manifest file specified if the option \"-i\" is not specified. Use the manifest to install the update otherwise"),
                            QCoreApplication::translate("main", "manifestFile")},
+                          {{"r", "reference-folder"},
+                           QCoreApplication::translate("main", "Use this folder as the \".\" folder for the files in the manifest. Must be used with \"m\""),
+                           QCoreApplication::translate("main", "manifestReferenceFolder")},
                           {{"s", "signer-key-file"},
                            QCoreApplication::translate("main", "Sign an update package. Produces a \"manifestSigned.json\" containing the signature of the created update package. Requires the private signer key to be given as an argument."),
                            QCoreApplication::translate("main", "signerKeyFile")},
@@ -101,6 +105,7 @@ ProgArgs parseArgs(const QCommandLineParser& parser){
     auto inputUpdateArchiveSet{parser.isSet("input-archive")};
     auto outputFolderSet{parser.isSet("output-folder")};
     auto manifestFileSet{parser.isSet("manifest")};
+    auto manifestReferenceFolderSet{parser.isSet("manifestReferenceFolder")};
     auto signerKeyFileSet{parser.isSet("signer-key-file")};
     auto verifierKeyFileSet{parser.isSet("verifier-key-file")};
     out.quiet = parser.isSet("quiet");
@@ -119,6 +124,7 @@ ProgArgs parseArgs(const QCommandLineParser& parser){
     out.inputUpdateArchive = parser.value("input-archive");
     out.outputFolder = parser.value("output-folder");
     out.manifestFile = parser.value("manifest");
+    out.manifestReferenceFolder = parser.value("reference-folder");
     out.signerKeyFile = parser.value("signer-key-file");
     out.verifierKeyFile = parser.value("verifier-key-file");
 
@@ -140,6 +146,12 @@ ProgArgs parseArgs(const QCommandLineParser& parser){
         {
             qWarning() << "Please indicate a file storing the private signer key (missing argument)";
         }
+    }
+
+    if(manifestReferenceFolderSet && !manifestFileSet)
+    {
+        qCritical() << "You cannot use a manifest reference folder without specifying a manifest file";
+        out.progGoal = ProgArgs::INVALID;
     }
 
     if(signerKeyFileSet && !manifestFileSet)

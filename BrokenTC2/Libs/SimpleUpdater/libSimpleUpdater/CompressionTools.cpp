@@ -252,31 +252,30 @@ bool Compressor::uncompress(const QString& path, const QString& outFolderPath){
 
 // PRIVATE
 
-void Compressor::compressToStream(const QString& path, QDataStream &stream){
+bool Compressor::compressToStream(const QString& path, QDataStream &stream){
     QFileInfo inf{path};
     if(inf.isDir())
     {
         QString root{getParentFolder(path)};
-        compressFolder(root,path,stream);
+        return compressFolder(root,path,stream);
     }
     else if(inf.isFile())
     {
-        compressFile(path,stream);
+        return compressFile(path,stream);
+    }
+
+    if(!inf.exists())
+    {
+        qCritical() << __PRETTY_FUNCTION__ << ": File does not exists: " << inf.absoluteFilePath() << "   ->" << inf;
     }
     else
-    {
-        if(!inf.exists())
-        {
-            qCritical() << __PRETTY_FUNCTION__ << ": File does not exists: " << inf.absoluteFilePath() << "   ->" << inf;
-        }
-        else
-            qCritical() << __PRETTY_FUNCTION__ << ": Unknown input type: " << inf;
-    }
+        qCritical() << __PRETTY_FUNCTION__ << ": Unknown input type: " << inf;
+    return false;
 }
 
-void Compressor::compressFolder(const QString& root, const QString& path, QDataStream& stream){
+bool Compressor::compressFolder(const QString& root, const QString& path, QDataStream& stream){
     if(QFileInfo{path}.isFile())
-        return;
+        return false;
     QDirIterator it(path,{"*"}, QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
@@ -286,9 +285,10 @@ void Compressor::compressFolder(const QString& root, const QString& path, QDataS
         auto tmp{fs::compressFile(it.filePath(),fs::getFilePathFromRoot(root,it.filePath()))};
         stream << tmp;
     }
+    return true;
 }
 
-void Compressor::compressFile(const QString& path, QDataStream &stream){
+bool Compressor::compressFile(const QString& path, QDataStream &stream){
     auto root{getParentFolder(path)};
     qDebug() << "Will be extracted to:" << QFileInfo{path}.fileName();
     auto tmp{fs::compressFile(path,QFileInfo{path}.fileName())};
@@ -297,7 +297,9 @@ void Compressor::compressFile(const QString& path, QDataStream &stream){
     if(tmp.size() == 0)
     {
         qCritical() << "Could not add the file to datastream:" << path;
+        return false;
     }
+    return true;
 }
 
 } // namespace fs
