@@ -163,6 +163,7 @@ SDLEventHandler::SDLEventHandler() : QObject(),m_controllerList()
 {
     if(!initSDL(SDL_INIT_JOYSTICK))
     {
+        qCritical() << __CURRENT_PLACE_q_ << ": Cannot initialize SDL2_Joystick";
         throw std::runtime_error(__CURRENT_PLACE_std_+" : Cannot initialize SDL2_Joystick");
     }
 
@@ -226,6 +227,7 @@ void SDLEventHandler::onButtonUp(int controllerId,int button)
 
 void SDLEventHandler::registerController(GameController* g)
 {
+    qInfo() << __PRETTY_FUNCTION__ << "Registering new controller";
     connect(g,&GameController::unregisterFromEventHandler,instance(),&SDLEventHandler::unregisterController);
 
     if(instance()->m_controllerList.indexOf(g) == -1)
@@ -234,6 +236,7 @@ void SDLEventHandler::registerController(GameController* g)
 
 void SDLEventHandler::unregisterController(GameController* g)
 {
+    qInfo() << __PRETTY_FUNCTION__ << "Unregistering new controller";
     auto gIndex{instance()->m_controllerList.indexOf(g)};
 //    qDebug() << gIndex;
 //    qDebug() << g;

@@ -1,11 +1,15 @@
-# 2.6 is here! (Technical update)
+# 1.0.0 is here! (Update update (yeah... I know...))
 
 # New Features
-- *Not this time, sorry*
+- A brand new update system! (you will probably never notice it)
+    - Updates are now more secure
+    - Updates should be lighter and quicker
+    - Updates will now be able to pack more new features
+- Controller and keyboard keys are now displayed in a more friendly manner
 
 
 <br/><br/>
 
 # Bugs patched
-- The program will now be able to start if another instance is already running
-- The program won't crash anymore if it can't set the preferred core count to use
+- You can now start multiple instances of the program
+- The program is less likely to crash when spamming the controller keys
