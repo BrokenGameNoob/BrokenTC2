@@ -8,7 +8,7 @@
 ![Repo size](https://img.shields.io/github/repo-size/BrokenGameNoob/BrokenTC2?style=for-the-badge) &nbsp;&nbsp; 
 
 ![Latest release](https://img.shields.io/github/v/release/BrokenGameNoob/BrokenTC2?label=Latest%20version&style=for-the-badge) 
-![GitHub release downloads (latest by date and asset)](https://img.shields.io/github/downloads/BrokenGameNoob/BrokenTC2/latest/BrokenTC2_setup_x64.exe?label=Was%20downloaded&style=for-the-badge)
+<!-- ![GitHub release downloads (latest by date and asset)](https://img.shields.io/github/downloads/BrokenGameNoob/BrokenTC2/latest/BrokenTC2_setup_x64.exe?label=Was%20downloaded&style=for-the-badge) -->
 
 
 
