@@ -1,5 +1,4 @@
-#ifndef UTILS_JSONTOOLS_HPP
-#define UTILS_JSONTOOLS_HPP
+#pragma once
 
 #include <QString>
 #include <QStringList>
@@ -9,8 +8,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-namespace utils {
-
+namespace updt::utils {
 namespace json
 {
 
@@ -30,7 +28,4 @@ std::optional<QJsonDocument> read(const QString& fileName);
 QStringList strListFromJsonArray(const QJsonArray& arr,bool skipEmpty = true);
 
 }//namespace json
-
-} // namespace utils
-
-#endif // UTILS_JSONTOOLS_HPP
+} // namespace updt::utils

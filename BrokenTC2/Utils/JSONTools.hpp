@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILS_JSONTOOLS_HPP
-#define UTILS_JSONTOOLS_HPP
+#pragma once
 
 #include <QString>
 
@@ -42,5 +41,3 @@ std::optional<QJsonDocument> read(const QString& fileName);
 }//namespace json
 
 } // namespace utils
-
-#endif // UTILS_JSONTOOLS_HPP

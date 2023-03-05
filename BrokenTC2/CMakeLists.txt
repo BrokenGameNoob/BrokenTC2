@@ -17,15 +17,15 @@
 cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
-set(VERSIONING_MAJOR 0)#incompatible update
-set(VERSIONING_MINOR 2)#new features added
-set(VERSIONING_PATCH 6)#bug fixed / minor change
+set(VERSIONING_MAJOR 1)#incompatible update
+set(VERSIONING_MINOR 0)#new features added
+set(VERSIONING_PATCH 0)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
 add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
 add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
-add_definitions("-DPROJECT_GITHUB_RELEASE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
+add_definitions("-DPROJECT_GITHUB_RELEASE_DEFINE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
 
 
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -97,9 +97,10 @@ add_subdirectory(Libs)
 set(PROJECT_SOURCES
         LoggerHandler.hpp
         assets/resources.qrc
+        Utils/JSONTools.hpp Utils/JSONTools.cpp
         Update/Update.hpp Update/Update.cpp
         Update/PostUpdate.hpp Update/PostUpdate.cpp
-        Update/UpdateManager.hpp Update/UpdateManager.cpp Update/UpdateManager.ui
+        Update/UpdateHandler.hpp Update/UpdateHandler.cpp Update/UpdateHandler.ui
 
         main.cpp
         mainwindow.cpp
@@ -107,6 +108,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
 
         global.hpp global.cpp
+        Constants.hpp
 
         TC/Profile.hpp TC/Profile.cpp
         TC/GearHandler.hpp TC/GearHandler.cpp
@@ -118,13 +120,9 @@ set(PROJECT_SOURCES
         QSDL/GameController.hpp QSDL/GameController.cpp
         QSDL/SDLEventHandler.hpp QSDL/SDLEventHandler.cpp
 
-#        Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
-#        Windows/winextras.hpp Windows/winextras.cpp
-
         Utils/Dialog_getKeyCode.hpp Utils/Dialog_getKeyCode.cpp Utils/Dialog_getKeyCode.ui
         Utils/Dialog_getGameControllerButton.hpp Utils/Dialog_getGameControllerButton.cpp Utils/Dialog_getGameControllerButton.ui
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
-        Utils/JSONTools.hpp Utils/JSONTools.cpp
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
 
@@ -164,6 +162,7 @@ target_link_libraries(${EXE_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Xml
     ${SDL2_LIBRARIES}
+    libSimpleUpdater::libSimpleUpdater
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES

@@ -7,11 +7,62 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QProcess>
+#include <QApplication>
 
 #include <QMessageBox>
+#include <QProgressDialog>
 #include <QWidget>
 
 #include <QDebug>
+
+namespace {
+
+bool createEmptyFile(const QString& f,bool overwrite = true){
+    QFileInfo fInfo{f};
+    if(fInfo.exists() && !overwrite)
+    {
+        return true;
+    }
+
+    if(!fInfo.absoluteDir().exists())
+    {
+        fInfo.absoluteDir().mkpath(".");
+    }
+
+    QFile file{fInfo.absoluteFilePath()};
+    if(!file.open(QIODevice::Truncate | QIODevice::WriteOnly))
+    {
+        qCritical() << "Could not create file:" << fInfo.absoluteFilePath();
+        return false;
+    }
+    file.close();
+    return true;
+}
+
+bool deleteFile(const QString& f){
+    if(f.isEmpty())
+        return true;
+    if(QFileInfo::exists(f))
+        return QFile::remove(f);
+    else
+        return true;
+}
+
+bool deleteUpdatedTag(const QString& path)
+{
+    auto success{deleteFile(path)};
+    if(!success)
+    {
+        qCritical() << __PRETTY_FUNCTION__ << ": Failed to remove the updated tag... Aïe aïe aïe...";
+    }
+    return success;
+}
+
+}//namespace
+
+
+
 
 inline
 std::optional<bool> signPackage(const ProgArgs& args,const QString& updatePck){
@@ -82,7 +133,22 @@ auto createPackage(const ProgArgs& args){
     qDebug() << "manifest in:" << manifestDir;
 
     updt::fs::Compressor compressor{INSTALLER_PACKAGE_EXTENSION};
-    compressor.paths() = manifest.updateFileList;
+
+    auto targetList{manifest.updateFileList};
+    if(!args.manifestReferenceFolder.isEmpty())
+    {
+        for(auto& f: targetList)
+        {
+            QFileInfo fInfo{f};
+            if(fInfo.isAbsolute())
+            {
+                continue;
+            }
+            f = QString{"%0/%1"}.arg(args.manifestReferenceFolder,f);
+        }
+    }
+
+    compressor.paths() = targetList;
     auto baseFolder{(args.outputFolder.isEmpty())?(manifestDir.absolutePath()):(QDir{args.outputFolder}.absolutePath())};
     auto outFile{QString{"%0/%1%2"}.arg(baseFolder,UPDATE_PACKAGE_FILENAME,INSTALLER_PACKAGE_EXTENSION)};
     auto trueOutput{compressor.compress(outFile,fInfo.absoluteDir().absolutePath())};
@@ -162,7 +228,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
             {
                 QMessageBox::critical(parent,QObject::tr("Error during installation"),
                                       QObject::tr("Failed to verify the update package.\n"
-                                                  "As it is a serious security ceoncern, the installation was cancelled\n\n"
+                                                  "As it is a serious security concern, the installation was cancelled\n\n"
                                                   "Please try to reinstall the software or reach support"));
             }
             qCritical() << "Failed to verify the update package.";
@@ -174,18 +240,77 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         }
     }
 
+    QString updatedTagFilePath{};
+    if(!args.manifestFile.isEmpty())
+    {
+        auto manifestOpt{updt::getManifest(args.manifestFile)};
+        if(!manifestOpt)
+        {
+            qCritical() << "Invalid manifest file";
+            return false;
+        }
+        const auto& manifest{manifestOpt.value()};
+        updatedTagFilePath = manifest.updatedTagFile;
+    }
+
+    if(!updatedTagFilePath.isEmpty())
+    {
+        if(!createEmptyFile(updatedTagFilePath))
+        {
+            qCritical() << __PRETTY_FUNCTION__ << "Failed to create the update tag";
+            return false;
+        }
+    }
+    else
+    {
+        qWarning() << "Installing an update without updated tag file";
+    }
+
 
     auto updtPckDir{fInfo.absoluteDir()};
     auto baseFolder{(args.outputFolder.isEmpty())?updtPckDir.absolutePath():QDir{args.outputFolder}.absolutePath()};
 
     updt::fs::Compressor c{};
+    QProgressDialog extractionProgress{QObject::tr("Installation progress"),"",0,100};
+    extractionProgress.setCancelButton(nullptr);
+    extractionProgress.connect(&c,&updt::fs::Compressor::progress,&extractionProgress,[&](int progress){
+        extractionProgress.setValue(progress);
+    });
+    extractionProgress.show();
+
     auto success{c.uncompress(fInfo.absoluteFilePath(),baseFolder)};
     if(!success)
     {
         qCritical() << __PRETTY_FUNCTION__ << ": Failed to extract update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
+        deleteUpdatedTag(updatedTagFilePath);
         return false;
     }
     qInfo() << "Successfully extracted update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
+
+
+
+    if(!args.postUpdateCmd.isEmpty())
+    {
+        qInfo() << "Running post update command:";
+        qInfo().nospace() << "\t" << args.postUpdateCmd;
+
+        qint64 pid{};
+        // -i
+        auto success = QProcess::startDetached(args.postUpdateCmd,
+        {},QApplication::applicationDirPath(),&pid);
+        if(pid == 0 || !success)
+        {
+            qCritical() << "Could not start the post update command (" << __PRETTY_FUNCTION__ << ")";
+            qCritical() << args.postUpdateCmd;
+            deleteUpdatedTag(updatedTagFilePath);
+            return false;
+        }
+        qInfo() << "Started post update with PID:" << pid;
+    }
+    else
+    {
+        qWarning() << __PRETTY_FUNCTION__ << ": No post-update command specified... Doesn't seem normal";
+    }
 
     return true;
 }

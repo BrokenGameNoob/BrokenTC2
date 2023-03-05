@@ -3,6 +3,8 @@
         <file>img/softPic.png</file>
         <file>img/helpIcon.png</file>
         <file>img/spashScreen.png</file>
+        <file>img/warning.png</file>
+        <file>img/discord.png</file>
     </qresource>
     <qresource prefix="/update">
         <file>update/update.py</file>

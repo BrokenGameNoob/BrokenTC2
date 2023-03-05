@@ -45,8 +45,8 @@ namespace qsdl{
 void SDLEventThread::work(const QVector<GameController*>& controllerList,
                           std::shared_ptr<const EventHandlerSharedConfig> sharedConfig)
 {
+    std::ignore = controllerList;
     static SDL_Event e;
-    int i{};
     m_continue = true;
 
     static bool firstCall{true};
@@ -147,18 +147,14 @@ void SDLEventThread::work(const QVector<GameController*>& controllerList,
             break;}
 
         case SDL_JOYDEVICEADDED:
+            qInfo() << "New controller plugged in with id:" << e.jdevice.which << "emitting signal: newControllerPluggedIn(e.jdevice.which)";
             emit newControllerPluggedIn(e.jdevice.which);
-//            qDebug() << "PLUGGED IN CONTROLLER";
             break;
         case SDL_JOYDEVICEREMOVED:
+            qInfo() << "Controller unplugged with id:" << e.jdevice.which << "emitting signal: controllerUnplugged(e.jdevice.which)";
             emit controllerUnplugged(e.jdevice.which);
         default:
             break;
-        }
-
-        if(sharedConfig.get()->lowPerfMode())
-        {
-//            lambdaLowPerfDelay();
         }
     }
 }

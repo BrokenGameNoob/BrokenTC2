@@ -38,20 +38,6 @@ namespace{
 
 static constexpr auto PROCESS_NAME{"BrokenTC2.exe"};
 
-void saveErrorMsg(const QString& err){
-    QDateTime now{QDateTime::currentDateTime()};
-    QFile f{QString{"CrashReport_%0.txt"}.arg(now.toString())};
-
-    if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        return;
-    }
-    QTextStream str{&f};
-
-    str << err;
-    f.close();
-}
-
 struct CanStart{
     enum Code{
         CAN_START,
@@ -102,22 +88,22 @@ int main(int argc,char* argv[])
     QSplashScreen splash{QPixmap{":/img/img/spashScreen.png"}};
     splash.show();
 
-    ::preStart();
+//    ::preStart();
 
-    auto canStart{::canStart()};
-    if(canStart != CanStart::CAN_START)
-    {
-        switch(canStart)
-        {
-        case CanStart::ALREADY_RUNNING:
-            QMessageBox::information(nullptr,QObject::tr("Info"),QObject::tr("BrokenTC2 is already running."));
-            break;
-        default:
-            break;
-        }
-        splash.finish(nullptr);
-        return 0;
-    }
+//    auto canStart{::canStart()};
+//    if(canStart != CanStart::CAN_START)
+//    {
+//        switch(canStart)
+//        {
+//        case CanStart::ALREADY_RUNNING:
+//            QMessageBox::information(nullptr,QObject::tr("Info"),QObject::tr("BrokenTC2 is already running."));
+//            break;
+//        default:
+//            break;
+//        }
+//        splash.finish(nullptr);
+//        return 0;
+//    }
 
     QCommandLineParser parser;
     parser.addOptions({
@@ -136,13 +122,14 @@ int main(int argc,char* argv[])
     }
     catch (const std::exception& e)
     {
-        saveErrorMsg(e.what());
+        qCritical() << "A FATAL ERROR OCCURED";
+        qCritical() << e.what();
 
         rCode = 1;
     }
     catch(...)
     {
-        saveErrorMsg("Unknown error");
+        qCritical() << "AN UNKNOWN FATAL ERROR OCCURED";
     }
 
     return rCode;

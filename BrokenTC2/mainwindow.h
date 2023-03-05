@@ -21,6 +21,9 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 
+
+#include "Utils/JSONTools.hpp"
+
 #include "global.hpp"
 
 #include "TC/Profile.hpp"
@@ -30,7 +33,7 @@
 #include "QSDL/GameController.hpp"
 #include "QSDL/SDLEventHandler.hpp"
 
-#include "Update/UpdateManager.hpp"
+#include "Update/UpdateHandler.hpp"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -122,6 +125,8 @@ private slots:
 
     void on_pb_ezConf_clicked();
 
+    void on_action_checkUpdates_triggered();
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();
@@ -141,8 +146,8 @@ private:
     Ui::MainWindow *ui;
     QSystemTrayIcon m_trayIcon;
 
-    updt::UpdateManager m_updateManager;
     bool m_wasUpdated;
+    updt::UpdateHandler* m_updateHandler;
 
     Widget_gearDisplay* m_gearDisplay;
 

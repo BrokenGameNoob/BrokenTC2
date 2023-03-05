@@ -8,13 +8,15 @@
 
 namespace updt {
 namespace net {
-void getJsonFromAPI(QObject* parent,const QString& url,std::function<void(std::optional<QJsonDocument>)> callback)
+void getJsonFromAPI(const QString& url, std::function<void(std::optional<QJsonDocument>)> callback)
 {
+    auto parent{new QObject{}};
     auto netManager{new QNetworkAccessManager(parent)};
     QObject::connect(netManager,&QNetworkAccessManager::finished,parent,[netManager,callback,url,parent](QNetworkReply* rep){
         if(rep->error() != QNetworkReply::NoError)
         {
             qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve informations from"<<url;
+            qCritical() << rep->errorString();
             callback({});//call callback with null optionnal = ERROR
         }
         else

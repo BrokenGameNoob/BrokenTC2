@@ -1,4 +1,4 @@
-#include "JSONTools.hpp"
+#include "UpdtJSONTools.hpp"
 
 #include <QFile>
 #include <QTextStream>
@@ -11,7 +11,7 @@ constexpr bool throwErrorOnFileFail{false};
 
 }
 
-namespace utils {
+namespace updt::utils {
 namespace json {
 
 bool save(const QJsonDocument& doc,const QString& fileName)
@@ -61,4 +61,4 @@ QStringList strListFromJsonArray(const QJsonArray& arr,bool skipEmpty){
 }
 
 }//namespace json
-} // namespace utils
+} // namespace updt::utils

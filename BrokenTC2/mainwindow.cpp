@@ -19,13 +19,17 @@
 #include "./ui_mainwindow.h"
 
 #include "global.hpp"
+#include "Constants.hpp"
+#include "Update/Update.hpp"
 #include "Update/PostUpdate.hpp"
 #include <QTimer>
+
 
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_About.hpp"
-#include "Utils/GUITools.hpp"
+
+#include <SimpleUpdater.hpp>
 
 #ifdef Q_OS_WIN
 #include "Windows/WinEventHandler.hpp"
@@ -201,8 +205,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"},this},
-      m_updateManager{false,this},
-      m_wasUpdated{updt::postUpdateFunction()},
+      m_updateHandler{new updt::UpdateHandler(consts::CURRENT_VERSION,consts::PROJECT_GITHUB_RELEASE,
+                                              consts::PUBLIC_VERIFIER_KEY_FILE,true,consts::POST_UPDATE_CMD,
+                                              true,this)},
       m_gearDisplay{new Widget_gearDisplay()},
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
@@ -242,13 +247,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         m_trayIcon.hide();
         m_trayIcon.show();
     }
-
-
-
-    qDebug() << c_appDataFolder;
-    qDebug() << c_softSettingsFile;
-
-    qDebug() << "UPDATED ? " << m_wasUpdated;
 
 
     connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
@@ -494,24 +492,19 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
     updateSoftSettings();
 
-
-
     //UPDATES
-    connect(ui->action_checkUpdates,&QAction::triggered,&m_updateManager,&updt::UpdateManager::checkUpdate);
 
-    connect(&m_updateManager,&updt::UpdateManager::hiddenUpdateAvailable,this,[&](){
-        auto ans = QMessageBox::question(this,tr("Update available"),tr("A new update is available. Do you want to download it ?"));
-        if(ans == QMessageBox::Yes)
-        {
-            m_updateManager.exec();
-        }
-    });
-    connect(&m_updateManager,&updt::UpdateManager::hiddenNoUpdateAvailable,this,[&](){
-        ui->statusbar->showMessage(tr("No available update found"),10000);
-    });
-    m_updateManager.checkUpdate();
+    std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
+        help->m_gearHandler.gearUp();
+        help->m_gearHandler.gearUp();
+        qDebug() << static_cast<int32_t>(help->m_gearHandler.gear());
+    };
+    m_wasUpdated = updt::acquireUpdated(toCallIfUpdated,lupdt::UPDATED_TAG_FILENAME,this);
 
-//    Dialog_getGameControllerButton::getButton(&m_controller,this);
+    qInfo() << "------------" << "Program state:";
+    qInfo() << "\tAppData folder (storing profiles):" << c_appDataFolder;
+    qInfo() << "\tCurrently loaded settings file:" << c_softSettingsFile;
+    qInfo() << "\tWas updated?" << m_wasUpdated;
 }
 
 MainWindow::~MainWindow()
@@ -519,8 +512,8 @@ MainWindow::~MainWindow()
     m_softSettings.openedTab = ui->tb_settings->currentIndex();
     saveSoftSettings();
 
+    m_gearDisplay->deleteLater();
     delete ui;
-    delete m_gearDisplay;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -554,6 +547,7 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 
         on_pb_ezConf_clicked();
     }
+
     if(m_wasUpdated)
     {
         QMetaObject::invokeMethod(this,[this](){
@@ -611,6 +605,7 @@ bool MainWindow::saveSoftSettings()
 
 bool MainWindow::loadSoftSettings()
 {
+    utils::json::read(c_softSettingsFile);
     auto docOpt{utils::json::read(c_softSettingsFile)};
 
     if(!docOpt)//if we could not read the settings file
@@ -1035,5 +1030,11 @@ void MainWindow::on_sb_bgHUDColorAlpha_valueChanged(int arg1)
 void MainWindow::on_pb_ezConf_clicked()
 {
     Dialog_ConfigureGame::configure(this);
+}
+
+
+void MainWindow::on_action_checkUpdates_triggered()
+{
+    m_updateHandler->show();
 }
 

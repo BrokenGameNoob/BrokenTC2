@@ -15,8 +15,8 @@ project(${LIB_NAME})
 
 set(SOURCE_FILES
     SimpleUpdater.hpp
-    Global.hpp Global.cpp
-    JSONTools.hpp JSONTools.cpp
+    UpdtGlobal.hpp UpdtGlobal.cpp
+    UpdtJSONTools.hpp UpdtJSONTools.cpp
 
     CompressionTools.hpp CompressionTools.cpp
     DownloadManager.hpp DownloadManager.cpp
@@ -25,6 +25,8 @@ set(SOURCE_FILES
 
     Signing.hpp
     GeneralLibFunctions.hpp
+
+    libSimpleUpdaterAssets.qrc
 )
 
 # We declare the project as a static library and add all the source code files to it.

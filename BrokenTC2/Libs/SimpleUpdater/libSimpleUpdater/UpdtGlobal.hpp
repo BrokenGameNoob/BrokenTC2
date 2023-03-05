@@ -48,9 +48,9 @@ QString getGithubReleaseApiUrl(const Str_t0& userSlug, const Str_t1& projectSlug
 }
 
 
-inline //ask online and get it in callback. Get a "ReleaseInfo"
-void getLatestReleaseInfo(std::function<void(std::optional<ReleaseInfo>)> callback,
-                          const QString& projectGithubRelease);
+//inline //ask online and get it in callback. Get a "ReleaseInfo"
+//void getLatestReleaseInfo(std::function<void(std::optional<ReleaseInfo>)> callback,
+//                          const QString& projectGithubRelease);
 std::optional<ReleaseInfo> getLatestReleaseInfo(QJsonDocument doc);
 
 QStringList getLatestReleaseAssetsURLs(const QJsonDocument& doc);
@@ -66,6 +66,10 @@ inline
 QDebug operator<<(QDebug dbg,const Version& v){
     dbg.nospace() << v.major << "." << v.minor << "." << v.patch;
     return dbg;
+}
+inline
+QString to_string(const Version& v){
+    return QString{"%0.%1.%2"}.arg(v.major).arg(v.minor).arg(v.patch);
 }
 
 inline

@@ -131,7 +131,7 @@ bool saveStringToFile(const std::string& content,const QString& fileName){
         qCritical() << "Can't open file:" << fileName;
         return false;
     }
-    if(f.write(content.c_str(),content.size()) != content.size())
+    if(f.write(content.c_str(),content.size()) != static_cast<qint64>(content.size()))
     {
         qCritical() << "An error occured when writing to:" << fileName;
         f.close();
