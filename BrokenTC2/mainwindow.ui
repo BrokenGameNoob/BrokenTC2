@@ -1757,12 +1757,6 @@ background color</string>
     <property name="title">
      <string>Tools</string>
     </property>
-    <widget class="QMenu" name="menuAdvanced">
-     <property name="title">
-      <string>Advanced</string>
-     </property>
-    </widget>
-    <addaction name="menuAdvanced"/>
     <addaction name="separator"/>
     <addaction name="action_about"/>
     <addaction name="separator"/>

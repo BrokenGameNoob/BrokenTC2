@@ -42,6 +42,7 @@ struct ProgArgs{
     QString inputUpdateArchive{};
     QString outputFolder{};
     QString verifierKeyFile{};
+    QString postUpdateCmd{};
 
     //create archive
     QString manifestFile{}; //Giving this argument means creating a new update archive
@@ -56,7 +57,9 @@ Stream_t operator<<(Stream_t stream,const ProgArgs& args){
     stream.nospace() << "\tinputUpdateArchive=" << args.inputUpdateArchive << "\n";
     stream.nospace() << "\toutputFolder=" << args.outputFolder << "\n";
     stream.nospace() << "\tverifierKeyFile=" << args.verifierKeyFile << "\n";
+    stream.nospace() << "\tpostUpdateCmd=" << args.postUpdateCmd << "\n";
     stream.nospace() << "\tmanifestFile=" << args.manifestFile << "\n";
+    stream.nospace() << "\tmanifestReferenceFolder=" << args.manifestReferenceFolder << "\n";
     stream.nospace() << "\tsignerKeyFile=" << args.signerKeyFile << "\n";
     stream << "}";
     return stream;
@@ -77,6 +80,9 @@ void addArgsOption(QCommandLineParser& parser){
                           {{"i", "input-archive"},
                            QCoreApplication::translate("main", "Use <input-archive> as an input for the update. If the output folder is omitted, the update package will be extracted in the same dir as the package."),
                            QCoreApplication::translate("main", "inputUpdateArchive")},
+                          {{"p", "post-update-cmd"},
+                           QCoreApplication::translate("main", "This command will be run if the update is successfull"),
+                           QCoreApplication::translate("main", "postUpdateCmd")},
                           {{"v", "verifier-key-file"},
                            QCoreApplication::translate("main", "Used the given file as the public key file required to check a signed update package."),
                            QCoreApplication::translate("main", "signerKeyFile")},
@@ -103,9 +109,10 @@ inline
 ProgArgs parseArgs(const QCommandLineParser& parser){
     ProgArgs out{};
     auto inputUpdateArchiveSet{parser.isSet("input-archive")};
+    auto postUpdateCmdSet{parser.isSet("post-update-cmd")};
     auto outputFolderSet{parser.isSet("output-folder")};
     auto manifestFileSet{parser.isSet("manifest")};
-    auto manifestReferenceFolderSet{parser.isSet("manifestReferenceFolder")};
+    auto manifestReferenceFolderSet{parser.isSet("reference-folder")};
     auto signerKeyFileSet{parser.isSet("signer-key-file")};
     auto verifierKeyFileSet{parser.isSet("verifier-key-file")};
     out.quiet = parser.isSet("quiet");
@@ -121,7 +128,14 @@ ProgArgs parseArgs(const QCommandLineParser& parser){
     if(outputFolderSet && !(inputUpdateArchiveSet || manifestFileSet))
         return out;
 
+    if(postUpdateCmdSet && !inputUpdateArchiveSet)
+    {
+        qCritical() << "Could not run a post update command if no input archive is specified";
+        return out;
+    }
+
     out.inputUpdateArchive = parser.value("input-archive");
+    out.postUpdateCmd = parser.value("post-update-cmd");
     out.outputFolder = parser.value("output-folder");
     out.manifestFile = parser.value("manifest");
     out.manifestReferenceFolder = parser.value("reference-folder");
@@ -130,6 +144,11 @@ ProgArgs parseArgs(const QCommandLineParser& parser){
 
     if(inputUpdateArchiveSet)
     {
+        if(!postUpdateCmdSet)
+        {
+            qWarning() << "You are running an update installation program without any post update command specified (such as restarting the program)";
+        }
+
         out.progGoal = ProgArgs::INSTALL_UPDATE;
     }
 

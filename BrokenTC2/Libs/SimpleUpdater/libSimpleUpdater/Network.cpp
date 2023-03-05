@@ -16,6 +16,7 @@ void getJsonFromAPI(const QString& url, std::function<void(std::optional<QJsonDo
         if(rep->error() != QNetworkReply::NoError)
         {
             qCritical() << __PRETTY_FUNCTION__ << ": Cannot retrieve informations from"<<url;
+            qCritical() << rep->errorString();
             callback({});//call callback with null optionnal = ERROR
         }
         else

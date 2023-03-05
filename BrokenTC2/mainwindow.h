@@ -125,6 +125,8 @@ private slots:
 
     void on_pb_ezConf_clicked();
 
+    void on_action_checkUpdates_triggered();
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();

@@ -1032,3 +1032,9 @@ void MainWindow::on_pb_ezConf_clicked()
     Dialog_ConfigureGame::configure(this);
 }
 
+
+void MainWindow::on_action_checkUpdates_triggered()
+{
+    m_updateHandler->show();
+}
+

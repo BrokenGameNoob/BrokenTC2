@@ -72,7 +72,7 @@ private:
     void resetState(const QString& errMsg = {});//use in case an error occurs. Reset everything
     void setReadyToUpdate(bool state = true){if(!state)resetState();else m_readyToUpdate = true;}
 
-    void setState(States::State newState);
+    void setState(States::State newState,bool keepInfoBoxVisible = true);
 
     void downloadAndInstall(bool onlyRetrieveManifest);
     void checkAvailableOnline(bool installAfterward);

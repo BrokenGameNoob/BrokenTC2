@@ -7,8 +7,11 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QProcess>
+#include <QApplication>
 
 #include <QMessageBox>
+#include <QProgressDialog>
 #include <QWidget>
 
 #include <QDebug>
@@ -194,6 +197,13 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
     auto baseFolder{(args.outputFolder.isEmpty())?updtPckDir.absolutePath():QDir{args.outputFolder}.absolutePath()};
 
     updt::fs::Compressor c{};
+    QProgressDialog extractionProgress{QObject::tr("Installation progress"),"",0,100};
+    extractionProgress.setCancelButton(nullptr);
+    extractionProgress.connect(&c,&updt::fs::Compressor::progress,[&](int progress){
+        extractionProgress.setValue(progress);
+    });
+    extractionProgress.show();
+
     auto success{c.uncompress(fInfo.absoluteFilePath(),baseFolder)};
     if(!success)
     {
@@ -201,6 +211,24 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         return false;
     }
     qInfo() << "Successfully extracted update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
+
+    if(!args.postUpdateCmd.isEmpty())
+    {
+        qInfo() << "Running post update command:";
+        qInfo().nospace() << "\t" << args.postUpdateCmd;
+
+        qint64 pid{};
+        // -i
+        auto success = QProcess::startDetached(args.postUpdateCmd,
+        {},QApplication::applicationDirPath(),&pid);
+        if(pid == 0 || !success)
+        {
+            qCritical() << "Could not start the post update command (" << __PRETTY_FUNCTION__ << ")";
+            qCritical() << args.postUpdateCmd;
+            return false;
+        }
+        qInfo() << "Started post update with PID:" << pid;
+    }
 
     return true;
 }

@@ -9,5 +9,5 @@ constexpr updt::Version CURRENT_VERSION{PROJECT_V_MAJOR,PROJECT_V_MINOR,PROJECT_
 
 constexpr auto PUBLIC_VERIFIER_KEY_FILE{"Assets/BrokenTC2.public"};
 
-constexpr auto POST_UPDATE_CMD{"Assets/BrokenTC2.public"};
+constexpr auto POST_UPDATE_CMD{"BrokenTC2.exe"};
 }

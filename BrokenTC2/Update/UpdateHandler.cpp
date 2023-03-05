@@ -28,7 +28,7 @@ UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApi
 
     if(searchAvailableOnCreation)
     {
-        on_pb_checkAvailable_clicked();
+        checkAvailableOnline(false);
     }
 
     if(parent)
@@ -59,9 +59,10 @@ void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& mes
             ui->lbl_disp_infoBox->setStyleSheet(QString{"QLabel{color: %0;}"}.arg(getColorStr(txtColor)));
         }};
 
-    if(!ui->widget_infoBox->isVisible())
+    if(!ui->widget_infoBox->isVisible() && this->isVisible())
     {
         ui->widget_infoBox->show();
+        ui->widget_infoBox->update();
     }
 
     switch (type) {
@@ -123,7 +124,7 @@ void UpdateHandler::resetState(const QString& errMsg){
 }
 
 
-void UpdateHandler::setState(States::State newState){
+void UpdateHandler::setState(States::State newState, bool keepInfoBoxVisible){
     qDebug() << newState;
 
     if(newState == m_state)
@@ -156,7 +157,7 @@ void UpdateHandler::setState(States::State newState){
         qWarning() << "Unhandled UpdateHandler state:" << newState;
         break;
     }
-    if(newState != States::kReset)
+    if(newState != States::kReset && !keepInfoBoxVisible)
     {
         hideInfoMessage();
     }
@@ -210,6 +211,8 @@ void UpdateHandler::checkAvailableOnline(bool installAfterward){
 void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseInfoOpt, bool installAfterwards){
     if(!releaseInfoOpt)
     {
+        showInfoMessage(InfoBoxMsgType::kCritical,tr("Could not retrieve info about the latest version available online."));
+        qCritical() << "Could not retrieve info about the latest version available online.";
         resetState();
         return;
     }
@@ -219,6 +222,25 @@ void UpdateHandler::onLatestUpdateRetrieved(std::optional<ReleaseInfo> releaseIn
     qDebug() << "Github:";
     qDebug() << releaseInfo.assetsURLs;
     qDebug() << releaseInfo.versionAvailable;
+
+    qInfo() << " --- Update status ---";
+    qInfo().noquote().nospace() << "\tRunning version: " << m_kRunningVersion;
+    qInfo().noquote().nospace() << "\tDistant version: " << releaseInfo.versionAvailable;
+    if(m_kRunningVersion > releaseInfo.versionAvailable && false)
+    {
+        qInfo().noquote().nospace() << "\tNo installation candidate found (distant version <= running version)";
+        showInfoMessage(InfoBoxMsgType::kOk,tr("You are already running the latest available version"));
+        resetState();
+
+        if(m_showInstallPropositionOnNextOccasion)
+            m_showInstallPropositionOnNextOccasion = false;
+
+        return;
+    }
+
+
+    qInfo().noquote().nospace() << "\tInstallation candidate found (distant version <= running version)";
+    showInfoMessage(InfoBoxMsgType::kOk,tr("A newer version is available, you should install it"));
 
     setState(States::kReleaseInfoRetrieved);
 
@@ -359,6 +381,7 @@ void UpdateHandler::onUpdatePackageRetrieved(){
     {"-i",m_kDownloadDir+m_kUpdatePackageName,
      "-v",m_kPblicVerifierKeyFile,
      "-m",m_kDistantManifestName,
+     "-p",m_kPostUpdateCmd,
      "-o","."},QApplication::applicationDirPath(),&pid);
     if(pid == 0 || !success)
     {
