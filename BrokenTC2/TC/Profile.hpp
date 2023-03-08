@@ -56,6 +56,7 @@ struct ProfileSettings{
     Key seqGearDown{-1};//key "a"
 
     Key kSwitchMode{-1};//keyboard key to switch
+    Key kCycleProfile{-1};//keyboard key to cycle controller
     int keyDownTime{20};//ms
 
     //---- Controller ----//
@@ -72,6 +73,7 @@ struct ProfileSettings{
     Button setSixthGear{-1};
 
     Button switchMode{-1};
+    Button cycleProfile{-1};
 };
 
 bool saveSettings(const ProfileSettings& sett,const QString& fileName);

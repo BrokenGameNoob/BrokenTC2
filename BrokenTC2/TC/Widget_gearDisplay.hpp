@@ -58,6 +58,7 @@ public slots:
 
     void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
 
+    void showNotif(const QString& text);
     void showGearModeChangeNotif(tc::GearSwitchMode newMode);
 
     void showOnScreen(int screenId);

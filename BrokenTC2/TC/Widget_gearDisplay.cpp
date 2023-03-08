@@ -58,11 +58,11 @@ Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
 
     m_tmpShowTimer.setSingleShot(true);
     connect(&m_tmpShowTimer,&QTimer::timeout,this,[&](){
-        ui->lbl_clutchMode->hide();
+        ui->lbl_notif->hide();
     });
     m_tmpShowTimer.setInterval(1500);
 
-    ui->lbl_clutchMode->hide();
+    ui->lbl_notif->hide();
 }
 
 Widget_gearDisplay::~Widget_gearDisplay()
@@ -73,7 +73,7 @@ Widget_gearDisplay::~Widget_gearDisplay()
 void Widget_gearDisplay::setBgHUDColor(QColor bgColor){
     m_backgroundColor = std::move(bgColor);
     ui->label->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
-    ui->lbl_clutchMode->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
+    ui->lbl_notif->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
 }
 
 void Widget_gearDisplay::refreshGear(int value)
@@ -88,24 +88,19 @@ void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
     m_currentColor = newColor;
 }
 
-void Widget_gearDisplay::showGearModeChangeNotif(tc::GearSwitchMode newMode)
-{
-    if(newMode == tc::GearSwitchMode::CLUTCH)
-    {
-        ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
-    }
-    else
-    {
-        ui->lbl_clutchMode->setText(m_gearModeText[newMode]);
-    }
+void Widget_gearDisplay::showNotif(const QString& text){
+    ui->lbl_notif->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
 
-    ui->lbl_clutchMode->setStyleSheet(tc::getStyleSheet(m_currentColor,m_backgroundColor));
-
-    ui->lbl_clutchMode->show();
+    ui->lbl_notif->setText(text);
+    ui->lbl_notif->show();
 
     if(m_tmpShowTimer.isActive())
         m_tmpShowTimer.stop();
     m_tmpShowTimer.start();
+}
+
+void Widget_gearDisplay::showGearModeChangeNotif(tc::GearSwitchMode newMode){
+    showNotif(m_gearModeText[newMode]);
 }
 
 void Widget_gearDisplay::showOnScreen(int screenId){

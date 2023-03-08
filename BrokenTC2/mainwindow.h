@@ -142,6 +142,8 @@ private:
     void populateDevicesComboBox();
     void refreshDisplayFromGearHandlerSettings();
 
+    void cycleGamepadProfile();
+
 private:
     Ui::MainWindow *ui;
     QSystemTrayIcon m_trayIcon;

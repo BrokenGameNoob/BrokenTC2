@@ -57,6 +57,7 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     keys.insert("seqGearDown",sett.seqGearDown);
 
     keys.insert("kSwitchMode",sett.kSwitchMode);
+    keys.insert("kCycleProfile",sett.kCycleProfile);
     keys.insert("keyDownTime",sett.keyDownTime);
     keys.insert("maxGear",sett.maxGear);
 
@@ -73,6 +74,7 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
     controller.insert("setSixthGear",sett.setSixthGear);
 
     controller.insert("switchMode",sett.switchMode);
+    controller.insert("cycleProfile",sett.cycleProfile);
 
     globObj.insert("keys",keys);
     globObj.insert("controller",controller);
@@ -113,6 +115,7 @@ ProfileSettings readProfileSettings(const QString& fileName)
     out.seqGearUp = keys.value("seqGearUp").toInt(ref.seqGearUp);
     out.seqGearDown = keys.value("seqGearDown").toInt(ref.seqGearDown);
     out.kSwitchMode = keys.value("kSwitchMode").toInt(ref.kSwitchMode);
+    out.kCycleProfile = keys.value("kCycleProfile").toInt(ref.kCycleProfile);
     out.keyDownTime = keys.value("keyDownTime").toInt(ref.keyDownTime);
 
     auto controller{docObj.value("controller").toObject()};
@@ -128,6 +131,7 @@ ProfileSettings readProfileSettings(const QString& fileName)
     out.setSixthGear = controller.value("setSixthGear").toInt(ref.setSixthGear);
 
     out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
+    out.cycleProfile = controller.value("cycleProfile").toInt(ref.cycleProfile);
 
     out.maxGear = keys.value("maxGear").toInt();
 

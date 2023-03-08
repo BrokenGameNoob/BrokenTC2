@@ -343,6 +343,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         setKey(key,ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
         saveProfileSettings();
     });
+    connect(ui->pb_selectKey_kCycleProfile,&QPushButton::clicked,this,[&](){
+        auto key{Dialog_getKeyCode::getKey(this).code};
+        setKey(key,ui->lbl_kCycleProfile,m_gearHandler.settings().kCycleProfile);
+        saveProfileSettings();
+    });
 
 
 
@@ -398,6 +403,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     connect(ui->pb_selectButton_switchMode,&QPushButton::clicked,this,[&](){
         auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
         setButton(btn,ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode);
+        saveProfileSettings();
+    });
+    connect(ui->pb_selectButton_cycleProfile,&QPushButton::clicked,this,[&](){
+        auto btn{Dialog_getGameControllerButton::getButton(&m_controller,this)};
+        setButton(btn,ui->lbl_btn_cycleProfile,m_gearHandler.settings().cycleProfile);
         saveProfileSettings();
     });
 
@@ -803,6 +813,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_seqDown,m_gearHandler.settings().seqGearDown);
 
     lambdaUpdateText(ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
+    lambdaUpdateText(ui->lbl_kCycleProfile,m_gearHandler.settings().kCycleProfile);
     ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp,false);
@@ -817,6 +828,31 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
     lambdaUpdateText(ui->lbl_btn_gear6,m_gearHandler.settings().setSixthGear,false);
 
     lambdaUpdateText(ui->lbl_btn_switchMode,m_gearHandler.settings().switchMode,false);
+    lambdaUpdateText(ui->lbl_btn_cycleProfile,m_gearHandler.settings().cycleProfile,false);
+}
+
+void MainWindow::cycleGamepadProfile(){
+    auto gamePadCount{ui->cb_selectDevice->count()};
+    if(gamePadCount <= 1)
+    {
+        return;
+    }
+    auto nextIndex{(ui->cb_selectDevice->currentIndex()+1)%gamePadCount};
+    ui->cb_selectDevice->setCurrentIndex(nextIndex);
+
+    const auto& deviceTitle{ui->cb_selectDevice->currentText()};
+    if(deviceTitle.isEmpty())
+    {
+        return;
+    }
+
+    qInfo() << "Selected device from cycle:" << deviceTitle;
+
+    if(ui->cb_enableNotification->isChecked())
+    {
+        m_gearDisplay->showNotif(deviceTitle);
+    }
+
 }
 
 //------------------------------------------------------------------
@@ -908,6 +944,10 @@ void MainWindow::onControllerButtonPressed(int button)
         if(ui->cb_enableNotification->isChecked())
             m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
     }
+    else if(button == m_gearHandler.settings().cycleProfile)
+    {
+        cycleGamepadProfile();
+    }
 }
 
 void MainWindow::onKeyboardPressed(int key)
@@ -917,6 +957,10 @@ void MainWindow::onKeyboardPressed(int key)
         m_gearHandler.switchGearSwitchMode();
         if(ui->cb_enableNotification->isChecked())
             m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
+    }
+    else if(key == m_gearHandler.settings().kCycleProfile)
+    {
+        cycleGamepadProfile();
     }
 }
 
