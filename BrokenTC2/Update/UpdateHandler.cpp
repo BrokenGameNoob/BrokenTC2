@@ -106,7 +106,7 @@ std::optional<qint64> UpdateHandler::startDetachedUpdateProcess(const QString& p
      "-m",updateManifest,
      "-p",postUpdateCmd,
      "-o","."},QApplication::applicationDirPath(),&pid);
-    if(!success)
+    if(!success || pid == 0)
     {
         return {};
     }
@@ -391,21 +391,15 @@ void UpdateHandler::onUpdatePackageRetrieved(){
                                                  m_kPblicVerifierKeyFile,
                                                  m_kDistantManifestName,
                                                  m_kPostUpdateCmd)};
-    auto success{startProcessResult.has_value()};
-    qint64 pid{};
-    if(success)
-    {
-        pid = startProcessResult.value();
-    }
 
-    if(pid == 0 || !success)
+    if(startProcessResult.has_value())
     {
         qCritical() << "Could not start the update process (" << __PRETTY_FUNCTION__ << ")";
         showInfoMessage(InfoBoxMsgType::kCritical,tr("Cannot start the update process for an unknown reason"));
         resetState();
         return;
     }
-    qInfo() << "Started update with PID:" << pid;
+    qInfo() << "Started update with PID:" << startProcessResult.value();
     QApplication::exit(0);
 }
 
