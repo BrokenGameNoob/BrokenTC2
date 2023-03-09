@@ -94,6 +94,25 @@ void UpdateHandler::hideInfoMessage(){
     ui->widget_infoBox->hide();
 }
 
+std::optional<qint64> UpdateHandler::startDetachedUpdateProcess(const QString& packagePath,
+                                                                const QString& verifierKeyPath,
+                                                                const QString& updateManifest,
+                                                                const QString& postUpdateCmd){
+    static constexpr auto kStartCommand{"SimpleUpdater.exe"};
+    qint64 pid{};
+    auto success = QProcess::startDetached(kStartCommand,
+    {"-i",packagePath,
+     "-v",verifierKeyPath,
+     "-m",updateManifest,
+     "-p",postUpdateCmd,
+     "-o","."},QApplication::applicationDirPath(),&pid);
+    if(!success)
+    {
+        return {};
+    }
+    return pid;
+}
+
 
 void UpdateHandler::on_pb_close_clicked()
 {
@@ -368,21 +387,17 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
 }
 
 void UpdateHandler::onUpdatePackageRetrieved(){
-    constexpr auto kStartCommand{"SimpleUpdater.exe"};
-//#ifdef Q_OS_WINDOWS
-//    #define UPDATE_OPT_ARG "/c",
-//#else
-//    #define UPDATE_OPT_ARG
-//#endif
-
+    auto startProcessResult{startDetachedUpdateProcess(m_kDownloadDir+m_kUpdatePackageName,
+                                                 m_kPblicVerifierKeyFile,
+                                                 m_kDistantManifestName,
+                                                 m_kPostUpdateCmd)};
+    auto success{startProcessResult.has_value()};
     qint64 pid{};
-    // -i
-    auto success = QProcess::startDetached(kStartCommand,
-    {"-i",m_kDownloadDir+m_kUpdatePackageName,
-     "-v",m_kPblicVerifierKeyFile,
-     "-m",m_kDistantManifestName,
-     "-p",m_kPostUpdateCmd,
-     "-o","."},QApplication::applicationDirPath(),&pid);
+    if(success)
+    {
+        pid = startProcessResult.value();
+    }
+
     if(pid == 0 || !success)
     {
         qCritical() << "Could not start the update process (" << __PRETTY_FUNCTION__ << ")";

@@ -63,6 +63,12 @@ public:
     void showInfoMessage(InfoBoxMsgType::Type type,const QString& message,int32_t timeout = 0);
     void hideInfoMessage();
 
+public:
+    static std::optional<qint64> startDetachedUpdateProcess(const QString& packagePath,
+                                                            const QString& verifierKeyPath,
+                                                            const QString& updateManifest,
+                                                            const QString& postUpdateCmd);
+
 private slots:
     void on_pb_close_clicked();
     void on_pb_checkAvailable_clicked();
