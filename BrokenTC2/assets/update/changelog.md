@@ -1,13 +1,13 @@
 # 1.1.0 is here! (Profile cycle)
 
-# New Features
+## New Features
 - Possibility to cycle through profiles using a controller button or a keyboard key
 - Neutral and Reverse gears are now displayed correctly on the HUD!
 
 
 <br/><br/>
 
-# Bugs patched
+## Bugs patched
 - *Not this time, sorry 🤷*
 
 
@@ -17,7 +17,7 @@
 
 # 1.0.0 is here! (Update update (yeah... I know...))
 
-# New Features
+## New Features
 - A brand new update system! (you will probably never notice it)
     - Updates are now more secure
     - Updates should be lighter and quicker
@@ -27,6 +27,6 @@
 
 <br/><br/>
 
-# Bugs patched
+## Bugs patched
 - You can now start multiple instances of the program
 - The program is less likely to crash when spamming the controller keys
