@@ -2,6 +2,7 @@
 
 # New Features
 - Possibility to cycle through profiles using a controller button or a keyboard key
+- Neutral and Reverse gears are now displayed correctly on the HUD!
 
 
 <br/><br/>
