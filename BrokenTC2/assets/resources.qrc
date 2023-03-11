@@ -7,8 +7,6 @@
         <file>img/discord.png</file>
     </qresource>
     <qresource prefix="/update">
-        <file>update/update.py</file>
-        <file>update/update.bat</file>
         <file>update/changelog.md</file>
     </qresource>
     <qresource prefix="/Docs"/>
