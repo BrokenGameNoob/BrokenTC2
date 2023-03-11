@@ -53,7 +53,7 @@ Widget_gearDisplay::Widget_gearDisplay(QWidget *parent) :
     this->setAttribute(Qt::WA_OpaquePaintEvent,false);
 //    this->setStyleSheet("background-color:transparent;color:rgb(255,255,255)");
 
-    ui->label->setText("0");
+    refreshGear(0);
 //    this->showFullScreen();
 
     m_tmpShowTimer.setSingleShot(true);
@@ -78,7 +78,21 @@ void Widget_gearDisplay::setBgHUDColor(QColor bgColor){
 
 void Widget_gearDisplay::refreshGear(int value)
 {
-    ui->label->setText(QString::number(value));
+    QString text{QString::number(value)};
+    if(value <= 0)
+    {
+        switch (value) {
+        case -1:
+            text = "R";
+            break;
+        case 0:
+            text = "N";
+            break;
+        default:
+            break;
+        }
+    }
+    ui->label->setText(text);
 }
 
 void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode)
