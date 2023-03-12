@@ -25,20 +25,11 @@ bool operator>(const Version& r,const Version& d)
 
 bool operator>=(const Version& r,const Version& d)
 {
-    if(r.major >= d.major)
+    if(r.major == d.major && r.minor == d.minor && r.patch == d.patch)
+    {
         return true;
-    else
-        return false;
-
-    if(r.minor >= d.minor)
-        return true;
-    else
-        return false;
-
-
-    if(r.patch >= d.patch)
-        return true;
-    return false;
+    }
+    return r > d;
 }
 
 

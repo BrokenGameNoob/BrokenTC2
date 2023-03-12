@@ -1,6 +1,6 @@
-# 1.1.0 is here! (Profile cycle)
+# 1.1.1 is here! (Update patch)
 
-## New Features
+## New Features (actually introduced in 1.1.0...)
 - Possibility to cycle through profiles using a controller button or a keyboard key
 - Neutral and Reverse gears are now displayed correctly on the HUD!
 
@@ -8,7 +8,7 @@
 <br/><br/>
 
 ## Bugs patched
-- *Not this time, sorry 🤷*
+- Fixed a version comparison problem. Available updates were not designated as correct candidates for installation
 
 
 <br/><br/>
