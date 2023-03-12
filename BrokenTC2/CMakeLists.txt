@@ -16,21 +16,21 @@
 
 cmake_minimum_required(VERSION 3.5)
 
+function(SetIfNotSet varName value)
+    if(NOT DEFINED ${varName})
+        set(${varName} "${value}" PARENT_SCOPE)
+    endif()
+endfunction()
+
+
+if(UNIX)
+    message( FATAL_ERROR "Linux is not supported, CMake will exit." )
+endif(UNIX)
+
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 1)#incompatible update
 set(VERSIONING_MINOR 1)#new features added
 set(VERSIONING_PATCH 1)#bug fixed / minor change
-
-
-add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
-add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
-add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
-add_definitions("-DPROJECT_GITHUB_RELEASE_DEFINE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
-
-
-IF(CMAKE_BUILD_TYPE MATCHES Debug)
-    add_compile_definitions(CMAKE_DEBUG_MODE)
-ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 
 set(EXE_NAME "BrokenTC2")
@@ -38,25 +38,18 @@ set(EXE_NAME "BrokenTC2")
 
 project(BrokenTC2 VERSION ${VERSIONING_MAJOR}.${VERSIONING_MINOR}.${VERSIONING_PATCH} LANGUAGES CXX)
 
-add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
-add_definitions("-DPROJECT_NAME=\"${CMAKE_PROJECT_NAME}\"")
-add_definitions("-DWPROJECT_NAME=L\"${CMAKE_PROJECT_NAME}\"")
+
+
+
+###############################
+#                             #
+#        CMake config         #
+#                             #
+###############################
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-
-#SDL: Place the x86_64-w64-mingw32 included in the SDL2-devel-{version}-mingw package into C:/Libs/
-if(UNIX)
-    set(SDL2_INCLUDE_DIR "/usr/include/" CACHE BOOL "" FORCE)
-    set(SDL2_LIBRARY "/usr/local/lib/libSDL2.so")
-    message(STATUS "FOUND LINUX")
-else()
-    set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
-    set(SDL2_INCLUDE_DIR "C:\\Libs\\x86_64-w64-mingw32\\include\\" CACHE BOOL "" FORCE)
-    message(STATUS "Found Windows")
-endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" "${CMAKE_ROOT}/Modules")
 
@@ -69,30 +62,48 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(${SDL2_INCLUDE_DIR})
 
+
+
+###############################
+#                             #
+#            LIBS             #
+#                             #
+###############################
+
+#SDL: Place the x86_64-w64-mingw32 included in the SDL2-devel-{version}-mingw package into C:/Libs/
+set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
+set(SDL2_INCLUDE_DIR "C:\\Libs\\x86_64-w64-mingw32\\include\\" CACHE BOOL "" FORCE)
+
+
+
+# --- SDL2 ---
+include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2 REQUIRED)
 
+
+# --- Qt ---
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Xml REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml REQUIRED)
 
-
-if(WIN32)
-    SET(PLATEFORM_DEPENDANT_SOURCES
-            Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
-            Windows/winextras.hpp Windows/winextras.cpp
-            Windows/WinUtils.hpp Windows/WinUtils.cpp
-)
-endif(WIN32)
-if(UNIX)
-    SET(PLATEFORM_DEPENDANT_SOURCES
-
-)
-endif(UNIX)
-
-set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/iconResource.rc")
-
+# --- Sudirectories ---
 add_subdirectory(Libs)
+
+
+
+
+###############################
+#                             #
+#          Sources            #
+#                             #
+###############################
+
+SET(PLATEFORM_DEPENDANT_SOURCES
+        Windows/WinEventHandler.hpp Windows/WinEventHandler.cpp
+        Windows/winextras.hpp Windows/winextras.cpp
+        Windows/WinUtils.hpp Windows/WinUtils.cpp
+)
+set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/iconResource.rc")
 
 set(PROJECT_SOURCES
         LoggerHandler.hpp
@@ -129,6 +140,15 @@ set(PROJECT_SOURCES
         ${PLATEFORM_DEPENDANT_SOURCES}
 )
 
+
+
+
+###############################
+#                             #
+#        Compilation          #
+#                             #
+###############################
+
 add_compile_options(-Wall -Wextra -Wpedantic)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -142,19 +162,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(${EXE_NAME} SHARED
-            ${PROJECT_SOURCES}
-            ${APP_ICON_RESOURCE_WINDOWS}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(${EXE_NAME}
-            ${PROJECT_SOURCES}
-            ${APP_ICON_RESOURCE_WINDOWS}
-        )
-    endif()
+    add_executable(${EXE_NAME}
+        ${PROJECT_SOURCES}
+        ${APP_ICON_RESOURCE_WINDOWS}
+    )
 endif()
 
 target_link_libraries(${EXE_NAME} PRIVATE
@@ -165,26 +176,33 @@ target_link_libraries(${EXE_NAME} PRIVATE
     libSimpleUpdater::libSimpleUpdater
 )
 
-set_target_properties(${EXE_NAME} PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${EXE_NAME})
 endif()
 
+
+
+
+###############################
+#                             #
+# Code macros (definitions)   #
+#                             #
+###############################
+
+add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
+add_definitions("-DPROJECT_V_MINOR=${VERSIONING_MINOR}")
+add_definitions("-DPROJECT_V_PATCH=${VERSIONING_PATCH}")
+add_definitions("-DPROJECT_GITHUB_RELEASE_DEFINE=\"https://api.github.com/repos/BrokenGameNoob/BrokenTC2/releases/latest\"")
+
+add_definitions("-DPROJECT_VERSION=\"${CMAKE_PROJECT_VERSION}\"")
+add_definitions("-DPROJECT_NAME=\"${CMAKE_PROJECT_NAME}\"")
+add_definitions("-DWPROJECT_NAME=L\"${CMAKE_PROJECT_NAME}\"")
+
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_compile_definitions(CMAKE_DEBUG_MODE)
+ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
+
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
-#----- Used to get the current filename
-
-# The additional / is important to remove the last character from the path.
-# Note that it does not matter if the OS uses / or \, because we are only
-# saving the path size.
-#string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
-
-#add_compile_definitions(SOURCE_PATH_SIZE=${SOURCE_PATH_SIZE})
-#add_definitions("-DSOURCE_PATH_SHORT=(char*)((__FILE__) + SOURCE_PATH_SIZE)")
-#add_definitions("-D__CURRENT_PLACE__=QString{\"%0 : <%1> : l.%2\"}.arg(SOURCE_PATH_SHORT,__func__,QString::number(__LINE__))")
