@@ -236,13 +236,17 @@ void SDLEventHandler::registerController(GameController* g)
 
 void SDLEventHandler::unregisterController(GameController* g)
 {
-    qInfo() << __PRETTY_FUNCTION__ << "Unregistering new controller";
+    qInfo() << __PRETTY_FUNCTION__ << "Unregistering controller with id:" << g->id();
     auto gIndex{instance()->m_controllerList.indexOf(g)};
 //    qDebug() << gIndex;
 //    qDebug() << g;
 //    qDebug() << instance()->m_controllerList;
     if(gIndex != -1)
         instance()->m_controllerList.removeAt(gIndex);
+    else
+    {
+        qWarning() << "Willing to unregister not known controller with id:" << g->id();
+    }
 }
 
 } // namespace qsdl
