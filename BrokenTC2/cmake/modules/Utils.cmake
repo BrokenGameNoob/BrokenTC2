@@ -1,0 +1,11 @@
+function(SetIfNotSet varName value)
+    if(NOT DEFINED ${varName})
+        set(${varName} ${value} PARENT_SCOPE)
+    endif()
+endfunction()
+
+function(SetIfNotSetCacheForce varName value)
+    if(NOT DEFINED ${varName})
+        set(${varName} ${value} CACHE BOOL "" FORCE PARENT_SCOPE)
+    endif()
+endfunction()

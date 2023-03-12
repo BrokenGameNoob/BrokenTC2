@@ -13,5 +13,15 @@
 ##
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
-add_subdirectory(SimpleUpdater)
-add_subdirectory(Proto)
+
+include(FindProtobuf)
+find_package(Protobuf REQUIRED)
+include_directories(${Protobuf_INCLUDE_DIRS})
+
+protobuf_generate_cpp(PROTO_SRC PROTO_HEADER
+    TCProfile.proto
+)
+add_library(BTC2Proto STATIC ${PROTO_HEADER} ${PROTO_SRC})
+add_library(BTC2Proto::BTC2Proto ALIAS BTC2Proto)
+
+target_link_libraries(BTC2Proto ${Protobuf_LIBRARIES})

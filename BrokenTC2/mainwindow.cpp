@@ -67,6 +67,7 @@
 #include <QDebug>
 #include <QProcess>
 
+#include <Libs/Proto/TCprofile.pb.h>
 
 
 

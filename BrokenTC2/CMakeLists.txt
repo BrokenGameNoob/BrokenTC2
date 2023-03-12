@@ -16,12 +16,6 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-function(SetIfNotSet varName value)
-    if(NOT DEFINED ${varName})
-        set(${varName} "${value}" PARENT_SCOPE)
-    endif()
-endfunction()
-
 
 if(UNIX)
     message( FATAL_ERROR "Linux is not supported, CMake will exit." )
@@ -63,6 +57,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
+# --- CMake files includes ---
+include(cmake/modules/Utils.cmake)
 
 
 ###############################
@@ -71,9 +67,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #                             #
 ###############################
 
-#SDL: Place the x86_64-w64-mingw32 included in the SDL2-devel-{version}-mingw package into C:/Libs/
-set(SDL2_PATH "C:\\Libs\\x86_64-w64-mingw32\\" CACHE BOOL "" FORCE)
-set(SDL2_INCLUDE_DIR "C:\\Libs\\x86_64-w64-mingw32\\include\\" CACHE BOOL "" FORCE)
+#SDL: by default search for SDL from the x86_64-w64-mingw32 dir
+# included in the SDL2-devel-{version}-mingw package (downloaded from github)
+# manually placed into C:/Libs/
+if(NOT DEFINED SDL2_BASE_INSTALLATION_PATH)
+    set(SDL2_BASE_INSTALLATION_PATH "C:\\Libs\\x86_64-w64-mingw32")
+endif()
+if(NOT DEFINED SDL2_PATH)
+    set(SDL2_PATH "${SDL2_BASE_INSTALLATION_PATH}\\" CACHE BOOL "")
+endif()
+if(NOT DEFINED SDL2_INCLUDE_DIR)
+    set(SDL2_INCLUDE_DIR "${SDL2_BASE_INSTALLATION_PATH}\\include\\" CACHE BOOL "")
+endif()
+
+
+#Protobuf (based on protoc version 22.2)
+if(NOT DEFINED Protobuf_BASE_INSTALLATION_PATH)
+    set(Protobuf_BASE_INSTALLATION_PATH "C:\\Libs\\protobuf")
+endif()
+if(NOT DEFINED Protobuf_LIBRARIES)
+    set(Protobuf_LIBRARIES "${Protobuf_BASE_INSTALLATION_PATH}" CACHE BOOL "")
+endif()
+if(NOT DEFINED Protobuf_INCLUDE_DIR)
+    set(Protobuf_INCLUDE_DIR "${Protobuf_BASE_INSTALLATION_PATH}\\include" CACHE BOOL "")
+endif()
 
 
 
@@ -81,12 +98,16 @@ set(SDL2_INCLUDE_DIR "C:\\Libs\\x86_64-w64-mingw32\\include\\" CACHE BOOL "" FOR
 include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2 REQUIRED)
 
+# --- Protobuf ---
+find_package(Protobuf REQUIRED)
+include_directories(SYSTEM ${Protobuf_INCLUDE_DIRS})
 
 # --- Qt ---
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Xml REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Xml REQUIRED)
 
 # --- Sudirectories ---
+
 add_subdirectory(Libs)
 
 
@@ -174,6 +195,7 @@ target_link_libraries(${EXE_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Xml
     ${SDL2_LIBRARIES}
     libSimpleUpdater::libSimpleUpdater
+    BTC2Proto::BTC2Proto
 )
 
 
@@ -181,7 +203,9 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${EXE_NAME})
 endif()
 
+# --- Properties ---
 
+set_property(GLOBAL PROPERTY COMPILE_WARNING_AS_ERROR OFF)
 
 
 ###############################
