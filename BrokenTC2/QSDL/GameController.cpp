@@ -58,6 +58,7 @@ void GameController::connectController(int controllerId)
     {
         m_controllerId = -1;
         qCritical() << __CURRENT_PLACE__ << " : Error : " << QString{"Invalid controller ID (%0), there is only %1 devices plugged in"}.arg(controllerId).arg(getPluggedJoysticksCount());
+        qCritical() << "SDL Error: " << QString{"%0"}.arg(SDL_GetError());
     }
     else
     {
@@ -66,6 +67,7 @@ void GameController::connectController(int controllerId)
         if(!m_controllerInstance)
         {
             qCritical() << __CURRENT_PLACE__ << " : Error : " << QString{"Unable to open game controller device (id=%0)"}.arg(m_controllerId);
+            qCritical() << "SDL Error: " << QString{"%0"}.arg(SDL_GetError());
         }
     }
 }
