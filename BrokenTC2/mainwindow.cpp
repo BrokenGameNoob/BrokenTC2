@@ -1012,7 +1012,9 @@ void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
         }
         updateSoftSettings();
 
+        qInfo() << __PRETTY_FUNCTION__ << "Connecting & registering new controller from mainwindow:" << ui->cb_selectDevice->currentData().toInt();
         m_controller.connectController(ui->cb_selectDevice->currentData().toInt());
+        qsdl::SDLEventHandler::registerController(&m_controller);
     }
 
     refreshDisplayFromGearHandlerSettings();
