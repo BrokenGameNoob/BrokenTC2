@@ -68,10 +68,52 @@
 #include <QProcess>
 
 #include <Libs/Proto/TCprofile.pb.h>
+#include <google/protobuf/util/json_util.h>
 
 
 
 namespace{
+
+bool dumpProtobufToFile(const google::protobuf::Message& message, const QString& filePath){
+    auto fileDir{QFileInfo{filePath}.absoluteDir()};
+    if(!fileDir.exists())
+    {
+        if(!fileDir.mkpath("."))
+        {
+            qCritical() << __PRETTY_FUNCTION__ << ": Failed to create dir: "<< fileDir.absolutePath();
+            return false;
+        }
+    }
+
+    std::string json{};
+
+    auto success = google::protobuf::util::MessageToJsonString(message,&json);
+    if(!success.ok())
+    {
+        std::string tmp{success.message()};
+        qCritical() << __PRETTY_FUNCTION__ << ": Failed to export protobuf json:" << QString::fromStdString(tmp);
+        return false;
+    }
+
+    QFile f{filePath};
+    if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        qCritical() << __PRETTY_FUNCTION__ << ": Failed to open file:" << filePath;
+        return false;
+    }
+    QTextStream fStream{&f};
+    fStream << QString::fromStdString(json);
+    f.close();
+    return true;
+}
+
+void testFunc(){
+    tc::ControllerProfile p;
+    p.set_controllername("Test");
+    bool success{};
+    success = dumpProtobufToFile(p,"TEST.json");
+    qDebug() << "Dump success:" << success;
+}
 
 QString getKeyOrButtonText(int keyCode,bool useVkCodeChar){
     if(keyCode < 0)
@@ -527,6 +569,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     qInfo() << "\tAppData folder (storing profiles):" << c_appDataFolder;
     qInfo() << "\tCurrently loaded settings file:" << c_softSettingsFile;
     qInfo() << "\tWas updated?" << m_wasUpdated;
+
+    testFunc();
 }
 
 MainWindow::~MainWindow()

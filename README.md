@@ -38,38 +38,20 @@
 
 <br/>
 
-#### SDL
+#### 1- SDL
 
 Setup SDL by downloading the `SDL2-devel-{version}-mingw` package from [github/SDL](https://github.com/libsdl-org/SDL/releases)
 Then extract the folder `x86_64-w64-mingw32` into `C:/Libs/` so that the final include directory for the SDL is `C:/Libs/x86_64-w64-mingw32/include`
 
 <br/>
 
-#### Protobuf
+#### 2- Protobuf
 
-1. Clone the Protobuf repo in the dir you would like to install it. DOT NOT FORGET SUBMODULES
-```bash
-git clone https://github.com/protocolbuffers/protobuf.git
-cd protobuf
-git checkout v22.2
-git switch -c release22.2
-git submodule init
-git submodule update
-mkdir build && cd build
-```
-2. Configure project
-```bash
-cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_C_COMPILER:FILEPATH=C:\\Dev\\mingw64\\bin\\gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=C:\\Dev\\mingw64\\bin\\g++.exe -G "MinGW Makefiles" ../cmake
-```
-> ***Note***: Replace the path to compilers with yours
-3. Build & install
-```bash
-cmake --build .
-cmake --build . -j 16
-cmake --build . --target install
-```
-> ***Note***: The install command may need to be run using admin privileges
-4. Copy the built folder (`C:/Program Files (x86)/protobuf` by default) to somewhere **not containing spaces**
+1. Install *MSys2*
+2. Install the [Protobuf package](https://packages.msys2.org/package/mingw-w64-x86_64-protobuf) (version **21.12-1**) in *MSys2*
+    ```bash
+    pacman -S mingw-w64-x86_64-protobuf
+    ```
 
 <br/><br/>
 
@@ -78,5 +60,5 @@ cmake --build . --target install
 Useful variables:
 - `SDL2_BASE_INSTALLATION_PATH`: base SDL2 installation path. This folder shall contains the following subfolders: `include`, `lib`, `share`, `bin`
     > ***Note***: default is `C:\\Libs\\x86_64-w64-mingw32`
-- `Protobuf_BASE_INSTALLATION_PATH`: base protobuf installation path. This folder shall contains the following subfolders: `include`, `lib`, `bin`
-    > ***Note***: default is `C:\\Libs\\protobuf`
+- `BASE_PROTO_PATH`: base protobuf installation path. This folder shall contains the following subfolders: `include`, `lib`, `bin`
+    > ***Note***: default is `C:\\msys64\\mingw64`
