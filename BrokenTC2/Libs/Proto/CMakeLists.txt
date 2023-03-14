@@ -1,18 +1,4 @@
-## Broken The Crew 2 sequential clutch assist
-## Copyright (C) 2022 BrokenGameNoob <brokengamenoob@gmail.com>
-##
-## This program is free software: you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation, either version 3 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# https://discourse.cmake.org/t/protobuf-generate-cpp-not-found/7053
 
 #Expect the following to be in the main CMakeLists.txt (it's a hack but meh :/)
 ###############################################################################
@@ -39,21 +25,15 @@
 
 set(target_name "BTC2Proto")
 message("==== TARGET: ${target_name}")
-add_library("${target_name}")
 
 file(GLOB src_files   "*.cpp")
 file(GLOB hdr_files   "*.hpp" "*.h")
 file(GLOB proto_files "*.proto")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-if(protobuf_MODULE_COMPATIBLE)
-    # Legacy Support
-    protobuf_generate_cpp(proto_srcs proto_hdrs "${proto_files}")
-    list(APPEND src_files "${proto_srcs}")
-    list(APPEND hdr_files "${proto_hdrs}")
-endif()
 
 
+add_library("${target_name}")
 add_library(${target_name}::${target_name} ALIAS "${target_name}")
 
 target_sources("${target_name}"
@@ -62,15 +42,17 @@ target_sources("${target_name}"
         "${hdr_files}"
         "${proto_files}")
 
-# target_link_libraries("${target_name}"
-#     INTERFACE
-#         protobuf::libprotobuf
-#         protobuf::libprotoc)
 target_link_libraries("${target_name}"
     INTERFACE
-    ${PROTOBUF_LIBRARIES})
+    ${PROTOBUF_LIBRARIES}
+)
+target_link_libraries("${target_name}"
+    PRIVATE
+    Qt${QT_VERSION_MAJOR}::Core
+)
 
-if(NOT protobuf_MODULE_COMPATIBLE)
-    # Modern Usage
-    protobuf_generate(TARGET "${target_name}")
-endif()
+set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+
+protobuf_generate(TARGET "${target_name}" PROTOC_OUT_DIR "${PROTO_BINARY_DIR}")
+
+target_include_directories(${target_name} PUBLIC "$<BUILD_INTERFACE:${PROTO_BINARY_DIR}>")

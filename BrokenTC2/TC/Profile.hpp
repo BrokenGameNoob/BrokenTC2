@@ -20,12 +20,10 @@
 
 #include <QString>
 
+#include <Libs/Proto/TCprofile.pb.h>
+
 namespace tc {
 
-enum class GearSwitchMode{
-    CLUTCH=0,
-    SEQUENTIAL=1
-};
 inline int toInt(GearSwitchMode g){return static_cast<int>(g);}
 
 struct ProfileSettings{
