@@ -41,6 +41,14 @@ concept FromPbMessage = std::is_base_of<google::protobuf::Message, T>::value;
 template<typename Proto_t>
 Proto_t getDefault() = delete;
 
+template<typename Proto_t>
+Proto_t initNonInitilizedFields(const Proto_t& message, Proto_t def){
+    qDebug() << "-------------------------- BEFIRE";
+    qDebug() << def;
+    def.MergeFrom(message);
+    qDebug() << def;
+    return def;
+}
 
 
 /* - File functions - */
@@ -74,7 +82,7 @@ std::optional<Proto_t> readFromFile(const QString& filePath){
         return {};
     }
 
-    return out;
+    return initNonInitilizedFields(out,getDefault<Proto_t>());
 }
 
 
