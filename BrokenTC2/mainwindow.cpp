@@ -83,7 +83,6 @@ QString getKeyOrButtonText(int keyCode,bool useVkCodeChar){
     {
         if(keyCode >= 1000)//gamepad axis
         {
-            qDebug() << "keyCode > 1000";
             text = "Axis: ";
             text += QString::number((keyCode-1000)/10);
             text += " Dir: ";
