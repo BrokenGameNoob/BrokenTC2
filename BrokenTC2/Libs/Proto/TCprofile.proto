@@ -7,7 +7,7 @@ enum GearSwitchMode{
     SEQUENTIAL=1;
 }
 
-message ControllerProfile{//keys mapped to a controller
+message ControllerProfile{//Controller keys used to do actions
     string profileName      = 1;
 
     int32 gearUp            = 2;
@@ -25,6 +25,22 @@ message ControllerProfile{//keys mapped to a controller
     int32 cycleProfile      = 12;
 }
 
-message GameProfile{
+message GameProfile{//keyboard keys used in game to execute actions
     string profileName      = 1;
+
+    int32 gearUp            = 2;
+    int32 gearDown          = 3;
+
+    int32 setGearReverse    = 4;
+    int32 setGear1          = 5;
+    int32 setGear2          = 6;
+    int32 setGear3          = 7;
+    int32 setGear4          = 8;
+    int32 setGear5          = 9;
+    int32 setGear6          = 10;
+}
+
+message SoftProfile{//software related keyboard keys
+    int32 switchMode        = 1;
+    int32 cycleProfile      = 2;
 }

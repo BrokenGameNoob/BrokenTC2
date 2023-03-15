@@ -69,7 +69,7 @@
 #include <QProcess>
 
 #include <Libs/Proto/TCprofile.pb.h>
-#include <Libs/Proto/GameProfileHelper.hpp>
+#include <Libs/Proto/TCprofileDefaults.hpp>
 #include <google/protobuf/util/json_util.h>
 
 

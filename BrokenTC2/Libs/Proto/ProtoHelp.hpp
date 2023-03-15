@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <cstdint>
+#include <functional>
 #include <QString>
 #include <QFileInfo>
 #include <QFile>
@@ -22,14 +23,76 @@ namespace constants{
     static constexpr int32_t MAX_GEAR{7};
 };
 
-
-/* --- Generic protobuf functions --- */
-
+using PbCppType = google::protobuf::FieldDescriptor::CppType;
+using PbReflection = google::protobuf::Reflection;
 
 /* - Concepts / deleted functions - */
 
 template <typename T>
 concept FromPbMessage = std::is_base_of<google::protobuf::Message, T>::value;
+
+
+/* --- Generic protobuf functions --- */
+
+template<FromPbMessage Proto_t>
+Proto_t initNonInitilizedFields(const Proto_t& message, Proto_t def){
+    def.MergeFrom(message);
+    return def;
+}
+
+//see setFieldTypeToValue for usage example
+template<FromPbMessage Proto_t>
+void applyOnPbFields(Proto_t* msg,
+                     std::function<bool(const google::protobuf::FieldDescriptor& desc, const google::protobuf::Reflection& reflection)> toApply){
+    const auto* desc = msg->GetDescriptor();
+    auto* ref = msg->GetReflection();
+    for (int i = 0; i < desc->field_count(); ++i) {
+        const google::protobuf::FieldDescriptor* field_desc = desc->field(i);
+        if(toApply(*field_desc,*ref))
+        {
+            break;
+        }
+    }
+}
+
+//function used for generic types
+// ex:
+// fieldCount = setFieldTypeToValue<PbCppType::CPPTYPE_INT32>(&out,&PbReflection::SetInt32,-1);
+template<google::protobuf::FieldDescriptor::CppType targetType,FromPbMessage Proto_t,typename ... Args>
+int32_t setFieldTypeToValue(Proto_t* msg,
+                            void(google::protobuf::Reflection::*pbSetter)(google::protobuf::Message*,const google::protobuf::FieldDescriptor*,Args...)const,
+                            Args... args){
+    int32_t modifiedFieldsCount{};
+    std::function<bool(const google::protobuf::FieldDescriptor& desc, const google::protobuf::Reflection& reflection)> toApply =
+    [&](const google::protobuf::FieldDescriptor& desc, const google::protobuf::Reflection& reflection)->bool{
+        if(desc.cpp_type() == targetType) {
+            ++modifiedFieldsCount;
+            (reflection.*pbSetter)(msg,&desc,args...);
+        }
+        return false;
+    };
+    applyOnPbFields(msg,toApply);
+    return modifiedFieldsCount;
+}
+
+//function to set submessage types
+template<FromPbMessage Proto_t>
+int32_t setFieldTypeToValue(Proto_t* msg,
+                            void(google::protobuf::Reflection::*pbSetter)(google::protobuf::Message*,google::protobuf::Message*,const google::protobuf::FieldDescriptor*),
+                            google::protobuf::Message* subMessage){
+    int32_t modifiedFieldsCount{};
+    std::function<bool(const google::protobuf::FieldDescriptor& desc, const google::protobuf::Reflection& reflection)> toApply =
+    [&](const google::protobuf::FieldDescriptor& desc, const google::protobuf::Reflection& reflection)->bool{
+        if(desc.cpp_type() == google::protobuf::FieldDescriptor::CppType::CPPTYPE_MESSAGE) {
+            ++modifiedFieldsCount;
+            (reflection.*pbSetter)(msg,subMessage,desc);
+        }
+        return false;
+    };
+    return modifiedFieldsCount;
+}
+
+/* - Deleted functions - */
 
 /*!
  * \brief One must use this function to init a protobuf message
@@ -38,24 +101,15 @@ concept FromPbMessage = std::is_base_of<google::protobuf::Message, T>::value;
  *
  * Usage example: auto profile{tc::getDefault<tc::ControllerProfile>()};
  */
-template<typename Proto_t>
+template<FromPbMessage Proto_t>
 Proto_t getDefault() = delete;
-
-template<typename Proto_t>
-Proto_t initNonInitilizedFields(const Proto_t& message, Proto_t def){
-    qDebug() << "-------------------------- BEFIRE";
-    qDebug() << def;
-    def.MergeFrom(message);
-    qDebug() << def;
-    return def;
-}
 
 
 /* - File functions - */
 
 bool dumpProtobufToFile(const google::protobuf::Message& message, const QString& filePath);
 
-template<typename Proto_t>
+template<FromPbMessage Proto_t>
 std::optional<Proto_t> readFromFile(const QString& filePath){
     if(!QFileInfo::exists(filePath))
     {
