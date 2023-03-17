@@ -2,11 +2,18 @@
 #include "ui_UpdateHandler.h"
 
 #include <QPixmap>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 #include <QTimer>
 #include <QProcess>
 
 namespace updt {
+
+const QString UpdateHandler::InfoBoxMsgType::kUnknownTitleText{QCoreApplication::tr("Information")};
+const QString UpdateHandler::InfoBoxMsgType::kWarningTitleText{QCoreApplication::tr("Warning")};
+const QString UpdateHandler::InfoBoxMsgType::kOkTitleText{QCoreApplication::tr("Information")};
+const QString UpdateHandler::InfoBoxMsgType::kCriticalTitleText{QCoreApplication::tr("Error")};
 
 UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApiAddress,
                              QString publicVerifierKeyFile, bool searchAvailableOnCreation,
@@ -40,6 +47,13 @@ UpdateHandler::UpdateHandler(Version progRunningVersion,QString githubReleaseApi
 
     ui->lbl_disp_infoPic->setPixmap(QPixmap{":/img/img/warning.png"});
     ui->lbl_disp_infoPic->hide();
+
+    connect(ui->cb_allowManualInstallation,&QCheckBox::clicked,this,[&](bool checked){
+        ui->pb_manualInstall->setVisible(checked);
+    });
+    ui->pb_manualInstall->hide();
+
+    m_baseInfoMsg = ui->lbl_disp_infoBox->text();
 }
 
 UpdateHandler::~UpdateHandler(){
@@ -54,9 +68,24 @@ void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& mes
             return in.name(QColor::HexRgb);
         }};
 
-    auto setColor{[&](const QColor& bg,const QColor& txtColor){
+    auto newHash{QString::number(type)+message};
+    if(newHash == m_prevInfoMsgHash)
+    {
+        ++m_infoMsgRepetitionCount;
+    }
+    else
+    {
+        m_infoMsgRepetitionCount = 1;
+    }
+    m_prevInfoMsgHash = newHash;
+
+    auto setColorAndTitle{[&](const QColor& bg,const QColor& txtColor, const QString& title){
             ui->widget_infoBox->setStyleSheet(QString{"background-color: %0;"}.arg(getColorStrA(bg)));
             ui->lbl_disp_infoBox->setStyleSheet(QString{"QLabel{color: %0;}"}.arg(getColorStr(txtColor)));
+            if(m_infoMsgRepetitionCount <= 1)
+                ui->lbl_disp_infoBox->setText(title);
+            else
+                ui->lbl_disp_infoBox->setText(title+" ("+QString::number(m_infoMsgRepetitionCount)+")");
         }};
 
     if(!ui->widget_infoBox->isVisible() && this->isVisible())
@@ -67,17 +96,17 @@ void UpdateHandler::showInfoMessage(InfoBoxMsgType::Type type,const QString& mes
 
     switch (type) {
     case InfoBoxMsgType::Type::kWarning:
-        setColor(InfoBoxMsgType::kWarningColor,InfoBoxMsgType::kWarningTextColor);
+        setColorAndTitle(InfoBoxMsgType::kWarningColor,InfoBoxMsgType::kWarningTextColor,InfoBoxMsgType::kWarningTitleText);
         break;
     case InfoBoxMsgType::Type::kOk:
-        setColor(InfoBoxMsgType::kOkColor,InfoBoxMsgType::kOkTextColor);
+        setColorAndTitle(InfoBoxMsgType::kOkColor,InfoBoxMsgType::kOkTextColor,InfoBoxMsgType::kOkTitleText);
         break;
     case InfoBoxMsgType::Type::kCritical:
-        setColor(InfoBoxMsgType::kCriticalColor,InfoBoxMsgType::kCriticalTextColor);
+        setColorAndTitle(InfoBoxMsgType::kCriticalColor,InfoBoxMsgType::kCriticalTextColor,InfoBoxMsgType::kCriticalTitleText);
         break;
     case InfoBoxMsgType::Type::kUnknown:
     default:
-        setColor(InfoBoxMsgType::kUnknownColor,InfoBoxMsgType::kUnknownTextColor);
+        setColorAndTitle(InfoBoxMsgType::kUnknownColor,InfoBoxMsgType::kUnknownTextColor,InfoBoxMsgType::kUnknownTitleText);
         qCritical() << "Unknown InfoBoxMsgType::Type:" << type;
         break;
     }
@@ -100,12 +129,16 @@ std::optional<qint64> UpdateHandler::startDetachedUpdateProcess(const QString& p
                                                                 const QString& postUpdateCmd){
     static constexpr auto kStartCommand{"SimpleUpdater.exe"};
     qint64 pid{};
-    auto success = QProcess::startDetached(kStartCommand,
-    {"-i",packagePath,
-     "-v",verifierKeyPath,
-     "-m",updateManifest,
-     "-p",postUpdateCmd,
-     "-o","."},QApplication::applicationDirPath(),&pid);
+    QStringList argList{
+                "-i",packagePath,
+                "-p",postUpdateCmd,
+                "-o","."};
+    if(!(verifierKeyPath.isEmpty() || updateManifest.isEmpty())){
+        argList.append({
+                       "-v",verifierKeyPath,
+                       "-m",updateManifest});
+    }
+    auto success = QProcess::startDetached(kStartCommand,argList,QApplication::applicationDirPath(),&pid);
     if(!success || pid == 0)
     {
         return {};
@@ -401,6 +434,41 @@ void UpdateHandler::onUpdatePackageRetrieved(){
     }
     qInfo() << "Started update with PID:" << startProcessResult.value();
     QApplication::exit(0);
+}
+
+
+void UpdateHandler::on_pb_manualInstall_clicked()
+{
+    QMessageBox::information(this,tr("Information"),tr("Please select at least an update package.\n"
+                                                       "If provided, please select the corresponding UpdateManifest.json file"));
+
+    auto filenames = QFileDialog::getOpenFileNames(this,tr("Select update files"),
+                                  QStandardPaths::writableLocation(QStandardPaths::DownloadLocation),
+                                  QString{"%0 (*.pck UpdateManifest*.json);;%1 (*.pck);;%2 (UpdateManifest*.json)"}
+                                  .arg(tr("All"),tr("Update package"),tr("Update manifest")));
+
+    int32_t updatePackageCount{};
+    int32_t manifestCount{};
+    QString manifest{};
+    QString updatePackage{};
+    for(const auto& filepath : filenames){
+        QFileInfo fInfo{filepath};
+        const QString f{fInfo.fileName()};
+        if(f.startsWith("UpdateManifest") && f.endsWith(".json")){
+            ++manifestCount;
+            manifest = filepath;
+        }
+        else if(f.endsWith("*.pck")){
+            updatePackage = filepath;
+            ++updatePackageCount;
+        }
+    }
+
+    if(updatePackageCount > 1 || manifestCount > 1)
+    {
+        showInfoMessage(InfoBoxMsgType::kCritical,tr("Please select at most one update package (.pck) and one update manifest (UpdateManifest*.json)"));
+        return;
+    }
 }
 
 } // namespace updt
