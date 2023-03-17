@@ -425,7 +425,7 @@ void UpdateHandler::onUpdatePackageRetrieved(){
                                                  m_kDistantManifestName,
                                                  m_kPostUpdateCmd)};
 
-    if(startProcessResult.has_value())
+    if(!startProcessResult.has_value())
     {
         qCritical() << "Could not start the update process (" << __PRETTY_FUNCTION__ << ")";
         showInfoMessage(InfoBoxMsgType::kCritical,tr("Cannot start the update process for an unknown reason"));
@@ -458,17 +458,32 @@ void UpdateHandler::on_pb_manualInstall_clicked()
             ++manifestCount;
             manifest = filepath;
         }
-        else if(f.endsWith("*.pck")){
+        else if(f.endsWith(".pck")){
             updatePackage = filepath;
             ++updatePackageCount;
         }
     }
 
-    if(updatePackageCount > 1 || manifestCount > 1)
+    if(updatePackageCount > 1 || manifestCount > 1 || updatePackageCount < 1)
     {
         showInfoMessage(InfoBoxMsgType::kCritical,tr("Please select at most one update package (.pck) and one update manifest (UpdateManifest*.json)"));
         return;
     }
+
+    auto startProcessResult{startDetachedUpdateProcess(updatePackage,
+                                                 m_kPblicVerifierKeyFile,
+                                                 manifest,
+                                                 m_kPostUpdateCmd)};
+
+    if(!startProcessResult.has_value())
+    {
+        qCritical() << "Could not start the update process (" << __PRETTY_FUNCTION__ << ")";
+        showInfoMessage(InfoBoxMsgType::kCritical,tr("Cannot start the update process for an unknown reason "));
+        resetState();
+        return;
+    }
+    qInfo() << "Started update with PID:" << startProcessResult.value();
+    QApplication::exit(0);
 }
 
 } // namespace updt
