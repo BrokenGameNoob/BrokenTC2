@@ -8,6 +8,8 @@
 
 ## -> Bugs patched
 - The software will now automatically reconnect to a disconnected controller (you won't have to restart the software anymore)
+- The default color on first start of the software for the gear indicator is now white instead of black
+- Joystick threshold is now set to halfway
 
 
 <br/><br/>
