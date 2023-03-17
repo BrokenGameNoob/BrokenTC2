@@ -1,7 +1,7 @@
 # 1.1.2 is here! (Controller reconnected)
 
 ## -> New Features
-- *Not this time, sorry 🤷*
+- Update UI now allow one to install an update from user's downloaded files
 
 
 <br/><br/>
