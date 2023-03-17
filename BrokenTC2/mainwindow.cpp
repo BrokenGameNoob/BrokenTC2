@@ -67,7 +67,7 @@
 #include <QDebug>
 #include <QProcess>
 
-
+#include <limits>
 
 
 namespace{
@@ -417,7 +417,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         saveProfileSettings();
     });
     //init threshold slider (set max value to int16_t max val)
-    ui->hs_joyAxisThreshold->setMaximum(32767);//int16_t
+    ui->hs_joyAxisThreshold->setMaximum(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1);//int16_t
     connect(ui->hs_joyAxisThreshold,&QSlider::valueChanged,this,[&](int val){
         m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(val));
         saveSoftSettings();
@@ -511,6 +511,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.isInit = true;
     on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
     updateSoftSettings();
+    refreshFromSettings();
 
     //UPDATES
 
@@ -661,7 +662,8 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.preferredCoreCount = settings.value("preferredCoreCount").toInt(def.preferredCoreCount);
     auto bgHUDColorStr{settings.value("bgHUDColor").toString()};
     m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr),m_gearDisplay);
-    m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
+    m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold")
+                                                            .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1)));
 
     refreshFromSettings();
 

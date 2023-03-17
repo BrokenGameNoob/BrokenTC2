@@ -86,7 +86,7 @@ struct Settings{
 
 private:
     bool m_lowPerfModeEnabled{false};
-    int16_t m_joyAxisthreshold{};
+    int16_t m_joyAxisthreshold{std::numeric_limits<int16_t>::max()/2};
     QColor m_bgHUDColor{79, 79, 79, 120};
 };
 

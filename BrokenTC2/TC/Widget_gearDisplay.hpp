@@ -75,7 +75,7 @@ private:
 
     QColor m_clutchColor{255,255,255};
     QColor m_seqColor{255,0,0};
-    QColor m_currentColor{};
+    QColor m_currentColor{255,255,255};
 
     QColor m_backgroundColor{79, 79, 79, 120};
 
