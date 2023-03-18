@@ -114,7 +114,7 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
         for(const auto& f : bindingList)
         {
             qDebug() << __PRETTY_FUNCTION__ << " edit config file -> " << f;
-            tc::xml::editXmlConf(tc::getConfigPath()+"/"+f);
+            tc::xml::editXmlControllerConf(tc::getConfigPath()+"/"+f);
         }
         this->done(QDialog::Accepted);
         break;}
@@ -130,7 +130,7 @@ void Dialog_ConfigureGame::configure(){
     bool success{true};
     for(const auto& xmlPath : bindingList)
     {
-        success = success && tc::xml::editXmlConf(xmlPath);
+        success = success && tc::xml::editXmlControllerConf(xmlPath);
     }
 
     m_succeeded = success;

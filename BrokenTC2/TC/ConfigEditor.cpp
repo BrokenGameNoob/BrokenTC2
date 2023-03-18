@@ -41,7 +41,7 @@ QStringList getBindingsFiles(const QString& configDirPath){
 
 namespace xml {
 
-bool editXmlConf(const QString& xmlPath){
+bool editXmlControllerConf(const QString& xmlPath){
     auto xmlDoc{::xml::getXmlDoc(xmlPath)};
     if(!xmlDoc)
     {
