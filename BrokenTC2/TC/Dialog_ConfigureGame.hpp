@@ -11,6 +11,13 @@ class Dialog_ConfigureGame : public QDialog
 {
     Q_OBJECT
 
+    enum PagesIndex : int32_t{
+        kIntro = 0,
+        kNoConfigFileFound = 1,
+        kWaitingForTC2Closed = 2,
+        kDone = 3
+    };
+
 public:
     explicit Dialog_ConfigureGame(QWidget *parent = nullptr);
     ~Dialog_ConfigureGame();

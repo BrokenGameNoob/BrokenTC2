@@ -108,9 +108,6 @@ private slots:
     void onKeyboardPressed(int key);
 
 
-
-    void on_pb_selectKey_resetDefault_clicked();
-
     void on_cb_selectDevice_currentIndexChanged(int index);
 
     void on_cb_showCurrentGear_stateChanged(int checked);
