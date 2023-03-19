@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include <QThread>
+
 #include "ProgFeatures.hpp"
 #include "libSimpleUpdater/SimpleUpdater.hpp"
 
@@ -51,6 +53,7 @@ MainWindow::MainWindow(const ProgArgs &args, QWidget *parent)
     }
     else if(m_args.progGoal == ProgArgs::INSTALL_UPDATE)
     {
+        QThread::msleep(500);
         auto success{installPackage(m_args,this)};
         if(!success)
         {
