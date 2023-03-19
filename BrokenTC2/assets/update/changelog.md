@@ -1,3 +1,20 @@
+# 1.1.3 is here! (Update fix)
+
+## -> New Features
+- *Not this time, sorry 🤷*
+
+
+<br/><br/>
+
+## -> Bugs patched
+- The update was not working on some computers.
+
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.2 is here! (Controller reconnected)
 
 ## -> New Features
@@ -11,7 +28,6 @@
 - The software will now automatically reconnect to a disconnected controller (you won't have to restart the software anymore)
 - The default color on first start of the software for the gear indicator is now white instead of black
 - Joystick threshold is now set by default at half its maximum value
-
 
 <br/><br/>
 \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
