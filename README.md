@@ -43,7 +43,7 @@ Quick guide language:
 <br/>
 
 Follow the instruction of the "Ez Setup"
-![Ez setup home page](UserManual_images/EzSetup_home.png)
+![Ez setup home page](Docs/UserManual_images/EzSetup_home.png)
 
 <br/>
 
@@ -65,7 +65,7 @@ Set desired keyboard keys for gears 1 to 7, reverse, clutch and gear up & down i
 
 <br/>
 
-[In game config](UserManual_images/GameConfig.png)
+[In game config](Docs/UserManual_images/GameConfig.png)
 
 <br/>
 
@@ -77,7 +77,7 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 <br/>
 
-[Software in game config](UserManual_images/BTC2_gameConfig.png)
+[Software in game config](Docs/UserManual_images/BTC2_gameConfig.png)
 
 <br/>
 
@@ -85,7 +85,7 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 <br/>
 
-![Software gearbox](UserManual_images/GameGearboxConfig.png)
+![Software gearbox](Docs/UserManual_images/GameGearboxConfig.png)
 
 
 ## Build
