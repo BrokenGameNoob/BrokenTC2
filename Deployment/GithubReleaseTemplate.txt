@@ -16,6 +16,8 @@ Vous y trouverez probablement quelques infos utiles. Vous aurez également la po
 
 # 🇬🇧 What's new?
 
+🇫🇷 Rendez-vous sur le serveur discord pour le changelog en français !
+
 ## New features
 - *Not this time, sorry 🤷*
 

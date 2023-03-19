@@ -2,6 +2,7 @@
 
 ## -> New Features
 - Update UI now allow one to install an update from user's downloaded files
+- Improved EZ Setup feature + rewrote user guide under the form of a quick guide
 
 
 <br/><br/>
@@ -9,7 +10,7 @@
 ## -> Bugs patched
 - The software will now automatically reconnect to a disconnected controller (you won't have to restart the software anymore)
 - The default color on first start of the software for the gear indicator is now white instead of black
-- Joystick threshold is now set to halfway
+- Joystick threshold is now set by default at half its maximum value
 
 
 <br/><br/>
