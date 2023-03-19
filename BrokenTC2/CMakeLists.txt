@@ -178,6 +178,12 @@ endif()
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
+add_definitions("-DCMAKE_PROGRAM_NAME=\"${EXE_NAME}\"")
+
+#define LOG_HANDLER_BASE_DIR_QSTRING
+set(LOG_HANDLER_BASE_DIR_MACRO "-DLOG_HANDLER_BASE_DIR_QSTRING=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+\"/\"+QString{\"${EXE_NAME}\"}" CACHE BOOL "" FORCE)
+add_definitions(${LOG_HANDLER_BASE_DIR_MACRO})
+
 #----- Used to get the current filename
 
 # The additional / is important to remove the last character from the path.

@@ -80,7 +80,7 @@ int SDL_main(int argc, char *argv[])
 int main(int argc,char* argv[])
 #endif
 {
-    installCustomLogHandler(logHandler::GlobalLogInfo{.progLogFileName="BrokeLog.log",.progName="BrokenTC2"});
+    installCustomLogHandler(logHandler::GlobalLogInfo{.progLogFilePath="BrokeLog.log",.progName="BrokenTC2"});
 
     int rCode{0};
     QApplication a(argc, argv);

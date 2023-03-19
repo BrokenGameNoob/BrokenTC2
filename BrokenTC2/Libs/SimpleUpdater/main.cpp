@@ -18,7 +18,8 @@
 
 int main(int argc, char *argv[])
 {
-    installCustomLogHandler("SimpleUpdater.log");
+    auto logConf{logHandler::GlobalLogInfo{.progLogFilePath="SimpleUpdater.log",.progName="BrokenTC2SimpleUpdater"}};
+    installCustomLogHandler(std::move(logConf));
     QApplication a(argc, argv);
 
     QCommandLineParser parser{};

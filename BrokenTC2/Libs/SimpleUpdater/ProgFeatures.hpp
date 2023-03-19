@@ -176,19 +176,52 @@ auto createPackage(const ProgArgs& args){
     return true;
 }
 
+struct InstallPackageSettings{
+    bool forceQuiet{false};
+    bool forceUnsecureInstallPrompt{false};
+    bool forceHideUnsecureInstallPrompt{false};
+};
+struct InstallPackageRVal{
+    enum FailureReason : int32_t{
+        kSucceeded,
+        kUnknown,
+        kRefusedUnsecure,
+        kInvalidUpdateFile,
+        kSignatureError,
+        kVerificationError,
+        kInvalidManifest,
+        kFailedUpdateTag,
+        kExtractionFailure,
+        kPostUpdateFailure
+    };
+    FailureReason reason{};
+
+    explicit operator bool()const{
+        return reason == kSucceeded;
+    }
+};
 
 inline
-auto installPackage(const ProgArgs& args,QWidget* parent){
+InstallPackageRVal installPackage(const ProgArgs& args,QWidget* parent, const InstallPackageSettings& installSettings){
+    auto lambda_isQuiet{[&](){
+            return args.quiet || installSettings.forceQuiet;
+    }};
+
+    qInfo() << "Installation parameters:";
+    qInfo().noquote() << "\tforceQuiet=" << installSettings.forceQuiet;
+    qInfo().noquote() << "\tforceUnsecureInstallPrompt=" << installSettings.forceUnsecureInstallPrompt;
+    qInfo().noquote() << "\tforceHideUnsecureInstallPrompt=" << installSettings.forceHideUnsecureInstallPrompt;
+
     QFileInfo fInfo{args.inputUpdateArchive};
     if(!fInfo.exists() || !fInfo.isFile())
     {
         qCritical() << __PRETTY_FUNCTION__ << ": Invalid update package (not found or not a file):" << args.inputUpdateArchive;
-        return false;
+        return {InstallPackageRVal::kInvalidUpdateFile};
     }
 
     if(args.verifierKeyFile.isEmpty())
     {
-        if(args.quiet)
+        if((lambda_isQuiet() && !installSettings.forceUnsecureInstallPrompt) || installSettings.forceHideUnsecureInstallPrompt)
         {
             qWarning() << "Installing an update without signature verification (unsecure)";
         }
@@ -202,7 +235,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
             if(ans == QMessageBox::StandardButton::No)
             {
                 qInfo() << "Installation aborted because refused to install package without signature verification";
-                return false;
+                return {InstallPackageRVal::kRefusedUnsecure};
             }
             qWarning() << "Installing an update without signature verification (unsecure)";
         }
@@ -212,19 +245,19 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         auto safeToInstallOpt{signing::checkFileSignatureFromManifest(fInfo.absoluteFilePath(),args.manifestFile,args.verifierKeyFile)};
         if(!safeToInstallOpt)
         {
-            if(!args.quiet)
+            if(!lambda_isQuiet())
             {
                 QMessageBox::critical(parent,QObject::tr("Error!"),
                           QObject::tr("The update was expected to be signed but an invalid manifest file (without signature or could not read it) was given.\n"
                                       "As it may be a security issue, the installation was cancelled"));
             }
             qCritical() << "The update was expected to be signed but no signature was found in the provided manifest file (or unreachable manifest). ABORTING installation";
-            return false;
+            return {InstallPackageRVal::kSignatureError};
         }
         const auto safeToInstall{safeToInstallOpt.value()};
         if(!safeToInstall)
         {
-            if(!args.quiet)
+            if(!lambda_isQuiet())
             {
                 QMessageBox::critical(parent,QObject::tr("Error during installation"),
                                       QObject::tr("Failed to verify the update package.\n"
@@ -232,7 +265,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
                                                   "Please try to reinstall the software or reach support"));
             }
             qCritical() << "Failed to verify the update package.";
-            return false;
+            return {InstallPackageRVal::kVerificationError};
         }
         else
         {
@@ -247,7 +280,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         if(!manifestOpt)
         {
             qCritical() << "Invalid manifest file";
-            return false;
+            return {InstallPackageRVal::kInvalidManifest};
         }
         const auto& manifest{manifestOpt.value()};
         updatedTagFilePath = manifest.updatedTagFile;
@@ -258,7 +291,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         if(!createEmptyFile(updatedTagFilePath))
         {
             qCritical() << __PRETTY_FUNCTION__ << "Failed to create the update tag";
-            return false;
+            return {InstallPackageRVal::kFailedUpdateTag};
         }
     }
     else
@@ -283,7 +316,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
     {
         qCritical() << __PRETTY_FUNCTION__ << ": Failed to extract update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
         deleteUpdatedTag(updatedTagFilePath);
-        return false;
+        return {InstallPackageRVal::kExtractionFailure};
     }
     qInfo() << "Successfully extracted update package:" << fInfo.absoluteFilePath() << " to:" << baseFolder;
 
@@ -303,7 +336,7 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
             qCritical() << "Could not start the post update command (" << __PRETTY_FUNCTION__ << ")";
             qCritical() << args.postUpdateCmd;
             deleteUpdatedTag(updatedTagFilePath);
-            return false;
+            return {InstallPackageRVal::kPostUpdateFailure};
         }
         qInfo() << "Started post update with PID:" << pid;
     }
@@ -312,5 +345,5 @@ auto installPackage(const ProgArgs& args,QWidget* parent){
         qWarning() << __PRETTY_FUNCTION__ << ": No post-update command specified... Doesn't seem normal";
     }
 
-    return true;
+    return {InstallPackageRVal::kSucceeded};
 }

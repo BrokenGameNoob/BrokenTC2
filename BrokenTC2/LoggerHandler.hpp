@@ -4,6 +4,9 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QLoggingCategory>
+#include <QFileInfo>
+#include <QDir>
+#include <QStandardPaths>
 
 #ifdef Q_OS_WIN
 #include <debugapi.h>
@@ -15,7 +18,7 @@ namespace logHandler
 {
 
 struct GlobalLogInfo{
-    std::string progLogFileName{};
+    std::string progLogFilePath{};
     std::string progName{};
 };
 
@@ -78,7 +81,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &context, con
     const auto time{QDateTime::currentDateTime().toString("hh:mm:ss").toLocal8Bit()};
 
     static bool firstCall{true};
-    static LoggerFile f{globalLogInfo.progLogFileName};
+    static LoggerFile f{globalLogInfo.progLogFilePath};
     if(firstCall){
         firstCall = false;
         progLog(stdout,f,"\n\n  [Info]  : Starting log session - %s - %s\n\n",date.constData(),time.constData());
@@ -121,11 +124,30 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &context, con
  */
 inline
 void installCustomLogHandler(logHandler::GlobalLogInfo logInfo){
-    logHandler::globalLogInfo = std::move(logInfo);
+#ifdef LOG_HANDLER_BASE_DIR_QSTRING
+    QFileInfo originalInfo{QString::fromStdString(logInfo.progLogFilePath)};
+
+    if(!originalInfo.isAbsolute())
+    {
+        logInfo.progLogFilePath = (LOG_HANDLER_BASE_DIR_QSTRING).toStdString()+"/Logs/"+logInfo.progLogFilePath;
+    }
+#else
+#endif
+
 #ifdef CMAKE_DEBUG_MODE
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
 #else
     QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, false);
 #endif
+
+    QFileInfo fInfo{QString::fromStdString(logInfo.progLogFilePath)};
+    auto logDir{fInfo.absoluteDir()};
+    if(!logDir.exists())
+    {
+        logDir.mkpath(".");
+    }
+
+    logHandler::globalLogInfo = std::move(logInfo);
+
     qInstallMessageHandler(logHandler::customMessageHandler);
 }
