@@ -57,10 +57,24 @@
        <item>
         <widget class="QLabel" name="lbl_disp_intro">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;WARNING&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;: This assistant will &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;unbind&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; all your gamepad keys to shift gear up and down.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;This mean you will &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;not be able to shift gears without running BrokenTC2 anymore&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;However, this &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;can be undone&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; simply by affecting the right keys in the game as you would do with any other.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;&amp;gt; This step is &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; font-style:italic; text-decoration: underline; color:#ff0000;&quot;&gt;REQUIRED&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; and shall not be skipped to ensure proper operation of the software.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;WARNING&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: This assistant will &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;unbind&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; all your gamepad keys to shift gear up and down.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;This mean you will &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;not be able to shift gears without running BrokenTC2 anymore&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;However, this &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;can be undone&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; simply by affecting the right keys in the game as you would do with any other.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;&amp;gt; This step is &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; font-style:italic; text-decoration: underline; color:#ff0000;&quot;&gt;REQUIRED&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; and shall not be skipped to ensure proper operation of the software.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pg_noConfigFileFound">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="lbl_disp_noConfigFileFound">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Please start your game and &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;change a controller key&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; (Inverse keys for gear up &amp;amp; down for example). This will generate a configuration file.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;You can then click the &amp;quot;next&amp;quot; button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -132,10 +146,10 @@
        <item>
         <widget class="QLabel" name="lbl_disp_done">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;The configuration will be edited once you click &amp;quot;Finish&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The configuration will be edited once you click &amp;quot;Finish&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

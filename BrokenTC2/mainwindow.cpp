@@ -261,7 +261,16 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
         constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2"};
-        qDebug() << __CURRENT_PLACE__ << " : open " << helpLink;
+        qInfo() << __CURRENT_PLACE__ << " : open " << helpLink;
+        if(!QDesktopServices::openUrl(QUrl{helpLink}))
+        {
+            QMessageBox::warning(this,tr("Can't help"),tr("Sorry, we can't open help. Go to this page :\n%0").
+                                 arg(helpLink));
+        }
+    });
+    connect(ui->pb_userManual,&QToolButton::clicked,this,[&](){
+        constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2#quick-guide"};
+        qInfo() << __CURRENT_PLACE__ << " : open " << helpLink;
         if(!QDesktopServices::openUrl(QUrl{helpLink}))
         {
             QMessageBox::warning(this,tr("Can't help"),tr("Sorry, we can't open help. Go to this page :\n%0").
@@ -964,21 +973,6 @@ void MainWindow::onKeyboardPressed(int key)
         cycleGamepadProfile();
     }
 }
-
-void MainWindow::on_pb_selectKey_resetDefault_clicked()
-{
-    auto ans{QMessageBox::question(this,tr("Confirmation"),tr("This will erase your current settings and they won't be recoverable.\nDo you want to continue ?"))};
-    if(ans != QMessageBox::Yes)
-    {
-        return;
-    }
-
-    auto oldProfileName{m_gearHandler.settings().profileName};
-    m_gearHandler.settings() = {.profileName=oldProfileName};
-    refreshDisplayFromGearHandlerSettings();
-    saveProfileSettings();
-}
-
 
 void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
 {
