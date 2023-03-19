@@ -470,7 +470,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     //--------------------------------------------------------------------
 
-    qDebug() << __CURRENT_PLACE__ << "  " << getCurrentProfileFilePath();
+    qDebug() << __CURRENT_PLACE__ << "   " << getCurrentProfileFilePath();
     if(!QFileInfo::exists(c_appDataFolder))//if the appdata folder doesn't exist
     {
         if(!QDir::root().mkpath(c_appDataFolder))
