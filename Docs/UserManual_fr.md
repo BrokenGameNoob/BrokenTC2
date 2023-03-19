@@ -37,7 +37,7 @@ Ces touches doivent être identiques à celles configurées dans le logiciel.
 
 <br/>
 
-[In game config](UserManual_images/GameConfig.png)
+![In game config](UserManual_images/GameConfig.png)
 
 <br/>
 
@@ -49,7 +49,7 @@ Configurez les touches de l'onglet "In game profile" pour correspondre à la con
 
 <br/>
 
-[Software in game config](UserManual_images/BTC2_gameConfig.png)
+![Software in game config](UserManual_images/BTC2_gameConfig.png)
 
 <br/>
 

@@ -65,7 +65,7 @@ Set desired keyboard keys for gears 1 to 7, reverse, clutch and gear up & down i
 
 <br/>
 
-[In game config](Docs/UserManual_images/GameConfig.png)
+![In game config](Docs/UserManual_images/GameConfig.png)
 
 <br/>
 
@@ -77,7 +77,7 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 <br/>
 
-[Software in game config](Docs/UserManual_images/BTC2_gameConfig.png)
+![Software in game config](Docs/UserManual_images/BTC2_gameConfig.png)
 
 <br/>
 
