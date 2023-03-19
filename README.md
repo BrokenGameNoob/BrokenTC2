@@ -26,11 +26,13 @@
 
 <br/>
 
+# Quick guide
+
 Quick guide language:
 - 🇫🇷 [Quick guide FR (Important !)](Docs/UserManual_fr.md)
 - 🇬🇧 [Quick guide EN (Important!)](Docs/UserManual_en.md)
 
-# Quick guide
+<br/>
 
 > ***Note***: ⚠️ Use "clutch" mode **ONLY** for cars with up to 7 speeds. Otherwise, use "Sequential mode". You can configure a key or a controller button to switch between both ⚠️
 
