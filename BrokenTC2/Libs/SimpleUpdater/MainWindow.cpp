@@ -53,7 +53,7 @@ MainWindow::MainWindow(const ProgArgs &args, QWidget *parent)
     }
     else if(m_args.progGoal == ProgArgs::INSTALL_UPDATE)
     {
-        QThread::msleep(500);
+        QThread::msleep(1000);
         auto success{installPackage(m_args,this)};
         if(!success)
         {
