@@ -76,6 +76,8 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(SimpleUpdater)
 endif()
 
+add_definitions(${LOG_HANDLER_BASE_DIR_MACRO})
+
 #add_custom_command(
 #        TARGET SimpleUpdater POST_BUILD
 #        COMMAND windeployqt.exe "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SimpleUpdater.exe")
