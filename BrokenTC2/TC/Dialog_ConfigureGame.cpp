@@ -3,6 +3,7 @@
 
 #include <QMessageBox>
 #include <QTime>
+#include <QDebug>
 
 #include "ConfigEditor.hpp"
 
@@ -55,13 +56,12 @@ void Dialog_ConfigureGame::setWaitWidgetsVisible(bool visible){
 void Dialog_ConfigureGame::onCurrentIndexChanged(int curIndex){
     switch(curIndex)
     {
-    case 0:
+    case kIntro:
+    case kNoConfigFileFound:
+    case kWaitingForTC2Closed:
         ui->pb_nextOk->setText(tr("Next"));
         break;
-    case 1:
-        ui->pb_nextOk->setText(tr("Next"));
-        break;
-    case 2:
+    case 3:
         ui->pb_nextOk->setText(tr("Finish"));
         break;
     default:
@@ -82,12 +82,31 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
 {
     auto curIndex{ui->stackedWidget->currentIndex()};
 
+    auto configFileList{tc::getBindingsFiles(tc::getConfigPath())};
+
     switch(curIndex)
     {
-    case 0:
-        ui->stackedWidget->setCurrentIndex(tc::isTC2Running()?1:2);
+    case kIntro:{
+        if(configFileList.empty())
+        {
+            ui->stackedWidget->setCurrentIndex(kNoConfigFileFound);
+        }
+        else
+        {
+            ui->stackedWidget->setCurrentIndex(tc::isTC2Running()?kWaitingForTC2Closed:kDone);
+        }
         break;
-    case 1:{
+    }case kNoConfigFileFound:{
+        if(configFileList.empty())
+        {
+            QMessageBox::warning(this,tr("Attention please"),tr("Please follow instruction on screen. No configuration file was found."));
+        }
+        else
+        {
+            ui->stackedWidget->setCurrentIndex(tc::isTC2Running()?kWaitingForTC2Closed:kDone);
+        }
+        break;
+    } case kWaitingForTC2Closed:{
         tc::killTheCrew2();
         setWaitWidgetsVisible(true);
         QStringList animText{"┏⁠(⁠＾⁠0⁠＾⁠)⁠⁠┛","ƪ⁠(⁠‾⁠.⁠‾⁠“⁠)⁠┐","ヘ⁠(⁠￣⁠ω⁠￣⁠ヘ⁠)","ƪ⁠(⁠˘⁠⌣⁠˘⁠)⁠ʃ"};
@@ -107,9 +126,9 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
                 break;
         }
 
-        ui->stackedWidget->setCurrentIndex(2);
+        ui->stackedWidget->setCurrentIndex(3);
         break;}
-    case 2:{
+    case kDone:{
         auto bindingList{tc::getBindingsFiles(tc::getConfigPath())};
         for(const auto& f : bindingList)
         {
