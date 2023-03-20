@@ -55,6 +55,12 @@ Configurez les touches de l'onglet "In game profile" pour correspondre à la con
 
 ## 3. N'oubliez pas de changer votre boîte de vitesse In-Game en "Boîte de vitesse + embrayage"
 
+## 4. Configurez les commandes souhaitées dans le logiciel
+
+![Software controller config](UserManual_images/BTC2_controllerConfig.png)
+
+
+
 <br/>
 
 ![Configuration de la boîte de vitesse](UserManual_images/GameGearboxConfig.png)

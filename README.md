@@ -90,6 +90,10 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 ![Software gearbox](Docs/UserManual_images/GameGearboxConfig.png)
 
+## 4. Configure your controller settings
+
+![Software controller config](Docs/UserManual_images/BTC2_controllerConfig.png)
+
 
 ## Build
 

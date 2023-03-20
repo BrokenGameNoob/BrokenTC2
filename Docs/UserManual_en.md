@@ -51,6 +51,10 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 ## 3. Do not forget to set your In-Game gearbox to "H-Shifter + Clutch"
 
+## 4. Configure your controller settings
+
+![Software controller config](UserManual_images/BTC2_controllerConfig.png)
+
 <br/>
 
 ![Software gearbox](UserManual_images/GameGearboxConfig.png)
