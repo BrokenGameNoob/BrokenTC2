@@ -45,6 +45,7 @@ Quick guide language:
 <br/>
 
 Follow the instruction of the "Ez Setup"
+
 ![Ez setup home page](Docs/UserManual_images/EzSetup_home.png)
 
 <br/>
