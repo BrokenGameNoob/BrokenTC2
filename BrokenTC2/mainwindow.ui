@@ -1876,6 +1876,7 @@ background color</string>
     <addaction name="separator"/>
     <addaction name="action_checkUpdates"/>
     <addaction name="separator"/>
+    <addaction name="actionOpen_logs_folder"/>
    </widget>
    <addaction name="menuTools"/>
   </widget>
@@ -1888,6 +1889,11 @@ background color</string>
   <action name="action_checkUpdates">
    <property name="text">
     <string>Check updates</string>
+   </property>
+  </action>
+  <action name="actionOpen_logs_folder">
+   <property name="text">
+    <string>Open logs folder</string>
    </property>
   </action>
  </widget>

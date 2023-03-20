@@ -63,6 +63,8 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QDir>
+#include <QDesktopServices>
+#include "LoggerHandler.hpp"
 
 #include <QDebug>
 #include <QProcess>
@@ -1083,5 +1085,12 @@ void MainWindow::on_pb_ezConf_clicked()
 void MainWindow::on_action_checkUpdates_triggered()
 {
     m_updateHandler->show();
+}
+
+
+void MainWindow::on_actionOpen_logs_folder_triggered()
+{
+    QFileInfo fInfo{QString::fromStdString(logHandler::GlobalLogInfo::i().progLogFilePath)};
+    QDesktopServices::openUrl(QUrl::fromLocalFile(fInfo.dir().absolutePath()));
 }
 

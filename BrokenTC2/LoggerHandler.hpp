@@ -20,9 +20,12 @@ namespace logHandler
 struct GlobalLogInfo{
     std::string progLogFilePath{};
     std::string progName{};
-};
 
-GlobalLogInfo globalLogInfo{};
+    static auto& i(){
+        static GlobalLogInfo instance{};
+        return instance;
+    }
+};
 
 class LoggerFile{
 public:
@@ -81,7 +84,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &context, con
     const auto time{QDateTime::currentDateTime().toString("hh:mm:ss").toLocal8Bit()};
 
     static bool firstCall{true};
-    static LoggerFile f{globalLogInfo.progLogFilePath};
+    static LoggerFile f{GlobalLogInfo::i().progLogFilePath};
     if(firstCall){
         firstCall = false;
         progLog(stdout,f,"\n\n  [Info]  : Starting log session - %s - %s\n\n",date.constData(),time.constData());
@@ -147,7 +150,7 @@ void installCustomLogHandler(logHandler::GlobalLogInfo logInfo){
         logDir.mkpath(".");
     }
 
-    logHandler::globalLogInfo = std::move(logInfo);
+    logHandler::GlobalLogInfo::i() = std::move(logInfo);
 
     qInstallMessageHandler(logHandler::customMessageHandler);
 }

@@ -124,6 +124,8 @@ private slots:
 
     void on_action_checkUpdates_triggered();
 
+    void on_actionOpen_logs_folder_triggered();
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();

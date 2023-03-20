@@ -1,3 +1,18 @@
+# 1.1.4 is here! (Tool? sorry)
+
+## -> New Features
+- Added a tool to open the logs folder
+
+<br/><br/>
+
+## -> Bugs patched
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.3 is here! (Update fix)
 
 ## -> New Features
