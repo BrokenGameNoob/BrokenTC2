@@ -589,8 +589,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>727</width>
-              <height>286</height>
+              <width>203</width>
+              <height>146</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -755,7 +755,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>713</width>
+              <width>223</width>
               <height>451</height>
              </rect>
             </property>
@@ -1117,7 +1117,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>713</width>
+              <width>390</width>
               <height>514</height>
              </rect>
             </property>
@@ -1805,7 +1805,7 @@ background color</string>
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://discord.gg/tkVRs4tp&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#8ab4f8;&quot;&gt;https://discord.gg/tkVRs4tp&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://discord.gg/3wH2RjVe4n&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#8ab4f8;&quot;&gt;https://discord.gg/3wH2RjVe4n&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>

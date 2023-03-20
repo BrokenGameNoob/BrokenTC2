@@ -18,7 +18,7 @@
 - Usable with wheels, controllers and pretty much anything recognized
 - Profiles linked to controller in use
 - Easy configuration and detailed instructions just below
-- Automatic upgrades
+- Secured automatic updates
 
 ## Download
 

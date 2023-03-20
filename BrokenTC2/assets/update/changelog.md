@@ -1,3 +1,18 @@
+# 1.1.5 is here! (Broken links...)
+
+## -> New Features
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs patched
+- Fixed broken (what a joke...) discord links
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.4 is here! (Tool? sorry)
 
 ## -> New Features
