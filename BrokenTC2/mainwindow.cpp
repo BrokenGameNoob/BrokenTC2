@@ -58,6 +58,7 @@
 #include <QWindow>
 #include <QCloseEvent>
 #include <QColorDialog>
+#include <QPainter>
 
 #include <QFile>
 #include <QFileInfo>
@@ -224,8 +225,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_softSettings{},
       c_appDataFolder{QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+"/"},
       c_softSettingsFile{c_appDataFolder+"settings.conf"},
-      m_controller{}
+      m_controller{},
+      m_pixmapBg{}
 {
+    m_pixmapBg.load(":/img/img/noshi.png");
     // UI Init
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
@@ -1094,3 +1097,25 @@ void MainWindow::on_actionOpen_logs_folder_triggered()
     QDesktopServices::openUrl(QUrl::fromLocalFile(fInfo.dir().absolutePath()));
 }
 
+
+void MainWindow::paintEvent(QPaintEvent *pe)
+{
+    std::ignore = pe;
+    QPainter painter(this);
+
+    auto winSize = size();
+    auto pixmapRatio = (float)m_pixmapBg.width() / m_pixmapBg.height();
+    auto windowRatio = (float)winSize.width() / winSize.height();
+
+    if(pixmapRatio > windowRatio)
+    {
+      auto newWidth = (int)(winSize.height() * pixmapRatio);
+      auto offset = (newWidth - winSize.width()) / -2;
+      painter.drawPixmap(offset, 0, newWidth, winSize.height(), m_pixmapBg);
+    }else
+    {
+      auto newHeight = (int)(winSize.width() / pixmapRatio);
+      auto offset = (newHeight - winSize.height()) / -2;
+      painter.drawPixmap(0, offset, winSize.width(), newHeight, m_pixmapBg);
+    }
+}
