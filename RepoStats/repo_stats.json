@@ -1,36 +1,4 @@
 {
-    "25-03-2023": {
-        "release_list": [
-            {
-                "downloads": {
-                    "setup_downloaded_count": 47,
-                    "update_downloaded_count": 12
-                },
-                "tag_name": "v1.1.5",
-                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
-            },
-            {
-                "downloads": {
-                    "setup_downloaded_count": 0,
-                    "update_downloaded_count": 2
-                },
-                "tag_name": "v1.1.4",
-                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
-            },
-            {
-                "downloads": {
-                    "setup_downloaded_count": 4,
-                    "update_downloaded_count": 4
-                },
-                "tag_name": "v1.1.3",
-                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
-            }
-        ],
-        "total_downloads": {
-            "setup_downloaded_count": 51,
-            "update_downloaded_count": 18
-        }
-    },
     "24-03-2023": {
         "release_list": [
             {
@@ -63,7 +31,7 @@
             "update_downloaded_count": 18
         }
     },
-    "26-03-2023": {
+    "25-03-2023": {
         "release_list": [
             {
                 "downloads": {
@@ -93,6 +61,326 @@
         "total_downloads": {
             "setup_downloaded_count": 51,
             "update_downloaded_count": 18
+        }
+    },
+    "26-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 55,
+                    "update_downloaded_count": 12
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 4
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 59,
+            "update_downloaded_count": 18
+        }
+    },
+    "27-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 59,
+                    "update_downloaded_count": 12
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 4
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 63,
+            "update_downloaded_count": 18
+        }
+    },
+    "28-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 65,
+                    "update_downloaded_count": 15
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 69,
+            "update_downloaded_count": 22
+        }
+    },
+    "29-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 15
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 71,
+            "update_downloaded_count": 22
+        }
+    },
+    "30-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 15
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 71,
+            "update_downloaded_count": 22
+        }
+    },
+    "31-03-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 16
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 71,
+            "update_downloaded_count": 23
+        }
+    },
+    "01-04-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 16
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 0,
+                    "update_downloaded_count": 2
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 4,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 71,
+            "update_downloaded_count": 23
+        }
+    },
+    "02-04-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 16
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 1,
+                    "update_downloaded_count": 3
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 5,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 73,
+            "update_downloaded_count": 24
+        }
+    },
+    "03-04-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 67,
+                    "update_downloaded_count": 16
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 1,
+                    "update_downloaded_count": 3
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 5,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 73,
+            "update_downloaded_count": 24
+        }
+    },
+    "05-04-2023": {
+        "release_list": [
+            {
+                "downloads": {
+                    "setup_downloaded_count": 80,
+                    "update_downloaded_count": 16
+                },
+                "tag_name": "v1.1.5",
+                "name": "Broken The Crew 2 v1.1.5 (Broken links...)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 1,
+                    "update_downloaded_count": 3
+                },
+                "tag_name": "v1.1.4",
+                "name": "Broken The Crew 2 v1.1.4 (Tool? sorry)"
+            },
+            {
+                "downloads": {
+                    "setup_downloaded_count": 5,
+                    "update_downloaded_count": 5
+                },
+                "tag_name": "v1.1.3",
+                "name": "Broken The Crew 2 v1.1.3 (Update fix)"
+            }
+        ],
+        "total_downloads": {
+            "setup_downloaded_count": 86,
+            "update_downloaded_count": 24
         }
     }
 }
