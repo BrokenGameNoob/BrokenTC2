@@ -64,6 +64,8 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QDir>
+#include <QDesktopServices>
+#include "LoggerHandler.hpp"
 
 #include <QDebug>
 #include <QProcess>
@@ -71,7 +73,7 @@
 #include <Libs/Proto/TCprofile.pb.h>
 #include <Libs/Proto/TCprofileDefaults.hpp>
 #include <google/protobuf/util/json_util.h>
-
+#include <limits>
 
 
 namespace{
@@ -105,7 +107,6 @@ QString getKeyOrButtonText(int keyCode,bool useVkCodeChar){
     {
         if(keyCode >= 1000)//gamepad axis
         {
-            qDebug() << "keyCode > 1000";
             text = "Axis: ";
             text += QString::number((keyCode-1000)/10);
             text += " Dir: ";
@@ -284,7 +285,16 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     connect(ui->toolB_help,&QToolButton::clicked,this,[&](){
         constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2"};
-        qDebug() << __CURRENT_PLACE__ << " : open " << helpLink;
+        qInfo() << __CURRENT_PLACE__ << " : open " << helpLink;
+        if(!QDesktopServices::openUrl(QUrl{helpLink}))
+        {
+            QMessageBox::warning(this,tr("Can't help"),tr("Sorry, we can't open help. Go to this page :\n%0").
+                                 arg(helpLink));
+        }
+    });
+    connect(ui->pb_userManual,&QToolButton::clicked,this,[&](){
+        constexpr auto helpLink{"https://github.com/BrokenGameNoob/BrokenTC2#quick-guide"};
+        qInfo() << __CURRENT_PLACE__ << " : open " << helpLink;
         if(!QDesktopServices::openUrl(QUrl{helpLink}))
         {
             QMessageBox::warning(this,tr("Can't help"),tr("Sorry, we can't open help. Go to this page :\n%0").
@@ -440,7 +450,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         saveProfileSettings();
     });
     //init threshold slider (set max value to int16_t max val)
-    ui->hs_joyAxisThreshold->setMaximum(32767);//int16_t
+    ui->hs_joyAxisThreshold->setMaximum(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1);//int16_t
     connect(ui->hs_joyAxisThreshold,&QSlider::valueChanged,this,[&](int val){
         m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(val));
         saveSoftSettings();
@@ -484,7 +494,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     //--------------------------------------------------------------------
 
-    qDebug() << __CURRENT_PLACE__ << "  " << getCurrentProfileFilePath();
+    qDebug() << __CURRENT_PLACE__ << "   " << getCurrentProfileFilePath();
     if(!QFileInfo::exists(c_appDataFolder))//if the appdata folder doesn't exist
     {
         if(!QDir::root().mkpath(c_appDataFolder))
@@ -534,6 +544,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.isInit = true;
     on_cb_showCurrentGear_stateChanged(ui->cb_showCurrentGear->isChecked());
     updateSoftSettings();
+    refreshFromSettings();
 
     //UPDATES
 
@@ -686,7 +697,8 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.preferredCoreCount = settings.value("preferredCoreCount").toInt(def.preferredCoreCount);
     auto bgHUDColorStr{settings.value("bgHUDColor").toString()};
     m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr),m_gearDisplay);
-    m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold").toInt(20000)));
+    m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold")
+                                                            .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1)));
 
     refreshFromSettings();
 
@@ -988,21 +1000,6 @@ void MainWindow::onKeyboardPressed(int key)
     }
 }
 
-void MainWindow::on_pb_selectKey_resetDefault_clicked()
-{
-    auto ans{QMessageBox::question(this,tr("Confirmation"),tr("This will erase your current settings and they won't be recoverable.\nDo you want to continue ?"))};
-    if(ans != QMessageBox::Yes)
-    {
-        return;
-    }
-
-    auto oldProfileName{m_gearHandler.settings().profileName};
-    m_gearHandler.settings() = {.profileName=oldProfileName};
-    refreshDisplayFromGearHandlerSettings();
-    saveProfileSettings();
-}
-
-
 void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
 {
     if(!m_softSettings.isInit)
@@ -1036,7 +1033,9 @@ void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
         }
         updateSoftSettings();
 
+        qInfo() << __PRETTY_FUNCTION__ << "Connecting & registering new controller from mainwindow:" << ui->cb_selectDevice->currentData().toInt();
         m_controller.connectController(ui->cb_selectDevice->currentData().toInt());
+        qsdl::SDLEventHandler::registerController(&m_controller);
     }
 
     refreshDisplayFromGearHandlerSettings();
@@ -1110,5 +1109,12 @@ void MainWindow::on_pb_ezConf_clicked()
 void MainWindow::on_action_checkUpdates_triggered()
 {
     m_updateHandler->show();
+}
+
+
+void MainWindow::on_actionOpen_logs_folder_triggered()
+{
+    QFileInfo fInfo{QString::fromStdString(logHandler::GlobalLogInfo::i().progLogFilePath)};
+    QDesktopServices::openUrl(QUrl::fromLocalFile(fInfo.dir().absolutePath()));
 }
 

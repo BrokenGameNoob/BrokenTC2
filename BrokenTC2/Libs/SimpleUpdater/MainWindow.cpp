@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include <QThread>
+
 #include "ProgFeatures.hpp"
 #include "libSimpleUpdater/SimpleUpdater.hpp"
 
@@ -12,31 +14,6 @@ MainWindow::MainWindow(const ProgArgs &args, QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-//    updt::getLatestReleaseInfo([&](std::optional<updt::ReleaseInfo> opt){
-//            if(opt)
-//            {
-//                qDebug() << opt.value().versionAvailable << "  " << opt.value().assetsURLs;
-////                updt::net::downloadFileList(this,/*{"https://releases.ubuntu.com/22.04/ubuntu-22.04.1-desktop-amd64.iso"}*/opt.value().assetsURLs,"UpdateDlTest/",true,[&](bool ok){
-////                    qDebug() << "Multiple DL succeeded?" << ok;
-////                });
-//                opt.value().assetsURLs.append("Truc");
-//                opt.value().assetsURLs.append("https://releases.ubuntu.com/22.04/ubuntu-22.04.1-desktop-amd64.iso");
-//                auto dlManager{new updt::net::DownloadManager(opt.value().assetsURLs,"UpdateDlTest/",true,this)};
-//                connect(dlManager,&updt::net::DownloadManager::allDlCompleted,this,[&](int32_t successCount,const QVector<updt::net::FailedDownload>& fails){
-//                    qDebug() << "Success: " << successCount << "   Fails:";
-//                    for(const auto& e : fails)
-//                    {
-//                        qDebug().nospace() << "Failed to dl " << e.url << " because of " << e.errMsg;
-//                    }
-//                });
-//                dlManager->startAllDownloads();
-//            }
-//            else
-//            {
-//                qDebug() << "Can't retrieve release versions";
-//            }
-//        },updt::getGithubReleaseApiUrl("BrokenGameNoob","BrokenTC2"));
 
     if(m_args.progGoal == ProgArgs::CREATE_PACKAGE)
     {
@@ -51,14 +28,62 @@ MainWindow::MainWindow(const ProgArgs &args, QWidget *parent)
     }
     else if(m_args.progGoal == ProgArgs::INSTALL_UPDATE)
     {
-        auto success{installPackage(m_args,this)};
-        if(!success)
+        int32_t kRetryCount{3};
+        int32_t kMsDelayBetweenRetry{1000};
+
+        using RVType = InstallPackageRVal;
+        const std::array<int32_t,3> reasonNotToRetry{
+            RVType::kInvalidUpdateFile,
+            RVType::kRefusedUnsecure,
+            RVType::kUnknown
+        };
+
+        InstallPackageSettings callParameters{};
+        for(int32_t i{}; i < kRetryCount; ++i)
         {
-            qCritical() << "Cannot extract installation package to given folder";
-            readyToQuit(2);
-            return;
+            qInfo() << "Installation try" << i;
+            //note: if the user is prompted to install unsecure update and refuse
+            //installation won't be retried. So we shall not show the prompt
+            //anymore anyway
+            if(i == 0)//first call
+            {
+                callParameters.forceQuiet = true;
+                callParameters.forceUnsecureInstallPrompt = true;
+                callParameters.forceHideUnsecureInstallPrompt = false;
+            }
+            else if(i == kRetryCount-1)//last call
+            {
+                callParameters.forceQuiet = false;
+                callParameters.forceUnsecureInstallPrompt = false;
+                callParameters.forceHideUnsecureInstallPrompt = true;
+            }
+            else//mid? call
+            {
+                callParameters.forceQuiet = true;
+                callParameters.forceUnsecureInstallPrompt = false;
+                callParameters.forceHideUnsecureInstallPrompt = true;
+            }
+
+            auto success{installPackage(m_args,this,callParameters)};
+
+            if(success)
+            {
+                qInfo() << "Successfully installed the update";
+                readyToQuit(0);
+                return;
+            }
+            else if(std::find(cbegin(reasonNotToRetry),cend(reasonNotToRetry),success.reason) != cend(reasonNotToRetry))
+            {
+                qWarning() << "Installation failure (" << success.reason << ") lead to not retrying";
+                break;
+            }
+            qWarning() << "Failed extraction try" << i <<", retrying after" << kMsDelayBetweenRetry << "ms";
+            QThread::msleep(kMsDelayBetweenRetry);
         }
-        qInfo() << "Successfully installed the update";
+        //we should not reach this place if we extracted the update
+        qCritical() << "Cannot extract installation package to given folder";
+        readyToQuit(2);
+        return;
     }
 
     readyToQuit(0);

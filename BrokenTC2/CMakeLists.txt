@@ -24,7 +24,7 @@ endif(UNIX)
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 1)#incompatible update
 set(VERSIONING_MINOR 1)#new features added
-set(VERSIONING_PATCH 1)#bug fixed / minor change
+set(VERSIONING_PATCH 5)#bug fixed / minor change
 
 
 set(EXE_NAME "BrokenTC2")
@@ -243,3 +243,8 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
+add_definitions("-DCMAKE_PROGRAM_NAME=\"${EXE_NAME}\"")
+
+#define LOG_HANDLER_BASE_DIR_QSTRING
+set(LOG_HANDLER_BASE_DIR_MACRO "-DLOG_HANDLER_BASE_DIR_QSTRING=QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)+\"/\"+QString{\"${EXE_NAME}\"}" CACHE BOOL "" FORCE)
+add_definitions(${LOG_HANDLER_BASE_DIR_MACRO})

@@ -53,7 +53,7 @@ namespace xml {
  * \param xmlPath : file to edit
  * \return success
  */
-bool editXmlConf(const QString& filePath);
+bool editXmlControllerConf(const QString& filePath);
 
 } // namespace xml
 } // namespace tc

@@ -86,7 +86,7 @@ struct Settings{
 
 private:
     bool m_lowPerfModeEnabled{false};
-    int16_t m_joyAxisthreshold{};
+    int16_t m_joyAxisthreshold{std::numeric_limits<int16_t>::max()/2};
     QColor m_bgHUDColor{79, 79, 79, 120};
 };
 
@@ -108,9 +108,6 @@ private slots:
     void onKeyboardPressed(int key);
 
 
-
-    void on_pb_selectKey_resetDefault_clicked();
-
     void on_cb_selectDevice_currentIndexChanged(int index);
 
     void on_cb_showCurrentGear_stateChanged(int checked);
@@ -126,6 +123,8 @@ private slots:
     void on_pb_ezConf_clicked();
 
     void on_action_checkUpdates_triggered();
+
+    void on_actionOpen_logs_folder_triggered();
 
 private:
     void updateSoftSettings();

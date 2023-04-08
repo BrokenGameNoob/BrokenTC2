@@ -1,0 +1,67 @@
+Broken The Crew 2 v1.. ()
+
+# Discord !
+
+🇬🇧 A discord server is now available! Feel free to join: [https://discord.gg/3wH2RjVe4n](https://discord.gg/3wH2RjVe4n)
+
+You may find useful resources and will be able to talk about features you would like to see / bugs you encoutered.
+
+<br/>
+
+🇫🇷 Un serveur discord est maintenant disponible ! [https://discord.gg/3wH2RjVe4n](https://discord.gg/3wH2RjVe4n)
+
+Vous y trouverez probablement quelques infos utiles. Vous aurez également la possibilité de discuter des fonctionnalités que vous aimeriez voir / des **bugs** que vous avez rencontrés.
+
+<br/>
+
+# 🇬🇧 What's new?
+
+🇫🇷 Rendez-vous sur le serveur discord pour le changelog en français !
+
+## New features
+- *Not this time, sorry 🤷*
+
+## Bugs patched
+- *Not this time, sorry 🤷*
+
+
+<br/>
+
+# What's to know about this?
+
+This allows you to use the method called "clutch" to engage gears faster using a gamepad or a wheel in the game The Crew 2.
+
+[🇬🇧 Learn more](https://github.com/BrokenGameNoob/BrokenTC2)
+
+[🇫🇷 En savoir plus](https://github.com/BrokenGameNoob/BrokenTC2/blob/master/Docs/README_fr.md)
+
+
+<br/>
+
+# 🇬🇧 How to install / 🇫🇷 Guide d'installation
+
+Download the [***BrokenTC2_setup_x64.exe***](https://github.com/BrokenGameNoob/BrokenTC2/releases/latest/download/BrokenTC2_setup_x64.exe) and launch it to start the installation /
+🇫🇷Téléchargez le fichier [***BrokenTC2_setup_x64.exe***](https://github.com/BrokenGameNoob/BrokenTC2/releases/latest/download/BrokenTC2_setup_x64.exe). Il vous suffit ensuite de l'exécuter pour lancer l'installation.
+
+
+<br/>
+
+# 🇬🇧 How to update from previous version /  🇫🇷 Mises à jour
+
+🇬🇧 Software will check for any available update on startup.
+
+Or you can use the `Tools->Check update` option.
+
+<br/>
+
+🇫🇷 Le logiciel vous proposera de se mettre à jour au démarrage si une nouvelle version est disponible
+
+Vous pouvez également utiliser le menu `Tools->Check update`
+
+<br/>
+
+# If there is any problem
+
+Join the [discord server](https://discord.gg/3wH2RjVe4n)
+Or you can submit them in the ["issue" section](https://github.com/BrokenGameNoob/BrokenTC2/issues)
+Or send an email at : brokengamenoob@gmail.com

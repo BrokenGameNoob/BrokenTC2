@@ -40,15 +40,19 @@ public:
 
         static constexpr QColor kUnknownColor{255,255,255,255};
         static constexpr QColor kUnknownTextColor{243,166,0};
+        static const QString kUnknownTitleText;
 
         static constexpr QColor kWarningColor{250,243,216};
         static constexpr QColor kWarningTextColor{243,166,0};
+        static const QString kWarningTitleText;
 
         static constexpr QColor kOkColor{216,241,227};
         static constexpr QColor kOkTextColor{68,184,111};
+        static const QString kOkTitleText;
 
         static constexpr QColor kCriticalColor{248,209,204};
         static constexpr QColor kCriticalTextColor{182,24,37};
+        static const QString kCriticalTitleText;
     };
 
 public:
@@ -63,10 +67,18 @@ public:
     void showInfoMessage(InfoBoxMsgType::Type type,const QString& message,int32_t timeout = 0);
     void hideInfoMessage();
 
+public:
+    static std::optional<qint64> startDetachedUpdateProcess(const QString& packagePath,
+                                                            const QString& verifierKeyPath,
+                                                            const QString& updateManifest,
+                                                            const QString& postUpdateCmd);
+
 private slots:
     void on_pb_close_clicked();
     void on_pb_checkAvailable_clicked();
     void on_pb_downloadAndInstall_clicked();
+
+    void on_pb_manualInstall_clicked();
 
 private:
     void resetState(const QString& errMsg = {});//use in case an error occurs. Reset everything
@@ -97,6 +109,10 @@ private:
     bool m_readyToUpdate{false};
     std::optional<ReleaseInfo> m_latestReleaseInfoOpt{};
     bool m_showInstallPropositionOnNextOccasion;/*!< Propose the user to install the updated  */
+
+    QString m_baseInfoMsg{};
+    QString m_prevInfoMsgHash{};
+    int32_t m_infoMsgRepetitionCount{};
 };
 
 } // namespace updt
