@@ -105,4 +105,5 @@ Then extract the folder `x86_64-w64-mingw32` into `C:/Libs/` so that the final i
 ## Misc
 
 Installer download count
+
 ![Download count](https://pourquoi-pas.eu/BrokenGameSofts/Images/download_stats.png)
