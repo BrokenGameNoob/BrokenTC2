@@ -26,6 +26,8 @@
 
 #include "global.hpp"
 
+#include <QPixmap>
+
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
 #include "TC/Widget_gearDisplay.hpp"
@@ -126,6 +128,9 @@ private slots:
 
     void on_actionOpen_logs_folder_triggered();
 
+protected:
+    void paintEvent(QPaintEvent *pe) override;
+
 private:
     void updateSoftSettings();
     bool saveSoftSettings();
@@ -159,6 +164,8 @@ private:
 
     tc::GearHandler m_gearHandler;
     qsdl::GameController m_controller;
+
+    QPixmap m_pixmapBg;
 };
 
 inline

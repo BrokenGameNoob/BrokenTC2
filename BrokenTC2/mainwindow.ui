@@ -98,6 +98,12 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QGroupBox" name="gb_settings">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title">
         <string>Settings</string>
        </property>
@@ -589,8 +595,8 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>203</width>
-              <height>146</height>
+              <width>727</width>
+              <height>286</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -755,7 +761,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>223</width>
+              <width>713</width>
               <height>451</height>
              </rect>
             </property>
@@ -1117,7 +1123,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>390</width>
+              <width>713</width>
               <height>514</height>
              </rect>
             </property>
@@ -1741,6 +1747,12 @@ background color</string>
     </item>
     <item>
      <widget class="QGroupBox" name="gb_help">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="title">
        <string>Help</string>
       </property>
