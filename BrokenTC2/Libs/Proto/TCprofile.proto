@@ -1,6 +1,12 @@
 syntax = "proto3";
+import "google/protobuf/descriptor.proto";
 
 package tc;
+
+extend google.protobuf.FieldOptions {
+  optional bool is_keyboard_key = 50003;
+  optional bool is_controller_key = 50004;
+}
 
 enum GearSwitchMode{
     CLUTCH=0;
@@ -10,37 +16,44 @@ enum GearSwitchMode{
 message ControllerProfile{//Controller keys used to do actions
     string profileName      = 1;
 
-    int32 gearUp            = 2;
-    int32 gearDown          = 3;
+    int32 gearUp            = 2 [(is_controller_key) = true];
+    int32 gearDown          = 3 [(is_controller_key) = true];
 
-    int32 setGearReverse    = 4;
-    int32 setGear1          = 5;
-    int32 setGear2          = 6;
-    int32 setGear3          = 7;
-    int32 setGear4          = 8;
-    int32 setGear5          = 9;
-    int32 setGear6          = 10;
+    int32 setGearReverse    = 4 [(is_controller_key) = true];
+    int32 setGear1          = 5 [(is_controller_key) = true];
+    int32 setGear2          = 6 [(is_controller_key) = true];
+    int32 setGear3          = 7 [(is_controller_key) = true];
+    int32 setGear4          = 8 [(is_controller_key) = true];
+    int32 setGear5          = 9 [(is_controller_key) = true];
+    int32 setGear6          = 10 [(is_controller_key) = true];
 
-    int32 switchMode        = 11;
-    int32 cycleProfile      = 12;
+    int32 switchMode        = 11 [(is_controller_key) = true];
+    int32 cycleProfile      = 12 [(is_controller_key) = true];
+}
+
+message KeyboardProfile{//keyboard keys used in the software to execute actions
+    string profileName     = 1;
+
+    int32 gearUp            = 2 [(is_keyboard_key) = true];
+    int32 gearDown          = 3 [(is_keyboard_key) = true];
 }
 
 message GameProfile{//keyboard keys used in game to execute actions
     string profileName      = 1;
 
-    int32 gearUp            = 2;
-    int32 gearDown          = 3;
+    int32 gearUp            = 2 [(is_keyboard_key) = true];
+    int32 gearDown          = 3 [(is_keyboard_key) = true];
 
-    int32 setGearReverse    = 4;
-    int32 setGear1          = 5;
-    int32 setGear2          = 6;
-    int32 setGear3          = 7;
-    int32 setGear4          = 8;
-    int32 setGear5          = 9;
-    int32 setGear6          = 10;
+    int32 setGearReverse    = 4 [(is_keyboard_key) = true];
+    int32 setGear1          = 5 [(is_keyboard_key) = true];
+    int32 setGear2          = 6 [(is_keyboard_key) = true];
+    int32 setGear3          = 7 [(is_keyboard_key) = true];
+    int32 setGear4          = 8 [(is_keyboard_key) = true];
+    int32 setGear5          = 9 [(is_keyboard_key) = true];
+    int32 setGear6          = 10 [(is_keyboard_key) = true];
 }
 
 message SoftProfile{//software related keyboard keys
-    int32 switchMode        = 1;
-    int32 cycleProfile      = 2;
+    int32 switchMode        = 1 [(is_keyboard_key) = true];
+    int32 cycleProfile      = 2 [(is_keyboard_key) = true];
 }

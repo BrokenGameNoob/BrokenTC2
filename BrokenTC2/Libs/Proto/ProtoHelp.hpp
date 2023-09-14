@@ -20,7 +20,9 @@ namespace tc{
 /* --- Global scope --- */
 
 namespace constants{
-    static constexpr int32_t MAX_GEAR{7};
+constexpr int32_t kMaxGear{7};
+
+constexpr int32_t kUnbindValue{-1};
 };
 
 using PbCppType = google::protobuf::FieldDescriptor::CppType;
@@ -33,6 +35,17 @@ concept FromPbMessage = std::is_base_of<google::protobuf::Message, T>::value;
 
 
 /* --- Generic protobuf functions --- */
+
+template<FromPbMessage Proto_t,typename MessageOption_t>
+auto GetMessageOption(const MessageOption_t& option){
+    return Proto_t::GetDescriptor()->options().GetExtension(option);
+}
+
+template<FromPbMessage Proto_t,typename MessageFieldOption_t>
+auto GetFieldOption(int field_number,const MessageFieldOption_t& option){
+    return Proto_t::GetDescriptor()->FindFieldByNumber(field_number)->options().GetExtension(option);
+}
+
 
 template<FromPbMessage Proto_t>
 Proto_t initNonInitilizedFields(const Proto_t& message, Proto_t def){

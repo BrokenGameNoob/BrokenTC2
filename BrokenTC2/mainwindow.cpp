@@ -79,11 +79,13 @@
 namespace{
 
 void testFunc(){
+    qDebug() << __func__ << " -----------------------------------------------";
     auto p{tc::getDefault<tc::ControllerProfile>()};
 //    tc::ControllerProfile p;
     p.set_profilename("Test");
+    qDebug() << "DEFAULT: " << p;
     bool success{};
-    constexpr auto filename{"TEST.json"};
+    constexpr auto filename{"TEST_controllerProfile.json"};
 //    success = dumpProtobufToFile(p,filename);
     auto msg{tc::readFromFile<tc::ControllerProfile>(filename)};
     if(!msg)
