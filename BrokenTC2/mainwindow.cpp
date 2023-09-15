@@ -62,6 +62,7 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QFileDialog>
 #include <QStandardPaths>
 #include <QDir>
 #include <QDesktopServices>
@@ -228,7 +229,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_controller{},
       m_pixmapBg{}
 {
-    m_pixmapBg.load(":/img/img/noshi.png");
+    m_pixmapBg.load(kDefaultBgPath);
+    if(m_pixmapBg.isNull()){
+        qCritical() << "Could not load background";
+    }
     // UI Init
     ui->setupUi(this);
     ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION,this});
@@ -527,6 +531,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     updateSoftSettings();
     refreshFromSettings();
 
+    setBackgroungImage(m_softSettings.backgroundImagePath);
+
     //UPDATES
 
     std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help){
@@ -599,6 +605,30 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
 //
 //------------------------------------------------------------------
 
+bool MainWindow::setBackgroungImage(const QString& newPath){
+    if(!QFileInfo::exists(newPath) && !newPath.isEmpty()){
+        qWarning() << "Background image not found: " << newPath;
+        QMessageBox::warning(this,tr("Warning"),tr("Background image not found")+QString{"\n%0"}.arg(newPath));
+        setBackgroungImage(kDefaultBgPath);
+        return false;
+    }
+
+    m_pixmapBg.load(newPath);
+    if(m_pixmapBg.isNull() && !newPath.isEmpty()){
+        qWarning() << "Invalid background image: " << newPath;
+        QMessageBox::warning(this,tr("Warning"),tr("Invalid background image")+QString{"\n%0"}.arg(newPath));
+        return setBackgroungImage(kDefaultBgPath);
+    }
+    //valid
+    if(newPath.isEmpty()){
+        setBackgroungImage(kDefaultBgPath);
+    }
+
+    ui->pb_changeBackground->setText(newPath == kDefaultBgPath || newPath.isEmpty() ? tr("Click to select") : newPath);
+    m_softSettings.backgroundImagePath = newPath;
+    saveSoftSettings();
+    return true;
+}
 
 void MainWindow::updateSoftSettings()
 {
@@ -632,6 +662,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("preferredCoreCount",m_softSettings.preferredCoreCount);
     settings.insert("bgHUDColor",tc::colorToString(m_softSettings.bgHUDColor()));
     settings.insert("joyAxisThreshold",m_softSettings.joyAxisThreshold());
+    settings.insert("backgroundImagePath",m_softSettings.backgroundImagePath);
 
     globObj.insert("settings",settings);
 
@@ -678,6 +709,7 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.setBgHUDColor(bgHUDColorStr.isEmpty() ? QColor{79, 79, 79, 120} : tc::stringToColor(bgHUDColorStr),m_gearDisplay);
     m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold")
                                                             .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1)));
+    m_softSettings.backgroundImagePath = settings.value("backgroundImagePath").toString();
 
     refreshFromSettings();
 
@@ -780,6 +812,8 @@ void MainWindow::refreshFromSettings()
 
     ui->lbl_bgHUDColor->setStyleSheet(QString{"background-color:%0"}.arg(tc::colorToString(m_softSettings.bgHUDColor())));
     ui->sb_bgHUDColorAlpha->setValue(m_softSettings.bgHUDColor().alpha());
+
+    ui->pb_changeBackground->setText(m_softSettings.backgroundImagePath);
 }
 
 void MainWindow::populateDevicesComboBox()
@@ -997,7 +1031,7 @@ void MainWindow::on_cb_selectDevice_currentIndexChanged(int index)
     {
         auto deviceName{ui->cb_selectDevice->currentText()};
 
-        if(QFileInfo(getProfileFilePath(deviceName)).exists())//If the profile file exists
+        if(QFileInfo::exists(getProfileFilePath(deviceName)))//If the profile file exists
         {
             if(!loadProfile(deviceName))//and we can't load the profile corresponding to the device
             {
@@ -1078,6 +1112,12 @@ void MainWindow::on_sb_bgHUDColorAlpha_valueChanged(int arg1)
     refreshFromSettings();
 }
 
+void MainWindow::on_pb_changeBackground_clicked()
+{
+    const auto kImage{QFileDialog::getOpenFileName(this,tr("Select image"),{},tr("Image Files %0;;All (*)").arg("(*.png *.jpg *.bmp *.jpeg)"))};
+    setBackgroungImage(kImage);
+}
+
 
 void MainWindow::on_pb_ezConf_clicked()
 {
@@ -1119,3 +1159,4 @@ void MainWindow::paintEvent(QPaintEvent *pe)
       painter.drawPixmap(0, offset, winSize.width(), newHeight, m_pixmapBg);
     }
 }
+

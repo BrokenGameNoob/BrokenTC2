@@ -65,6 +65,8 @@ struct Settings{
 
     int preferredCoreCount{2};
 
+    QString backgroundImagePath{};
+
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;
         qsdl::SDLEventHandler::setLowPerfMode(m_lowPerfModeEnabled);
@@ -128,10 +130,13 @@ private slots:
 
     void on_actionOpen_logs_folder_triggered();
 
+    void on_pb_changeBackground_clicked();
+
 protected:
     void paintEvent(QPaintEvent *pe) override;
 
 private:
+    bool setBackgroungImage(const QString& newPath);
     void updateSoftSettings();
     bool saveSoftSettings();
     bool loadSoftSettings();
@@ -166,6 +171,7 @@ private:
     qsdl::GameController m_controller;
 
     QPixmap m_pixmapBg;
+    static constexpr auto kDefaultBgPath{":/img/img/background.jpeg"};
 };
 
 inline

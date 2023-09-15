@@ -5,7 +5,7 @@
         <file>img/spashScreen.png</file>
         <file>img/warning.png</file>
         <file>img/discord.png</file>
-        <file>img/noshi.png</file>
+        <file>img/background.jpeg</file>
     </qresource>
     <qresource prefix="/update">
         <file>update/changelog.md</file>

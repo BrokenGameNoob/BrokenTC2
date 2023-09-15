@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>773</width>
-    <height>651</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QScrollArea" name="tb_settings_controller">
            <property name="sizePolicy">
@@ -596,7 +596,7 @@ Sequential / Clutch</string>
               <x>0</x>
               <y>0</y>
               <width>727</width>
-              <height>286</height>
+              <height>386</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1124,7 +1124,7 @@ Sequential / Clutch</string>
               <x>0</x>
               <y>0</y>
               <width>713</width>
-              <height>514</height>
+              <height>560</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1140,51 +1140,22 @@ Sequential / Clutch</string>
 	</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="19" column="2">
-              <widget class="QComboBox" name="cb_lowPerfMode">
-               <item>
-                <property name="text">
-                 <string>No</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Yes</string>
-                </property>
-               </item>
+             <item row="11" column="2">
+              <widget class="QComboBox" name="cb_gearDisplayScreen">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <spacer name="verticalSpacer_14">
+             <item row="6" column="1" rowspan="3">
+              <widget class="Line" name="line_32">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>10</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="6" column="0">
-              <spacer name="verticalSpacer_19">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>10</height>
-                </size>
-               </property>
-              </spacer>
+              </widget>
              </item>
              <item row="10" column="0">
               <spacer name="verticalSpacer_13">
@@ -1202,53 +1173,6 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="6" column="1" rowspan="3">
-              <widget class="Line" name="line_32">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="11" column="0">
-              <widget class="QLabel" name="lbl_disp_gearDisplayScreen">
-               <property name="text">
-                <string>Display gear engaged on screen :</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="2">
-              <widget class="QSlider" name="hs_joyAxisThreshold">
-               <property name="minimum">
-                <number>10</number>
-               </property>
-               <property name="tracking">
-                <bool>true</bool>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="tickPosition">
-                <enum>QSlider::NoTicks</enum>
-               </property>
-               <property name="tickInterval">
-                <number>0</number>
-               </property>
-              </widget>
-             </item>
-             <item row="21" column="2">
-              <widget class="QComboBox" name="cb_launchOnStartup">
-               <item>
-                <property name="text">
-                 <string>No</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Yes</string>
-                </property>
-               </item>
-              </widget>
-             </item>
              <item row="8" column="0">
               <spacer name="verticalSpacer_18">
                <property name="orientation">
@@ -1265,136 +1189,7 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="5" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="hlay_disp_sepController">
-               <item>
-                <widget class="Line" name="line_30">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_disp_sepController">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Controller</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="line_31">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="1">
-              <widget class="Line" name="line_21">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="hlay_disp_sepDisplay">
-               <item>
-                <widget class="Line" name="line_25">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_disp_sepDisplay">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Display</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="line_10">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="17" column="1" rowspan="5">
-              <widget class="Line" name="line_28">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="1" rowspan="5">
-              <widget class="Line" name="line_29">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1" rowspan="3">
-              <widget class="Line" name="line_22">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="12" column="0">
-              <spacer name="verticalSpacer_20">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>10</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="11" column="2">
-              <widget class="QComboBox" name="cb_gearDisplayScreen">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="lbl_disp_joyAxisThreshold">
-               <property name="text">
-                <string>Controller axis threshold (deadzone)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="20" column="0">
+             <item row="22" column="0">
               <spacer name="verticalSpacer_17">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1410,47 +1205,28 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="19" column="0">
-              <widget class="QLabel" name="lbl_disp_lowPerfMode">
-               <property name="text">
-                <string>Enable low performance mode
-(reduce CPU Usage but slightly increase latency)</string>
+             <item row="19" column="1" rowspan="5">
+              <widget class="Line" name="line_28">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
               </widget>
              </item>
-             <item row="16" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="hlay_disp_sepGeneral">
-               <item>
-                <widget class="Line" name="line_26">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_disp_sepGeneral">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>General</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="line_27">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+             <item row="6" column="0">
+              <spacer name="verticalSpacer_19">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item row="2" column="0">
               <spacer name="verticalSpacer_6">
@@ -1503,7 +1279,188 @@ Sequential / Clutch</string>
                </item>
               </layout>
              </item>
-             <item row="18" column="2">
+             <item row="20" column="0">
+              <widget class="QLabel" name="lbl_disp_exitOnCloseEvent">
+               <property name="text">
+                <string>Behavior when closing the program</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="hlay_disp_sepController">
+               <item>
+                <widget class="Line" name="line_30">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_disp_sepController">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Controller</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_31">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="2">
+              <widget class="QSpinBox" name="sb_gearDelay">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>How long the key is going to be pressed down</string>
+               </property>
+               <property name="maximum">
+                <number>1200</number>
+               </property>
+              </widget>
+             </item>
+             <item row="21" column="0">
+              <widget class="QLabel" name="lbl_disp_lowPerfMode">
+               <property name="text">
+                <string>Enable low performance mode
+(reduce CPU Usage but slightly increase latency)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="hlay_disp_sepDisplay">
+               <item>
+                <widget class="Line" name="line_25">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_disp_sepDisplay">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Display</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_10">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="lbl_disp_joyAxisThreshold">
+               <property name="text">
+                <string>Controller axis threshold (deadzone)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="Line" name="line_21">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="lbl_disp_bgHUDColor">
+               <property name="text">
+                <string>Gear indicator and notification
+background color</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="0">
+              <widget class="QLabel" name="lbl_disp_changeBackground">
+               <property name="text">
+                <string>Background image</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" rowspan="3">
+              <widget class="Line" name="line_22">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="19" column="0">
+              <spacer name="verticalSpacer_16">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="lbl_disp_gearDisplayScreen">
+               <property name="text">
+                <string>Display gear engaged on screen :</string>
+               </property>
+              </widget>
+             </item>
+             <item row="16" column="0">
+              <spacer name="verticalSpacer_15">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="10" column="1" rowspan="7">
+              <widget class="Line" name="line_29">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="20" column="2">
               <widget class="QComboBox" name="cb_exitOnCloseEvent">
                <item>
                 <property name="text">
@@ -1517,13 +1474,49 @@ Sequential / Clutch</string>
                </item>
               </widget>
              </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="lbl_disp_settValue">
-               <property name="text">
-                <string>Value</string>
+             <item row="7" column="2">
+              <widget class="QSlider" name="hs_joyAxisThreshold">
+               <property name="minimum">
+                <number>10</number>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               <property name="tracking">
+                <bool>true</bool>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="tickPosition">
+                <enum>QSlider::NoTicks</enum>
+               </property>
+               <property name="tickInterval">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="24" column="0">
+              <spacer name="verticalSpacer_12">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="23" column="0">
+              <widget class="QLabel" name="lbl_disp_launchOnStartup">
+               <property name="text">
+                <string>Launch program on computer startup</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lbl_disp_settings">
+               <property name="text">
+                <string>Setting</string>
                </property>
               </widget>
              </item>
@@ -1561,23 +1554,80 @@ Sequential / Clutch</string>
                </item>
               </layout>
              </item>
-             <item row="13" column="0">
-              <widget class="QLabel" name="lbl_disp_bgHUDColor">
-               <property name="text">
-                <string>Gear indicator and notification
-background color</string>
-               </property>
+             <item row="18" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="hlay_disp_sepGeneral">
+               <item>
+                <widget class="Line" name="line_26">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_disp_sepGeneral">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>General</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_27">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="23" column="2">
+              <widget class="QComboBox" name="cb_launchOnStartup">
+               <item>
+                <property name="text">
+                 <string>No</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yes</string>
+                </property>
+               </item>
               </widget>
              </item>
-             <item row="22" column="0">
-              <spacer name="verticalSpacer_12">
+             <item row="21" column="2">
+              <widget class="QComboBox" name="cb_lowPerfMode">
+               <item>
+                <property name="text">
+                 <string>No</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yes</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <spacer name="verticalSpacer_20">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>40</height>
+                 <height>10</height>
                 </size>
                </property>
               </spacer>
@@ -1592,15 +1642,8 @@ background color</string>
                </property>
               </widget>
              </item>
-             <item row="21" column="0">
-              <widget class="QLabel" name="lbl_disp_launchOnStartup">
-               <property name="text">
-                <string>Launch program on computer startup</string>
-               </property>
-              </widget>
-             </item>
-             <item row="17" column="0">
-              <spacer name="verticalSpacer_16">
+             <item row="4" column="0">
+              <spacer name="verticalSpacer_14">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
@@ -1615,22 +1658,18 @@ background color</string>
                </property>
               </spacer>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="lbl_disp_settings">
+             <item row="0" column="2">
+              <widget class="QLabel" name="lbl_disp_settValue">
                <property name="text">
-                <string>Setting</string>
+                <string>Value</string>
                </property>
-              </widget>
-             </item>
-             <item row="18" column="0">
-              <widget class="QLabel" name="lbl_disp_exitOnCloseEvent">
-               <property name="text">
-                <string>Behavior when closing the program</string>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
              <item row="14" column="0">
-              <spacer name="verticalSpacer_15">
+              <spacer name="verticalSpacer_21">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
@@ -1645,19 +1684,10 @@ background color</string>
                </property>
               </spacer>
              </item>
-             <item row="3" column="2">
-              <widget class="QSpinBox" name="sb_gearDelay">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>How long the key is going to be pressed down</string>
-               </property>
-               <property name="maximum">
-                <number>1200</number>
+             <item row="15" column="2">
+              <widget class="QPushButton" name="pb_changeBackground">
+               <property name="text">
+                <string/>
                </property>
               </widget>
              </item>
