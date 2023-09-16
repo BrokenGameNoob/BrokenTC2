@@ -101,3 +101,9 @@ Set in the tab "In game config" keyboard keys for gears 1 to 7, reverse, clutch 
 
 Setup SDL by downloading the `SDL2-devel-{version}-mingw` package from [github/SDL](https://github.com/libsdl-org/SDL/releases)
 Then extract the folder `x86_64-w64-mingw32` into `C:/Libs/` so that the final include directory for the SDL is `C:/Libs/x86_64-w64-mingw32/include`
+
+## Misc
+
+Installer download count
+
+![Download count](https://pourquoi-pas.eu/BrokenGameSofts/Images/download_stats.png)
