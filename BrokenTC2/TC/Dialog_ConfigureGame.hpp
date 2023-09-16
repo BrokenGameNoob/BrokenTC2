@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "TC/gameProfile.hpp"
+
 namespace Ui {
 class Dialog_ConfigureGame;
 }
@@ -36,8 +38,12 @@ private slots:
 
     void on_pb_nextOk_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     void closeEvent(QCloseEvent *e);
+
+    tc::GameId getSelectedGameId() const;
 
 private:
     Ui::Dialog_ConfigureGame *ui;

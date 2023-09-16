@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.5)
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 1)#incompatible update
 set(VERSIONING_MINOR 1)#new features added
-set(VERSIONING_PATCH 5)#bug fixed / minor change
+set(VERSIONING_PATCH 6)#bug fixed / minor change
 
 
 add_definitions("-DPROJECT_V_MAJOR=${VERSIONING_MAJOR}")
@@ -110,6 +110,7 @@ set(PROJECT_SOURCES
         global.hpp global.cpp
         Constants.hpp
 
+        TC/gameProfile.hpp
         TC/Profile.hpp TC/Profile.cpp
         TC/GearHandler.hpp TC/GearHandler.cpp
         TC/Widget_gearDisplay.hpp TC/Widget_gearDisplay.cpp TC/Widget_gearDisplay.ui

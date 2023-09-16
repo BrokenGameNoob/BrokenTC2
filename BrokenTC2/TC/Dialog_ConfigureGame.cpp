@@ -1,4 +1,5 @@
 #include "Dialog_ConfigureGame.hpp"
+#include "global.hpp"
 #include "ui_Dialog_ConfigureGame.h"
 
 #include <QMessageBox>
@@ -18,6 +19,8 @@ Dialog_ConfigureGame::Dialog_ConfigureGame(QWidget *parent) :
     connect(ui->stackedWidget,&QStackedWidget::currentChanged,this,&Dialog_ConfigureGame::onCurrentIndexChanged);
 
     setWaitWidgetsVisible(false);
+
+    ui->pb_nextOk->setEnabled(false);
 }
 
 Dialog_ConfigureGame::~Dialog_ConfigureGame()
@@ -33,17 +36,19 @@ bool Dialog_ConfigureGame::configure(QWidget* parent){
 
     auto success{dial.succeeded()};
 
+    const auto& kGameInfos{tc::GetGameInfo(dial.getSelectedGameId())};
+
     if(ans != QDialog::Accepted)
         return success;
 
     if(success)
     {
-        QMessageBox::information(&dial,dial.windowTitle(),tr("Successfully configured The Crew 2"));
+        QMessageBox::information(&dial,dial.windowTitle(),tr("Successfully configured %0").arg(kGameInfos.kGameName));
 //        QMessageBox::information()
     }
     else
     {
-        QMessageBox::warning(&dial,dial.windowTitle(),tr("An error occurred when trying to configure The Crew 2"));
+        QMessageBox::warning(&dial,dial.windowTitle(),tr("An error occurred when trying to configure %0").arg(kGameInfos.kGameName));
     }
 
     return success;//cancelling is a success because it's an expected behavior
@@ -67,6 +72,11 @@ void Dialog_ConfigureGame::onCurrentIndexChanged(int curIndex){
     default:
         break;
     }
+    if(curIndex != 0){
+        ui->comboBox->setEnabled(false);
+    } else {
+        ui->comboBox->setEnabled(true);
+    }
     setWaitWidgetsVisible(false);
 }
 
@@ -84,6 +94,12 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
 
     auto configFileList{tc::getBindingsFiles(tc::getConfigPath())};
 
+    const auto& kGameInfos{tc::GetGameInfo(getSelectedGameId())};
+    qInfo() << "Setting up game: ";
+    qInfo() <<  getSelectedGameId();
+    qInfo() << kGameInfos.kProcessName;
+    qInfo() << kGameInfos.kFolderInDocuments;
+
     switch(curIndex)
     {
     case kIntro:{
@@ -93,7 +109,7 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
         }
         else
         {
-            ui->stackedWidget->setCurrentIndex(tc::isTC2Running()?kWaitingForTC2Closed:kDone);
+            ui->stackedWidget->setCurrentIndex(tc::isGameRunning(kGameInfos)?kWaitingForTC2Closed:kDone);
         }
         break;
     }case kNoConfigFileFound:{
@@ -103,16 +119,16 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
         }
         else
         {
-            ui->stackedWidget->setCurrentIndex(tc::isTC2Running()?kWaitingForTC2Closed:kDone);
+            ui->stackedWidget->setCurrentIndex(tc::isGameRunning(kGameInfos)?kWaitingForTC2Closed:kDone);
         }
         break;
     } case kWaitingForTC2Closed:{
-        tc::killTheCrew2();
+        tc::killGame(kGameInfos);
         setWaitWidgetsVisible(true);
         QStringList animText{"┏⁠(⁠＾⁠0⁠＾⁠)⁠⁠┛","ƪ⁠(⁠‾⁠.⁠‾⁠“⁠)⁠┐","ヘ⁠(⁠￣⁠ω⁠￣⁠ヘ⁠)","ƪ⁠(⁠˘⁠⌣⁠˘⁠)⁠ʃ"};
         int32_t animIndex{};
         QTime lastAnimTime{QTime::currentTime().addSecs(-10)};
-        while(tc::isTC2Running())
+        while(tc::isGameRunning(kGameInfos))
         {
             auto curTime{QTime::currentTime()};
             if(lastAnimTime.msecsTo(curTime) > 500)
@@ -129,11 +145,11 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
         ui->stackedWidget->setCurrentIndex(3);
         break;}
     case kDone:{
-        auto bindingList{tc::getBindingsFiles(tc::getConfigPath())};
+        auto bindingList{tc::getBindingsFiles(tc::getConfigPath(kGameInfos))};
         for(const auto& f : bindingList)
         {
             qDebug() << __PRETTY_FUNCTION__ << " edit config file -> " << f;
-            tc::xml::editXmlControllerConf(tc::getConfigPath()+"/"+f);
+            tc::xml::editXmlControllerConf(tc::getConfigPath(kGameInfos)+"/"+f);
         }
         this->done(QDialog::Accepted);
         break;}
@@ -144,7 +160,8 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
 
 
 void Dialog_ConfigureGame::configure(){
-    auto bindingList{tc::getBindingsFiles(tc::getConfigPath())};
+    const auto& kGameInfos{tc::GetGameInfo(getSelectedGameId())};
+    auto bindingList{tc::getBindingsFiles(tc::getConfigPath(kGameInfos))};
 
     bool success{true};
     for(const auto& xmlPath : bindingList)
@@ -158,14 +175,27 @@ void Dialog_ConfigureGame::configure(){
 
 
 
-
-
-
-
-
-
 void Dialog_ConfigureGame::closeEvent(QCloseEvent *e){
     m_breakInfLoop = true;
 
     QDialog::closeEvent(e);
 }
+
+tc::GameId Dialog_ConfigureGame::getSelectedGameId() const {
+    return static_cast<tc::GameId>(ui->comboBox->currentIndex()-1);
+}
+
+void Dialog_ConfigureGame::on_comboBox_currentIndexChanged(int index)
+{
+//    auto labelList{retrieveChildren<QLabel>(this)};
+//    for(QLabel* lbl: labelList){
+//        lbl->setText(lbl->text().arg(ui->comboBox->currentText()));
+//    }
+
+    if(index == 0){
+        ui->pb_nextOk->setEnabled(false);
+    } else {
+        ui->pb_nextOk->setEnabled(true);
+    }
+}
+

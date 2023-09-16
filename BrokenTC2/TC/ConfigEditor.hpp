@@ -13,6 +13,8 @@
 
 #include <functional>
 
+#include "TC/gameProfile.hpp"
+
 #ifdef Q_OS_WIN
 #include "Windows/WinUtils.hpp"
 #endif
@@ -24,18 +26,18 @@ static const auto TC2_PROCESS_NAME{"TheCrew2.exe"};
 namespace tc {
 
 inline
-QString getConfigPath(){
-    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/The Crew 2";
+    QString getConfigPath(const tc::GameInfo& gameInfo = tc::GetGameInfo(GameId::THE_CREW2)){
+    return QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/"+gameInfo.kFolderInDocuments;
 }
 
 inline
-bool isTC2Running(){
-    return win::isProcessRunning(TC2_PROCESS_NAME);
+bool isGameRunning(const tc::GameInfo& gameInfo = tc::GetGameInfo(GameId::THE_CREW2)){
+    return win::isProcessRunning(gameInfo.kProcessName);
 }
 
 inline
-bool killTheCrew2(){
-    auto pId{win::findProcessId(TC2_PROCESS_NAME)};
+bool killGame(const tc::GameInfo& gameInfo = tc::GetGameInfo(GameId::THE_CREW2)){
+    auto pId{win::findProcessId(gameInfo.kProcessName)};
     if(!pId)
     {
         return true;

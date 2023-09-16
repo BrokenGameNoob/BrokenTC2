@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
-    <height>830</height>
+    <width>642</width>
+    <height>751</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QScrollArea" name="tb_settings_controller">
            <property name="sizePolicy">
@@ -149,7 +149,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>713</width>
+              <width>582</width>
               <height>522</height>
              </rect>
             </property>
@@ -595,7 +595,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>727</width>
+              <width>596</width>
               <height>386</height>
              </rect>
             </property>
@@ -761,7 +761,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>713</width>
+              <width>582</width>
               <height>451</height>
              </rect>
             </property>
@@ -1123,7 +1123,7 @@ Sequential / Clutch</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>713</width>
+              <width>582</width>
               <height>560</height>
              </rect>
             </property>
@@ -1905,7 +1905,7 @@ background color</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>773</width>
+     <width>642</width>
      <height>21</height>
     </rect>
    </property>

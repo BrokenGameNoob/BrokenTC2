@@ -88,7 +88,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;We need&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;&gt; The Crew 2&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to be closed to edit the configuration.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;When clicking next,&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;&gt; The Crew 2&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; will automatically be closed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;We need&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;the game&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to be closed to edit the configuration.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;When clicking next,&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;the game will automatically be closed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::AutoText</enum>
@@ -115,7 +115,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Waiting for &lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;&gt;The Crew 2&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to be closed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Waiting for the game to be closed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -146,7 +146,7 @@
        <item>
         <widget class="QLabel" name="lbl_disp_done">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The configuration will be edited once you click &amp;quot;Finish&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The configuration of will be edited once you click &amp;quot;Finish&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -169,6 +169,32 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="hlay_pb">
+     <item>
+      <widget class="QLabel" name="lbl_disp_selectGame">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Select game:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>Select game</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Crew 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Motorfest</string>
+        </property>
+       </item>
+      </widget>
+     </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">

@@ -1,3 +1,24 @@
+# 1.1.6 is here! (Motorfest)
+
+## -> New Features
+- The "Easy configure"  feature is now compatible with **Motorfest**!
+- You can now choose a background image (I know, this is useless, but it was done as a joke... And ended up as a feature)
+
+<br/><br/>
+
+## -> Bugs patched
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.5 is here! (Broken links...)
 
 ## -> New Features

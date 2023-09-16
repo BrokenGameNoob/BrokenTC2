@@ -24,6 +24,7 @@
 #include <string_view>
 #include <algorithm>
 #include <stdexcept>
+#include <QVector>
 
 #ifdef __PRETTY_FUNCTION__
 #define __CURRENT_PLACE__ __PRETTY_FUNCTION__
@@ -62,6 +63,18 @@ QString removeSpecialChars(QString str){
     auto it = std::remove_if(str.begin(), str.end(), [](const QChar& c){ return !c.isLetterOrNumber();});
     str.chop(std::distance(it, str.end()));
     return str;
+}
+
+template<typename T>
+auto retrieveChildren(QObject* parent){
+    QVector<T*> out{};
+    for(auto* child : parent->children()){
+        auto* castedChild{qobject_cast<T *>(child)};
+        if(castedChild){
+            out.append(castedChild);
+        }
+    }
+    return out;
 }
 
 #endif // GLOBAL_HPP
