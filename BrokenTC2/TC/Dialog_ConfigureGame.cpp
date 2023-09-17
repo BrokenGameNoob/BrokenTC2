@@ -92,13 +92,15 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
 {
     auto curIndex{ui->stackedWidget->currentIndex()};
 
-    auto configFileList{tc::getBindingsFiles(tc::getConfigPath())};
-
     const auto& kGameInfos{tc::GetGameInfo(getSelectedGameId())};
+    const auto kConfigPath{tc::getConfigPath(kGameInfos)};
+    auto configFileList{tc::getBindingsFiles(kConfigPath)};
+
     qInfo() << "Setting up game: ";
-    qInfo() <<  getSelectedGameId();
-    qInfo() << kGameInfos.kProcessName;
-    qInfo() << kGameInfos.kFolderInDocuments;
+    qInfo() << "\t" << getSelectedGameId();
+    qInfo() << "\t" << kGameInfos.kProcessName;
+    qInfo() << "\t" << kGameInfos.kFolderInDocuments;
+    qInfo() << "\t" << kConfigPath;
 
     switch(curIndex)
     {
@@ -145,11 +147,11 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked()
         ui->stackedWidget->setCurrentIndex(3);
         break;}
     case kDone:{
-        auto bindingList{tc::getBindingsFiles(tc::getConfigPath(kGameInfos))};
+        auto bindingList{tc::getBindingsFiles(kConfigPath)};
         for(const auto& f : bindingList)
         {
             qDebug() << __PRETTY_FUNCTION__ << " edit config file -> " << f;
-            tc::xml::editXmlControllerConf(tc::getConfigPath(kGameInfos)+"/"+f);
+            tc::xml::editXmlControllerConf(kConfigPath+"/"+f);
         }
         this->done(QDialog::Accepted);
         break;}

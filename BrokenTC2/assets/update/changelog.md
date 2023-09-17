@@ -1,3 +1,23 @@
+# 1.1.7 is here! (Easy configure patch)
+
+## -> New Features
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs patched
+- Motorfest configuration file was not found if TC2 wasn't installed
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.6 is here! (Motorfest)
 
 ## -> New Features
