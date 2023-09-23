@@ -88,12 +88,13 @@ void GearHandler::setGear(int gear){
 #endif
 
     gear = std::clamp(gear,static_cast<int>(Gear::R),m_settings.maxGear);
+    const auto kOldGear{m_currentGear};
     m_currentGear = static_cast<Gear>(gear);
 
     auto keyCode{getKeyCode(m_currentGear,m_settings)};
 
     auto lambdaSwitchClutch{
-        [&](int gearKeyCode){
+        [&,kOldGear](int gearKeyCode){
             auto t_starting{std::chrono::high_resolution_clock::now()};
 
             if(m_currentGear != Gear::N_CLUTCH)
@@ -101,7 +102,7 @@ void GearHandler::setGear(int gear){
                 sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH,m_settings),true);//press clutch
             }
             else{
-                gearKeyCode = getKeyCode(m_currentGear == Gear::R ? Gear::G1 : Gear::R,m_settings);
+                gearKeyCode = getKeyCode(kOldGear == Gear::R ? Gear::G1 : Gear::R,m_settings);
             }
 
             sendKeyboardEvent(gearKeyCode,true);//press gear key
