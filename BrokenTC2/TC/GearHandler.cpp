@@ -29,6 +29,7 @@
 
 #include <chrono>
 #include <thread>
+#include <future>
 
 #include <QDebug>
 
@@ -99,8 +100,9 @@ void GearHandler::setGear(int gear){
             {
                 sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH,m_settings),true);//press clutch
             }
-            else
-                gearKeyCode = getKeyCode(Gear::G7,m_settings);
+            else{
+                gearKeyCode = getKeyCode(m_currentGear == Gear::R ? Gear::G1 : Gear::R,m_settings);
+            }
 
             sendKeyboardEvent(gearKeyCode,true);//press gear key
             std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
