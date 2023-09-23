@@ -17,6 +17,7 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+//#include <QCoreApplication>
 
 #include "global.hpp"
 #include "Constants.hpp"
@@ -67,6 +68,8 @@
 #include <QDir>
 #include <QDesktopServices>
 #include "LoggerHandler.hpp"
+
+#include <TextToSpeech.hpp>
 
 #include <QDebug>
 #include <QProcess>
@@ -229,6 +232,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       m_controller{},
       m_pixmapBg{}
 {
+    if(!cus::TextPlayer::Init()){
+        qWarning() << "Audio notifications not available";
+    }
+    cus::TextPlayer::SetRate(0.7);
+
     m_pixmapBg.load(kDefaultBgPath);
     if(m_pixmapBg.isNull()){
         qCritical() << "Could not load background";
@@ -450,6 +458,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
         m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
         saveSoftSettings();
     });
+    connect(ui->cb_audioNotif,&QCheckBox::stateChanged,this,[&](int){
+        m_softSettings.textToSpeechEnabled = ui->cb_audioNotif->checkState();
+        saveSoftSettings();
+    });
     connect(ui->cb_exitOnCloseEvent,&QComboBox::currentIndexChanged,this,[&](int valI){
         m_softSettings.exitOnCloseEvent = bool(valI);
         saveSoftSettings();
@@ -468,7 +480,12 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     connect(&m_gearHandler,&tc::GearHandler::gearChanged,m_gearDisplay,&Widget_gearDisplay::refreshGear);
     connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,m_gearDisplay,&Widget_gearDisplay::onSwitchGearModeChanged);
-    connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,this,[&](auto){saveProfileSettings();});
+    connect(&m_gearHandler,&tc::GearHandler::gearSwitchModeChanged,this,[&](tc::GearSwitchMode newMode){
+        if(ui->cb_audioNotif->isChecked()){
+            cus::TextPlayer::Play(newMode == tc::GearSwitchMode::CLUTCH ? tr("Clutch") : tr("Sequential"));
+        }
+        saveProfileSettings();
+    });
 
     using qsdl::SDLEventHandler;
     using qsdl::GameController;
@@ -637,6 +654,7 @@ void MainWindow::updateSoftSettings()
                                                                                      :ui->cb_selectDevice->currentText());
     m_softSettings.gearDisplayed = ui->cb_showCurrentGear->isChecked();
     m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
+    m_softSettings.textToSpeechEnabled = ui->cb_audioNotif->checkState();
     m_softSettings.displayGearScreen = ui->cb_gearDisplayScreen->currentText();
 
     saveSoftSettings();
@@ -663,6 +681,7 @@ bool MainWindow::saveSoftSettings()
     settings.insert("bgHUDColor",tc::colorToString(m_softSettings.bgHUDColor()));
     settings.insert("joyAxisThreshold",m_softSettings.joyAxisThreshold());
     settings.insert("backgroundImagePath",m_softSettings.backgroundImagePath);
+    settings.insert("textToSpeechEnabled",m_softSettings.textToSpeechEnabled);
 
     globObj.insert("settings",settings);
 
@@ -710,6 +729,7 @@ bool MainWindow::loadSoftSettings()
     m_softSettings.setJoyAxisThreshold(static_cast<int16_t>(settings.value("joyAxisThreshold")
                                                             .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max()-1)));
     m_softSettings.backgroundImagePath = settings.value("backgroundImagePath").toString();
+    m_softSettings.textToSpeechEnabled = settings.value("textToSpeechEnabled").toInt();
 
     refreshFromSettings();
 
@@ -786,6 +806,10 @@ void MainWindow::refreshFromSettings()
 #endif
     ui->cb_showCurrentGear->setChecked(m_softSettings.gearDisplayed);
     ui->cb_enableNotification->setChecked(m_softSettings.enableNotification);
+    ui->cb_audioNotif->setCheckState(m_softSettings.textToSpeechEnabled == 0 ?
+                                        Qt::CheckState::Unchecked : (m_softSettings.textToSpeechEnabled == 1 ?
+                                        Qt::CheckState::PartiallyChecked : Qt::CheckState::Checked));
+
     ui->cb_lowPerfMode->setCurrentIndex(int(m_softSettings.lowPerfMode()));
 
     auto deviceIndex{ui->cb_selectDevice->findText(m_softSettings.currentDeviceName)};

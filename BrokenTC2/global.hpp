@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <QVector>
+//#include <QObject>
 
 #ifdef __PRETTY_FUNCTION__
 #define __CURRENT_PLACE__ __PRETTY_FUNCTION__

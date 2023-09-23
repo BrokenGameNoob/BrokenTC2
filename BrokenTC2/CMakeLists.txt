@@ -32,6 +32,7 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
     add_compile_definitions(CMAKE_DEBUG_MODE)
 ENDIF(CMAKE_BUILD_TYPE MATCHES Debug)
 
+add_compile_definitions(CMAKE_DEBUG_MODE)
 
 set(EXE_NAME "BrokenTC2")
 
@@ -127,6 +128,8 @@ set(PROJECT_SOURCES
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
 
+#        Libs/TextToSpeech/TextToSpeech.cpp Libs/TextToSpeech/TextToSpeech.hpp
+
         ${PLATEFORM_DEPENDANT_SOURCES}
 )
 
@@ -162,8 +165,10 @@ target_link_libraries(${EXE_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Xml
+#    Qt${QT_VERSION_MAJOR}::TextToSpeech
     ${SDL2_LIBRARIES}
     libSimpleUpdater::libSimpleUpdater
+    TextToSpeech::TextToSpeech
 )
 
 set_target_properties(${EXE_NAME} PROPERTIES

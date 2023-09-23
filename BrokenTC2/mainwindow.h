@@ -21,9 +21,6 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 
-
-#include "Utils/JSONTools.hpp"
-
 #include "global.hpp"
 
 #include <QPixmap>
@@ -66,6 +63,9 @@ struct Settings{
     int preferredCoreCount{2};
 
     QString backgroundImagePath{};
+
+    /* Text to speech */
+    int textToSpeechEnabled{};
 
     void setLowPerfMode(bool enable){
         m_lowPerfModeEnabled = enable;

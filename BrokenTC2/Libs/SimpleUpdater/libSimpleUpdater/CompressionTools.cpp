@@ -119,7 +119,7 @@ bool saveBA(const QByteArray& ba,const QString& path){
     auto count{f.write(ba)};
     f.close();
 
-    if(count != ba.size())
+    if(count == -1)
     {
         return false;
     }
@@ -242,7 +242,7 @@ bool Compressor::uncompress(const QString& path, const QString& outFolderPath){
         if(!qFInfo.absoluteDir().exists())
             qFInfo.absoluteDir().mkpath(".");
         auto success{uncompressFile(elemStream,fInfo)};
-//        qDebug() << to_string(fInfo);
+        qDebug() << to_string(fInfo);
         allSucceded = success && allSucceded;
     }
     fileBuff.close();

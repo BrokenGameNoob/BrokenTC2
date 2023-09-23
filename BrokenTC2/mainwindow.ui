@@ -1761,6 +1761,23 @@ background color</string>
        </widget>
       </item>
       <item>
+       <widget class="Line" name="line_34">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_audioNotif">
+        <property name="text">
+         <string>Enable audio notif</string>
+        </property>
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

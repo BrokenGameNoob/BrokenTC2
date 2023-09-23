@@ -77,7 +77,7 @@ MainWindow::MainWindow(const ProgArgs &args, QWidget *parent)
                 qWarning() << "Installation failure (" << success.reason << ") lead to not retrying";
                 break;
             }
-            qWarning() << "Failed extraction try" << i <<", retrying after" << kMsDelayBetweenRetry << "ms";
+            qWarning() << "Failed extraction try" << i <<" (Reason " << success.reason << "), retrying after" << kMsDelayBetweenRetry << "ms";
             QThread::msleep(kMsDelayBetweenRetry);
         }
         //we should not reach this place if we extracted the update
