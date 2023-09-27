@@ -59,7 +59,7 @@ struct Settings{
     bool enableNotification{false};
     QString displayGearScreen{};
 
-    bool exitOnCloseEvent{false};
+    bool exitOnCloseEvent{true};
 
     int openedTab{2};
 

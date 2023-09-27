@@ -361,7 +361,7 @@ void UpdateHandler::onManifestRetrieved(std::optional<QJsonDocument> docOpt,bool
 //        QMessageBox::warning(this,tr("Could not update"),);
         showInfoMessage(InfoBoxMsgType::kWarning,tr("Sorry, your running version is not suitable for an automatic update.\n"
                                                     "(Min required running version is: %1)\n\n"
-                                                    "Please reinstall the software manually.").arg(to_string(minVersion)));
+                                                    "Please reinstall the software manually.\n%2%3").arg(to_string(minVersion),PROJECT_GITHUB_RELEASE_DEFINE,"/download/BrokenTC2_setup_x64.exe"));
         return;
     }
 
