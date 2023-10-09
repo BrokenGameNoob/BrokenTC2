@@ -58,6 +58,8 @@ bool saveSettings(const ProfileSettings& sett,const QString& fileName)
 
     keys.insert("kSwitchMode",sett.kSwitchMode);
     keys.insert("kCycleProfile",sett.kCycleProfile);
+    keys.insert("keyboardSeqGearUp",sett.keyboardSeqGearUp);
+    keys.insert("keyboardSeqGearDown",sett.keyboardSeqGearDown);
     keys.insert("keyDownTime",sett.keyDownTime);
     keys.insert("maxGear",sett.maxGear);
 
@@ -116,6 +118,8 @@ ProfileSettings readProfileSettings(const QString& fileName)
     out.seqGearDown = keys.value("seqGearDown").toInt(ref.seqGearDown);
     out.kSwitchMode = keys.value("kSwitchMode").toInt(ref.kSwitchMode);
     out.kCycleProfile = keys.value("kCycleProfile").toInt(ref.kCycleProfile);
+    out.keyboardSeqGearUp = keys.value("keyboardSeqGearUp").toInt(ref.keyboardSeqGearUp);
+    out.keyboardSeqGearDown = keys.value("keyboardSeqGearDown").toInt(ref.keyboardSeqGearDown);
     out.keyDownTime = keys.value("keyDownTime").toInt(ref.keyDownTime);
 
     auto controller{docObj.value("controller").toObject()};

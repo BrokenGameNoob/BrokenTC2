@@ -31,6 +31,7 @@
 #include "TC/Profile.hpp"
 #include "TC/GearHandler.hpp"
 #include "TC/Widget_gearDisplay.hpp"
+#include "Utils/Dialog_getKeyCode.hpp"
 
 #include "QSDL/GameController.hpp"
 #include "QSDL/SDLEventHandler.hpp"
@@ -104,6 +105,8 @@ protected:
     void showEvent(QShowEvent* event) override;
 
 private slots:
+    void UpdateConflicts();
+
     void onControllerPluggedIn(int id);
     void onControllerUnplugged(int id);
 
@@ -136,6 +139,7 @@ protected:
     void paintEvent(QPaintEvent *pe) override;
 
 private:
+    int32_t GetKey();
     bool setBackgroungImage(const QString& newPath);
     void updateSoftSettings();
     bool saveSoftSettings();
@@ -156,6 +160,8 @@ private:
 private:
     Ui::MainWindow *ui;
     QSystemTrayIcon m_trayIcon;
+
+    bool m_ignore_kb_events{false};
 
     bool m_wasUpdated;
     updt::UpdateHandler* m_updateHandler;

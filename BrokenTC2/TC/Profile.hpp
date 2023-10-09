@@ -57,6 +57,8 @@ struct ProfileSettings{
 
     Key kSwitchMode{-1};//keyboard key to switch
     Key kCycleProfile{-1};//keyboard key to cycle controller
+    Key keyboardSeqGearUp{-1};
+    Key keyboardSeqGearDown{-1};
     int keyDownTime{20};//ms
 
     //---- Controller ----//

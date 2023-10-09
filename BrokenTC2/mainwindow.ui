@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>642</width>
-    <height>751</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QScrollArea" name="tb_settings_controller">
            <property name="sizePolicy">
@@ -612,7 +612,7 @@ Sequential / Clutch</string>
 	</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="6" column="0">
+             <item row="9" column="0">
               <spacer name="verticalSpacer_11">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -625,10 +625,10 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="0" column="1">
-              <widget class="Line" name="line">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
+             <item row="5" column="2">
+              <widget class="QLabel" name="lbl_kCycleProfile">
+               <property name="text">
+                <string>-</string>
                </property>
               </widget>
              </item>
@@ -645,11 +645,24 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QPushButton" name="pb_selectKey_kSwitchMode">
+             <item row="7" column="0">
+              <widget class="QPushButton" name="pb_selectKey_keyboardGearUp">
                <property name="text">
-                <string>Switch mode
-Sequential / Clutch</string>
+                <string>Gear Up</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QPushButton" name="pb_selectKey_kCycleProfile">
+               <property name="text">
+                <string>Cycle profile</string>
                </property>
               </widget>
              </item>
@@ -662,6 +675,37 @@ Sequential / Clutch</string>
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pb_selectKey_kSwitchMode">
+               <property name="text">
+                <string>Switch mode
+Sequential / Clutch</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lbl_disp_selectKey">
+               <property name="text">
+                <string>Select key</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <spacer name="verticalSpacer_22">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item row="1" column="0" colspan="3">
               <layout class="QHBoxLayout" name="hlay_kbSoftSettSep">
@@ -697,29 +741,29 @@ Sequential / Clutch</string>
                </item>
               </layout>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="lbl_disp_selectKey">
+             <item row="8" column="0">
+              <widget class="QPushButton" name="pb_selectKey_keyboardGearDown">
                <property name="text">
-                <string>Select key</string>
+                <string>Gear Down</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QPushButton" name="pb_selectKey_kCycleProfile">
-               <property name="text">
-                <string>Cycle profile</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1" rowspan="4">
+             <item row="2" column="1" rowspan="7">
               <widget class="Line" name="line_6">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
               </widget>
              </item>
-             <item row="5" column="2">
-              <widget class="QLabel" name="lbl_kCycleProfile">
+             <item row="7" column="2">
+              <widget class="QLabel" name="lbl_keyboardGearUp">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="2">
+              <widget class="QLabel" name="lbl_keyboardGearDown">
                <property name="text">
                 <string>-</string>
                </property>

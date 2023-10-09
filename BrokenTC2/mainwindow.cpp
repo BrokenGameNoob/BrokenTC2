@@ -80,21 +80,21 @@ QString getKeyOrButtonText(int keyCode,bool useVkCodeChar){
     if(keyCode < 0)
         return "- -";
 
-    QString text{};
+    QString text{" "};
     if(useVkCodeChar)
         text = win::vkCodeToStr(keyCode).toUpper();
     else
     {
         if(keyCode >= 1000)//gamepad axis
         {
-            text = "Axis: ";
+            text += "Axis: ";
             text += QString::number((keyCode-1000)/10);
             text += " Dir: ";
             text += QString::number(keyCode%10);
         }
         else
         {
-            text = QString::number(keyCode);
+            text += QString::number(keyCode);
         }
     }
     return text;
@@ -206,6 +206,16 @@ bool reg_startOnStartup(bool enableAutoStart)
 }
 #endif
 
+void SetLabelHasConflict(QLabel* lbl, const QString& conflict_with){
+    lbl->setStyleSheet("background-color:#ffcccc");
+    lbl->setToolTip(QObject::tr("This key is in conflict with <%1>").arg(conflict_with));
+}
+
+void ClearLabelConflict(QLabel* lbl){
+    lbl->setStyleSheet("");
+    lbl->setToolTip("");
+}
+
 }
 
 
@@ -298,72 +308,86 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
 
     connect(ui->pb_selectKey_GReverse,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_GReverse,m_gearHandler.settings().reverse);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_GClutch,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_GClutch,m_gearHandler.settings().clutch);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G1,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G1,m_gearHandler.settings().g1);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G2,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G2,m_gearHandler.settings().g2);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G3,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G3,m_gearHandler.settings().g3);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G4,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G4,m_gearHandler.settings().g4);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G5,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G5,m_gearHandler.settings().g5);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G6,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G6,m_gearHandler.settings().g6);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_G7,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_G7,m_gearHandler.settings().g7);
         saveProfileSettings();
     });
 
     connect(ui->pb_selectKey_SeqUp,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_seqUp,m_gearHandler.settings().seqGearUp);
         saveProfileSettings();
+        UpdateConflicts();
     });
     connect(ui->pb_selectKey_SeqDown,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_seqDown,m_gearHandler.settings().seqGearDown);
         saveProfileSettings();
+        UpdateConflicts();
     });
 
 
     connect(ui->pb_selectKey_kSwitchMode,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
         saveProfileSettings();
     });
     connect(ui->pb_selectKey_kCycleProfile,&QPushButton::clicked,this,[&](){
-        auto key{Dialog_getKeyCode::getKey(this).code};
+        auto key{GetKey()};
         setKey(key,ui->lbl_kCycleProfile,m_gearHandler.settings().kCycleProfile);
         saveProfileSettings();
+    });
+    connect(ui->pb_selectKey_keyboardGearUp,&QPushButton::clicked,this,[&](){
+        auto key{GetKey()};
+        setKey(key,ui->lbl_keyboardGearUp,m_gearHandler.settings().keyboardSeqGearUp);
+        saveProfileSettings();
+        UpdateConflicts();
+    });
+    connect(ui->pb_selectKey_keyboardGearDown,&QPushButton::clicked,this,[&](){
+        auto key{GetKey()};
+        setKey(key,ui->lbl_keyboardGearDown,m_gearHandler.settings().keyboardSeqGearDown);
+        saveProfileSettings();
+        UpdateConflicts();
     });
 
 
@@ -599,6 +623,13 @@ void MainWindow::showEvent(QShowEvent* event)//when the window is shown
     m_trayIcon.hide();
 }
 
+int32_t MainWindow::GetKey(){
+    m_ignore_kb_events = true;
+    Dialog_getKeyCode::KeyCode key{Dialog_getKeyCode::getKey(this)};
+    m_ignore_kb_events = false;
+    return key.code;
+}
+
 //------------------------------------------------------------------
 //
 //--------   Soft settings
@@ -746,6 +777,7 @@ bool MainWindow::loadProfileSettings()
     {
         m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
         m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
+        UpdateConflicts();
     }
     catch (const std::runtime_error& e)
     {
@@ -863,6 +895,8 @@ void MainWindow::refreshDisplayFromGearHandlerSettings()
 
     lambdaUpdateText(ui->lbl_kSwitchMode,m_gearHandler.settings().kSwitchMode);
     lambdaUpdateText(ui->lbl_kCycleProfile,m_gearHandler.settings().kCycleProfile);
+    lambdaUpdateText(ui->lbl_keyboardGearUp,m_gearHandler.settings().keyboardSeqGearUp);
+    lambdaUpdateText(ui->lbl_keyboardGearDown,m_gearHandler.settings().keyboardSeqGearDown);
     ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
     lambdaUpdateText(ui->lbl_btn_GUp,m_gearHandler.settings().gearUp,false);
@@ -910,6 +944,23 @@ void MainWindow::cycleGamepadProfile(){
 //
 //------------------------------------------------------------------
 
+void MainWindow::UpdateConflicts(){
+//    if(m_gearHandler.settings().keyboardSeqGearUp == m_gearHandler.settings().seqGearUp){
+//        ::SetLabelHasConflict(ui->lbl_keyboardGearUp,tr("In game config: %2").arg(ui->pb_selectKey_SeqUp->text()));
+//        ::SetLabelHasConflict(ui->lbl_seqUp,tr("Keyboard inputs: %2").arg(ui->pb_selectKey_keyboardGearUp->text()));
+//    } else {
+//        ::ClearLabelConflict(ui->lbl_keyboardGearUp);
+//        ::ClearLabelConflict(ui->lbl_seqUp);
+//    }
+
+//    if(m_gearHandler.settings().keyboardSeqGearDown == m_gearHandler.settings().seqGearDown){
+//        ::SetLabelHasConflict(ui->lbl_keyboardGearDown,tr("In game config: %2").arg(ui->pb_selectKey_SeqDown->text()));
+//        ::SetLabelHasConflict(ui->lbl_seqDown,tr("Keyboard inputs: %2").arg(ui->pb_selectKey_keyboardGearDown->text()));
+//    } else {
+//        ::ClearLabelConflict(ui->lbl_keyboardGearDown);
+//        ::ClearLabelConflict(ui->lbl_seqDown);
+//    }
+}
 
 void MainWindow::onControllerPluggedIn(int id)
 {
@@ -1001,6 +1052,9 @@ void MainWindow::onControllerButtonPressed(int button)
 
 void MainWindow::onKeyboardPressed(int key)
 {
+    if(m_ignore_kb_events){
+        return;
+    }
     if(key == m_gearHandler.settings().kSwitchMode)
     {
         m_gearHandler.switchGearSwitchMode();
@@ -1010,6 +1064,14 @@ void MainWindow::onKeyboardPressed(int key)
     else if(key == m_gearHandler.settings().kCycleProfile)
     {
         cycleGamepadProfile();
+    }
+    else if(key == m_gearHandler.settings().keyboardSeqGearUp)
+    {
+        m_gearHandler.gearUp();
+    }
+    else if(key == m_gearHandler.settings().keyboardSeqGearDown)
+    {
+        m_gearHandler.gearDown();
     }
 }
 
