@@ -495,9 +495,19 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
 
     auto availableScreens{QApplication::screens()};
     int i{};
+    std::map<QString,int32_t> screenCount{};
+    qInfo() << "Found "<< availableScreens.size() <<" screens";
+    for(const auto& e : availableScreens){
+        qInfo() << "\t-> " << screenName(e);
+    }
     for(const auto& e : availableScreens)
     {
-        ui->cb_gearDisplayScreen->addItem(screenName(e),i);
+        const auto kTmpScreenName{screenName(e)};
+        screenCount[kTmpScreenName]++;
+        const auto kDisplayName{screenCount[kTmpScreenName] > 1 ?
+                                    QString{"%0_%1"}.arg(kTmpScreenName).arg(screenCount[kTmpScreenName]) :
+                                    std::move(kTmpScreenName)};
+        ui->cb_gearDisplayScreen->addItem(kDisplayName,i);
         ++i;
     }
 
