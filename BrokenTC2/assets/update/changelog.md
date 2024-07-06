@@ -1,3 +1,23 @@
+# 1.1.8 is here! (Skip neutral!)
+
+## -> New Features
+- It is now possible (and advised) to skip the neutral in clutch mode. This actually solves the issue of reverse or first gear not engaging properly if enabled. This option can be set in the "settings" tab.
+
+<br/><br/>
+
+## -> Bugs patched
+- It should now be possible for users with multiple identical screens to select one. (Please let me know on discord if the issue isn't fixed)
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.7 is here! (Easy configure patch)
 
 ## -> New Features
