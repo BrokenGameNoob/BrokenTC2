@@ -89,13 +89,11 @@ void GearHandler::setGear(int gear) {
     if (m_currentGear != Gear::N_CLUTCH) {
       sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH, m_settings), true);  // press clutch
     } else {
-      gearKeyCode = getKeyCode(kOldGear == Gear::R ? Gear::G1 : Gear::R, m_settings);
+      gearKeyCode = getKeyCode(kOldGear == Gear::R ? Gear::G2 : Gear::R, m_settings);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     sendKeyboardEvent(gearKeyCode, true);  // press gear key
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
     sendKeyboardEvent(gearKeyCode, false);  // release gear Key
 
     sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH, m_settings), false);  // release clutch
