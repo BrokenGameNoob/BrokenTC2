@@ -22,66 +22,64 @@
 
 namespace tc {
 
-enum class GearSwitchMode{
-    CLUTCH=0,
-    SEQUENTIAL=1
-};
-inline int toInt(GearSwitchMode g){return static_cast<int>(g);}
+enum class GearSwitchMode { CLUTCH = 0, SEQUENTIAL = 1 };
+inline int toInt(GearSwitchMode g) { return static_cast<int>(g); }
 
-struct ProfileSettings{
-    using Key = int;
-    using Button = int;
+struct ProfileSettings {
+  using Key = int;
+  using Button = int;
 
-    //---- global ----//
+  //---- global ----//
 
-    QString profileName{"Default"};
-    GearSwitchMode gearSwitchMode{GearSwitchMode::CLUTCH};
+  QString profileName{"Default"};
+  GearSwitchMode gearSwitchMode{GearSwitchMode::CLUTCH};
 
-    int maxGear{7};
+  int maxGear{7};
 
-    //---- keyboard ----//
+  //---- keyboard ----//
 
-    Key reverse{-1};//key "8"
-    Key clutch{-1};//key "0"
-    Key g1{-1};//key "1"
-    Key g2{-1};//key "2"
-    Key g3{-1};//key "3"
-    Key g4{-1};//key "4"
-    Key g5{-1};//key "5"
-    Key g6{-1};//key "6"
-    Key g7{-1};//key "7"
+  Key reverse{-1}; // key "8"
+  Key clutch{-1};  // key "0"
+  Key g1{-1};      // key "1"
+  Key g2{-1};      // key "2"
+  Key g3{-1};      // key "3"
+  Key g4{-1};      // key "4"
+  Key g5{-1};      // key "5"
+  Key g6{-1};      // key "6"
+  Key g7{-1};      // key "7"
 
-    //the crew keyboard keys for gear up/down
-    Key seqGearUp{-1};//key "e"
-    Key seqGearDown{-1};//key "a"
+  // the crew keyboard keys for gear up/down
+  Key seqGearUp{-1};   // key "e"
+  Key seqGearDown{-1}; // key "a"
 
-    Key kSwitchMode{-1};//keyboard key to switch
-    Key kCycleProfile{-1};//keyboard key to cycle controller
-    Key keyboardSeqGearUp{-1};
-    Key keyboardSeqGearDown{-1};
-    int keyDownTime{20};//ms
+  Key kSwitchMode{-1};   // keyboard key to switch
+  Key kCycleProfile{-1}; // keyboard key to cycle controller
+  Key keyboardSeqGearUp{-1};
+  Key keyboardSeqGearDown{-1};
+  int keyDownTime{20}; // ms
+  bool skipNeutral{true};
 
-    //---- Controller ----//
+  //---- Controller ----//
 
-    Button gearUp{4};
-    Button gearDown{5};
+  Button gearUp{4};
+  Button gearDown{5};
 
-    Button setReverseGear{-1};
-    Button setFirstGear{-1};
-    Button setSecondGear{-1};
-    Button setThirdGear{-1};
-    Button setFourthGear{-1};
-    Button setFifthGear{-1};
-    Button setSixthGear{-1};
+  Button setReverseGear{-1};
+  Button setFirstGear{-1};
+  Button setSecondGear{-1};
+  Button setThirdGear{-1};
+  Button setFourthGear{-1};
+  Button setFifthGear{-1};
+  Button setSixthGear{-1};
 
-    Button switchMode{-1};
-    Button cycleProfile{-1};
+  Button switchMode{-1};
+  Button cycleProfile{-1};
 };
 
-bool saveSettings(const ProfileSettings& sett,const QString& fileName);
+bool saveSettings(const ProfileSettings &sett, const QString &fileName);
 
-ProfileSettings readProfileSettings(const QString& fileName);
+ProfileSettings readProfileSettings(const QString &fileName);
 
-}//namespace tc
+} // namespace tc
 
 #endif // TC_PROFILE_HPP
