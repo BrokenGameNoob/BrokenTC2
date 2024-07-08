@@ -71,24 +71,24 @@ namespace {
 QString getKeyOrButtonText(int keyCode, bool useVkCodeChar) {
   if (keyCode < 0) return "- -";
 
-  QString text{};
+  QString text{" "};
   if (useVkCodeChar)
     text = win::vkCodeToStr(keyCode).toUpper();
   else {
     if (keyCode >= 1000)  // gamepad axis
     {
-      text = "Axis: ";
+      text += "Axis: ";
       text += QString::number((keyCode - 1000) / 10);
       text += " Dir: ";
       text += QString::number(keyCode % 10);
     } else {
-      text = QString::number(keyCode);
+      text += QString::number(keyCode);
     }
   }
   return text;
 }
 
-void setKey(int keyCode, QLabel* lblDisp, tc::ProfileSettings::Key& settingsKeyToChange) {
+void setKey(int keyCode, QLabel *lblDisp, tc::ProfileSettings::Key &settingsKeyToChange) {
   if (keyCode == 0)  // means do nothing
   {
     return;
@@ -97,7 +97,7 @@ void setKey(int keyCode, QLabel* lblDisp, tc::ProfileSettings::Key& settingsKeyT
   settingsKeyToChange = keyCode;  // if key == -1, it will never be matched = Unbind
 }
 
-inline void setButton(int button, QLabel* lblDisp, tc::ProfileSettings::Key& settingsBtnToChange) {
+inline void setButton(int button, QLabel *lblDisp, tc::ProfileSettings::Key &settingsBtnToChange) {
   if (button < -1)  // means do nothing
   {
     return;
@@ -106,7 +106,7 @@ inline void setButton(int button, QLabel* lblDisp, tc::ProfileSettings::Key& set
   settingsBtnToChange = button;  // if button == -1, it will never be matched = Unbind
 }
 
-inline QString screenName(const QScreen* screen) {
+inline QString screenName(const QScreen *screen) {
   static QRegularExpression reToRemove{"(\\.)|(/)|(\\\\)"};
   return screen->name().remove(reToRemove);
 }
@@ -117,8 +117,8 @@ inline QString screenName(const QScreen* screen) {
 //     int nChars = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
 //     // allocate it
 //     std::unique_ptr<wchar_t[]> out{new WCHAR[nChars]};
-//     MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, (LPWSTR)(out.get()), nChars);
-//     return out;
+//     MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, (LPWSTR)(out.get()),
+//     nChars); return out;
 // }
 
 #ifdef Q_OS_WIN
@@ -155,8 +155,8 @@ bool reg_startOnStartup(bool enableAutoStart) {
   auto cExePath{stdStrExePath.c_str()};
 
   if (enableAutoStart) {
-    lResult =
-        RegSetValueExA(hKey, PROJECT_NAME, 0, REG_SZ, reinterpret_cast<const BYTE*>(cExePath), size(stdStrExePath) + 1);
+    lResult = RegSetValueExA(
+        hKey, PROJECT_NAME, 0, REG_SZ, reinterpret_cast<const BYTE *>(cExePath), size(stdStrExePath) + 1);
   } else {
     lResult = RegDeleteKeyValueA(hKey, NULL, PROJECT_NAME);
   }
@@ -177,14 +177,24 @@ bool reg_startOnStartup(bool enableAutoStart) {
 }
 #endif
 
+void SetLabelHasConflict(QLabel *lbl, const QString &conflict_with) {
+  lbl->setStyleSheet("background-color:#ffcccc");
+  lbl->setToolTip(QObject::tr("This key is in conflict with <%1>").arg(conflict_with));
+}
+
+void ClearLabelConflict(QLabel *lbl) {
+  lbl->setStyleSheet("");
+  lbl->setToolTip("");
+}
+
 }  // namespace
 
-void MainWindow::Settings::setBgHUDColor(QColor c, Widget_gearDisplay* m_gearDisplay) {
+void MainWindow::Settings::setBgHUDColor(QColor c, Widget_gearDisplay *m_gearDisplay) {
   m_bgHUDColor = std::move(c);
   m_gearDisplay->setBgHUDColor(m_bgHUDColor);
 }
 
-MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
+MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       m_trayIcon{QIcon{":/img/img/softPic.png"}, this},
@@ -206,8 +216,8 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
   ui->statusbar->addPermanentWidget(new QLabel{PROJECT_VERSION, this});
 
   // Correct line appearances
-  auto lineList{this->findChildren<QFrame*>(QRegularExpression{"^line_[0-9]*$"})};
-  for (auto& e : lineList) {
+  auto lineList{this->findChildren<QFrame *>(QRegularExpression{"^line_[0-9]*$"})};
+  for (auto &e : lineList) {
     e->setMidLineWidth(1);
   }
 
@@ -303,26 +313,63 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
     saveProfileSettings();
   });
 
-  connect(ui->pb_selectKey_SeqUp, &QPushButton::clicked, this, [&]() {
-    auto key{Dialog_getKeyCode::getKey(this).code};
-    setKey(key, ui->lbl_seqUp, m_gearHandler.settings().seqGearUp);
+  connect(ui->pb_selectKey_GReverse, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_GReverse, m_gearHandler.settings().reverse);
     saveProfileSettings();
   });
-  connect(ui->pb_selectKey_SeqDown, &QPushButton::clicked, this, [&]() {
-    auto key{Dialog_getKeyCode::getKey(this).code};
-    setKey(key, ui->lbl_seqDown, m_gearHandler.settings().seqGearDown);
+  connect(ui->pb_selectKey_GClutch, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_GClutch, m_gearHandler.settings().clutch);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G1, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G1, m_gearHandler.settings().g1);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G2, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G2, m_gearHandler.settings().g2);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G3, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G3, m_gearHandler.settings().g3);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G4, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G4, m_gearHandler.settings().g4);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G5, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G5, m_gearHandler.settings().g5);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G6, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G6, m_gearHandler.settings().g6);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectKey_G7, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_G7, m_gearHandler.settings().g7);
     saveProfileSettings();
   });
 
-  connect(ui->pb_selectKey_kSwitchMode, &QPushButton::clicked, this, [&]() {
-    auto key{Dialog_getKeyCode::getKey(this).code};
-    setKey(key, ui->lbl_kSwitchMode, m_gearHandler.settings().kSwitchMode);
+  connect(ui->pb_selectKey_SeqUp, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_seqUp, m_gearHandler.settings().seqGearUp);
     saveProfileSettings();
+    UpdateConflicts();
   });
-  connect(ui->pb_selectKey_kCycleProfile, &QPushButton::clicked, this, [&]() {
-    auto key{Dialog_getKeyCode::getKey(this).code};
-    setKey(key, ui->lbl_kCycleProfile, m_gearHandler.settings().kCycleProfile);
+  connect(ui->pb_selectKey_SeqDown, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_seqDown, m_gearHandler.settings().seqGearDown);
     saveProfileSettings();
+    UpdateConflicts();
   });
 
   connect(ui->pb_selectButton_GUp, &QPushButton::clicked, this, [&]() {
@@ -336,40 +383,27 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
     saveProfileSettings();
   });
 
-  connect(ui->pb_selectButton_gearR, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gearR, m_gearHandler.settings().setReverseGear);
+  connect(ui->pb_selectKey_kSwitchMode, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_kSwitchMode, m_gearHandler.settings().kSwitchMode);
     saveProfileSettings();
   });
-  connect(ui->pb_selectButton_gear1, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear1, m_gearHandler.settings().setFirstGear);
+  connect(ui->pb_selectKey_kCycleProfile, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_kCycleProfile, m_gearHandler.settings().kCycleProfile);
     saveProfileSettings();
   });
-  connect(ui->pb_selectButton_gear2, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear2, m_gearHandler.settings().setSecondGear);
+  connect(ui->pb_selectKey_keyboardGearUp, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_keyboardGearUp, m_gearHandler.settings().keyboardSeqGearUp);
     saveProfileSettings();
+    UpdateConflicts();
   });
-  connect(ui->pb_selectButton_gear3, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear3, m_gearHandler.settings().setThirdGear);
+  connect(ui->pb_selectKey_keyboardGearDown, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_keyboardGearDown, m_gearHandler.settings().keyboardSeqGearDown);
     saveProfileSettings();
-  });
-  connect(ui->pb_selectButton_gear4, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear4, m_gearHandler.settings().setFourthGear);
-    saveProfileSettings();
-  });
-  connect(ui->pb_selectButton_gear5, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear5, m_gearHandler.settings().setFifthGear);
-    saveProfileSettings();
-  });
-  connect(ui->pb_selectButton_gear6, &QPushButton::clicked, this, [&]() {
-    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
-    setButton(btn, ui->lbl_btn_gear6, m_gearHandler.settings().setSixthGear);
-    saveProfileSettings();
+    UpdateConflicts();
   });
 
   connect(ui->pb_selectButton_switchMode, &QPushButton::clicked, this, [&]() {
@@ -455,10 +489,10 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
   int i{};
   std::map<QString, int32_t> screenCount{};
   qInfo() << "Found " << availableScreens.size() << " screens";
-  for (const auto& e : availableScreens) {
+  for (const auto &e : availableScreens) {
     qInfo() << "\t-> " << screenName(e);
   }
-  for (const auto& e : availableScreens) {
+  for (const auto &e : availableScreens) {
     const auto kTmpScreenName{screenName(e)};
     screenCount[kTmpScreenName]++;
     const auto kDisplayName{screenCount[kTmpScreenName] > 1
@@ -494,7 +528,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget* parent)
 
   // UPDATES
 
-  std::function<void(MainWindow*)> toCallIfUpdated = [](MainWindow* help) { qDebug() << "Updated!"; };
+  std::function<void(MainWindow *)> toCallIfUpdated = [](MainWindow *help) { qDebug() << "Updated!"; };
   m_wasUpdated = updt::acquireUpdated(toCallIfUpdated, lupdt::UPDATED_TAG_FILENAME, this);
 
   qInfo() << "------------"
@@ -512,10 +546,10 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent* event) {
+void MainWindow::closeEvent(QCloseEvent *event) {
   __asm("nop");
-  if (event->spontaneous() &&
-      !(m_softSettings.exitOnCloseEvent))  // if the window is closed by the top right closing icon
+  if (event->spontaneous() && !(m_softSettings.exitOnCloseEvent))  // if the window is closed by the top
+                                                                   // right closing icon
   {
     this->hide();
     m_trayIcon.show();
@@ -528,7 +562,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 }
 
-void MainWindow::showEvent(QShowEvent* event)  // when the window is shown
+void MainWindow::showEvent(QShowEvent *event)  // when the window is shown
 {
   QMainWindow::showEvent(event);
 
@@ -537,8 +571,10 @@ void MainWindow::showEvent(QShowEvent* event)  // when the window is shown
     m_softSettings.displayAboutOnStartup = false;
     saveSoftSettings();
 
-    QMetaObject::invokeMethod(
-        this, "on_action_about_triggered", Qt::ConnectionType::QueuedConnection);  // call it after function terminated
+    QMetaObject::invokeMethod(this,
+                              "on_action_about_triggered",
+                              Qt::ConnectionType::QueuedConnection);  // call it after function
+                                                                      // terminated
 
     on_pb_ezConf_clicked();
   }
@@ -551,13 +587,20 @@ void MainWindow::showEvent(QShowEvent* event)  // when the window is shown
   m_trayIcon.hide();
 }
 
+int32_t MainWindow::GetKey() {
+  m_ignore_kb_events = true;
+  Dialog_getKeyCode::KeyCode key{Dialog_getKeyCode::getKey(this)};
+  m_ignore_kb_events = false;
+  return key.code;
+}
+
 //------------------------------------------------------------------
 //
 //--------   Soft settings
 //
 //------------------------------------------------------------------
 
-bool MainWindow::setBackgroungImage(const QString& newPath) {
+bool MainWindow::setBackgroungImage(const QString &newPath) {
   if (!QFileInfo::exists(newPath) && !newPath.isEmpty()) {
     qWarning() << "Background image not found: " << newPath;
     QMessageBox::warning(this, tr("Warning"), tr("Background image not found") + QString{"\n%0"}.arg(newPath));
@@ -644,7 +687,8 @@ bool MainWindow::loadSoftSettings() {
   Settings def{};
 
   auto settings{docObj.value("settings").toObject()};
-  //    out.launchOnComputerStartup = settings.value("launchOnComputerStartup").toBool(false);
+  //    out.launchOnComputerStartup =
+  //    settings.value("launchOnComputerStartup").toBool(false);
   m_softSettings.displayAboutOnStartup = settings.value("displayAboutOnStartup").toBool(true);
   m_softSettings.currentDeviceName = settings.value("lastProfile").toString();
   m_softSettings.gearDisplayed = settings.value("displayGear").toBool();
@@ -688,7 +732,8 @@ bool MainWindow::loadProfileSettings() {
   try {
     m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
     m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
-  } catch (const std::runtime_error& e) {
+    UpdateConflicts();
+  } catch (const std::runtime_error &e) {
     qCritical() << "Cannot read gearHandler settings file";
     QMessageBox::critical(
         this, tr("Error"), tr("Cannot read gear keys and settings from the file\n%0").arg(getCurrentProfileFilePath()));
@@ -761,7 +806,7 @@ void MainWindow::populateDevicesComboBox() {
 
   auto newDeviceIndex{-1};
   int i{};
-  for (const auto& e : deviceList) {
+  for (const auto &e : deviceList) {
     if (curDevice == e) newDeviceIndex = i;
     ui->cb_selectDevice->addItem(e, i);  // store device id as data. Even though it should match cb index
     ++i;
@@ -770,7 +815,7 @@ void MainWindow::populateDevicesComboBox() {
 }
 
 void MainWindow::refreshDisplayFromGearHandlerSettings() {
-  auto lambdaUpdateText{[&](QLabel* lbl, auto newCode, bool useVkCodeChar = true) {
+  auto lambdaUpdateText{[&](QLabel *lbl, auto newCode, bool useVkCodeChar = true) {
     lbl->setText(getKeyOrButtonText(newCode, useVkCodeChar));
   }};
 
@@ -788,6 +833,8 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
 
   lambdaUpdateText(ui->lbl_kSwitchMode, m_gearHandler.settings().kSwitchMode);
   lambdaUpdateText(ui->lbl_kCycleProfile, m_gearHandler.settings().kCycleProfile);
+  lambdaUpdateText(ui->lbl_keyboardGearUp, m_gearHandler.settings().keyboardSeqGearUp);
+  lambdaUpdateText(ui->lbl_keyboardGearDown, m_gearHandler.settings().keyboardSeqGearDown);
   ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
   ui->cb_skip_neutral->setChecked(m_gearHandler.settings().skipNeutral);
   refreshSkipNeutralCheckBoxText();
@@ -815,7 +862,7 @@ void MainWindow::cycleGamepadProfile() {
   auto nextIndex{(ui->cb_selectDevice->currentIndex() + 1) % gamePadCount};
   ui->cb_selectDevice->setCurrentIndex(nextIndex);
 
-  const auto& deviceTitle{ui->cb_selectDevice->currentText()};
+  const auto &deviceTitle{ui->cb_selectDevice->currentText()};
   if (deviceTitle.isEmpty()) {
     return;
   }
@@ -832,6 +879,35 @@ void MainWindow::cycleGamepadProfile() {
 //--------   Qt slots
 //
 //------------------------------------------------------------------
+
+void MainWindow::UpdateConflicts() {
+  bool has_at_least_one_conflict{false};
+  if (m_gearHandler.settings().keyboardSeqGearUp == m_gearHandler.settings().seqGearUp) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearUp, tr("In game config: %2").arg(ui->pb_selectKey_SeqUp->text()));
+    ::SetLabelHasConflict(ui->lbl_seqUp, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_keyboardGearUp->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearUp);
+    ::ClearLabelConflict(ui->lbl_seqUp);
+  }
+
+  if (m_gearHandler.settings().keyboardSeqGearDown == m_gearHandler.settings().seqGearDown) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearDown, tr("In game config: %2").arg(ui->pb_selectKey_SeqDown->text()));
+    ::SetLabelHasConflict(ui->lbl_seqDown, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_keyboardGearDown->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearDown);
+    ::ClearLabelConflict(ui->lbl_seqDown);
+  }
+
+  if (has_at_least_one_conflict) {
+    m_has_keyboard_conflict = true;
+    ui->lbl_conflict->setVisible(true);
+  } else {
+    m_has_keyboard_conflict = false;
+    ui->lbl_conflict->setVisible(false);
+  }
+}
 
 void MainWindow::refreshSkipNeutralCheckBoxText() {
   ui->cb_skip_neutral->setText(m_gearHandler.settings().skipNeutral ? tr("Yes") : tr("No"));
@@ -860,7 +936,7 @@ void MainWindow::onControllerButtonPressed(int button) {
     if (switchBack) m_gearHandler.switchGearSwitchMode();
   }};
 
-  auto setStyleSheet{[&](auto* lbl, const auto& style) { lbl->setStyleSheet(style); }};
+  auto setStyleSheet{[&](auto *lbl, const auto &style) { lbl->setStyleSheet(style); }};
 
   constexpr int displayDelay{150};
 
@@ -895,11 +971,21 @@ void MainWindow::onControllerButtonPressed(int button) {
 }
 
 void MainWindow::onKeyboardPressed(int key) {
+  if (m_ignore_kb_events) {
+    return;
+  }
+  if (m_has_keyboard_conflict) {
+    return;
+  }
   if (key == m_gearHandler.settings().kSwitchMode) {
     m_gearHandler.switchGearSwitchMode();
     if (ui->cb_enableNotification->isChecked()) m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
   } else if (key == m_gearHandler.settings().kCycleProfile) {
     cycleGamepadProfile();
+  } else if (key == m_gearHandler.settings().keyboardSeqGearUp) {
+    m_gearHandler.gearUp();
+  } else if (key == m_gearHandler.settings().keyboardSeqGearDown) {
+    m_gearHandler.gearDown();
   }
 }
 
@@ -917,7 +1003,8 @@ void MainWindow::on_cb_selectDevice_currentIndexChanged(int index) {
 
     if (QFileInfo::exists(getProfileFilePath(deviceName)))  // If the profile file exists
     {
-      if (!loadProfile(deviceName))  // and we can't load the profile corresponding to the device
+      if (!loadProfile(deviceName))  // and we can't load the profile
+                                     // corresponding to the device
       {
         throw std::runtime_error{__CURRENT_PLACE_std_ + " : Cannot load profile for <" +
                                  getProfileFilePath(deviceName).toStdString() + ">"};
@@ -1001,7 +1088,7 @@ void MainWindow::on_actionOpen_logs_folder_triggered() {
   QDesktopServices::openUrl(QUrl::fromLocalFile(fInfo.dir().absolutePath()));
 }
 
-void MainWindow::paintEvent(QPaintEvent* pe) {
+void MainWindow::paintEvent(QPaintEvent *pe) {
   std::ignore = pe;
   QPainter painter(this);
 

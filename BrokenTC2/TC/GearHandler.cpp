@@ -28,7 +28,6 @@
 #include <QDebug>
 #include <QTimer>
 #include <chrono>
-#include <future>
 #include <thread>
 
 namespace tc {
@@ -100,7 +99,8 @@ void GearHandler::setGear(int gear) {
 
     auto t_ending{std::chrono::high_resolution_clock::now()};
     auto duration{std::chrono::duration<double>(t_ending - t_starting).count() * 1000};
-    qDebug() << "Gear change took :" << duration << "ms";
+    std::ignore = duration;
+    // qDebug() << "Gear change took :" << duration << "ms";
   }};
 
   std::thread t{lambdaSwitchClutch, keyCode};

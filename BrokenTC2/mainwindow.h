@@ -28,6 +28,7 @@
 #include "TC/Profile.hpp"
 #include "TC/Widget_gearDisplay.hpp"
 #include "Update/UpdateHandler.hpp"
+#include "Utils/Dialog_getKeyCode.hpp"
 #include "Utils/JSONTools.hpp"
 #include "global.hpp"
 
@@ -70,7 +71,7 @@ class MainWindow : public QMainWindow {
       return m_lowPerfModeEnabled;
     }
 
-    void setBgHUDColor(QColor c, Widget_gearDisplay* m_gearDisplay);
+    void setBgHUDColor(QColor c, Widget_gearDisplay *m_gearDisplay);
     QColor bgHUDColor() const {
       return m_bgHUDColor;
     }
@@ -90,16 +91,18 @@ class MainWindow : public QMainWindow {
   };
 
  public:
-  //    LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-  MainWindow(bool hideOnStartup, QWidget* parent = nullptr);
+  //    LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM
+  //    lParam);
+  MainWindow(bool hideOnStartup, QWidget *parent = nullptr);
   ~MainWindow();
 
  protected:
-  void closeEvent(QCloseEvent* event) override;
-  void showEvent(QShowEvent* event) override;
+  void closeEvent(QCloseEvent *event) override;
+  void showEvent(QShowEvent *event) override;
 
  private slots:
   void refreshSkipNeutralCheckBoxText();
+  void UpdateConflicts();
 
   void onControllerPluggedIn(int id);
   void onControllerUnplugged(int id);
@@ -120,16 +123,17 @@ class MainWindow : public QMainWindow {
   void on_pb_changeBackground_clicked();
 
  protected:
-  void paintEvent(QPaintEvent* pe) override;
+  void paintEvent(QPaintEvent *pe) override;
 
  private:
-  bool setBackgroungImage(const QString& newPath);
+  int32_t GetKey();
+  bool setBackgroungImage(const QString &newPath);
   void updateSoftSettings();
   bool saveSoftSettings();
   bool loadSoftSettings();
 
   QString getCurrentProfileFilePath();
-  QString getProfileFilePath(const QString& deviceName);
+  QString getProfileFilePath(const QString &deviceName);
   void saveProfileSettings();
   bool loadProfileSettings();
   bool loadProfile(QString gamePadName);
@@ -141,13 +145,16 @@ class MainWindow : public QMainWindow {
   void cycleGamepadProfile();
 
  private:
-  Ui::MainWindow* ui;
+  Ui::MainWindow *ui;
   QSystemTrayIcon m_trayIcon;
 
-  bool m_wasUpdated;
-  updt::UpdateHandler* m_updateHandler;
+  bool m_ignore_kb_events{false};
+  bool m_has_keyboard_conflict{false};
 
-  Widget_gearDisplay* m_gearDisplay;
+  bool m_wasUpdated;
+  updt::UpdateHandler *m_updateHandler;
+
+  Widget_gearDisplay *m_gearDisplay;
 
   Settings m_softSettings;
   const QString c_appDataFolder;
@@ -160,7 +167,7 @@ class MainWindow : public QMainWindow {
   static constexpr auto kDefaultBgPath{":/img/img/background.jpeg"};
 };
 
-inline QString MainWindow::getProfileFilePath(const QString& deviceName) {
+inline QString MainWindow::getProfileFilePath(const QString &deviceName) {
   return c_appDataFolder + removeSpecialChars(deviceName) + ".json";
 }
 inline QString MainWindow::getCurrentProfileFilePath() {
