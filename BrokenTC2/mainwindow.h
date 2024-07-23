@@ -85,7 +85,7 @@ class MainWindow : public QMainWindow {
     }
 
    private:
-    bool m_lowPerfModeEnabled{false};
+    bool m_lowPerfModeEnabled{true};
     int16_t m_joyAxisthreshold{std::numeric_limits<int16_t>::max() / 2};
     QColor m_bgHUDColor{79, 79, 79, 120};
   };
@@ -101,7 +101,6 @@ class MainWindow : public QMainWindow {
   void showEvent(QShowEvent *event) override;
 
  private slots:
-  void refreshSkipNeutralCheckBoxText();
   void UpdateConflicts();
 
   void onControllerPluggedIn(int id);

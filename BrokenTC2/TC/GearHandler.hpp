@@ -19,13 +19,27 @@
 #define TC_GEARHANDLER_H
 
 #include <QObject>
-#include <algorithm>
 
 #include "TC/Profile.hpp"
 
 namespace tc {
 
-enum class Gear { R = -1, N_CLUTCH = 0, G1 = 1, G2 = 2, G3 = 3, G4 = 4, G5 = 5, G6 = 6, G7 = 7 };
+enum class Gear {
+  R = -1,
+  N_CLUTCH = 0,
+  G1 = 1,
+  G2 = 2,
+  G3 = 3,
+  G4 = 4,
+  G5 = 5,
+  G6 = 6,
+  G7 = 7,
+  G8 = 8,
+  G9 = 9,
+  G10 = 10
+};
+constexpr auto kSequentialMaxGear{Gear::G10};
+constexpr auto kClutchMaxGear{Gear::G7};
 inline int toInt(Gear g) {
   return static_cast<int>(g);
 }
@@ -71,15 +85,6 @@ class GearHandler : public QObject {
     return m_currentGear;
   }
 
-  void setGearNoAction(int gear) {
-    gear = std::clamp(gear, static_cast<int>(Gear::R), m_settings.maxGear);
-    m_currentGear = static_cast<Gear>(gear);
-    emit gearChanged(gear);
-  }
-  void setGearNoAction(Gear gear) {
-    setGearNoAction(static_cast<int>(gear));
-  }
-
   void switchSeqGear(bool goUp);  // if you don't go up, I'll assume you want to go down
 
   const ProfileSettings& settings() const {
@@ -97,27 +102,13 @@ class GearHandler : public QObject {
     return m_settings.gearSwitchMode;
   }
 
+  Gear getMaxGear() const {
+    return m_settings.useSequentialAfterClutch ? kSequentialMaxGear : kClutchMaxGear;
+  }
+
  public slots:
-  void gearUp() {
-    if (m_settings.gearSwitchMode == GearSwitchMode::CLUTCH) {
-      if (settings().skipNeutral) {
-        setGear(m_currentGear + (((m_currentGear + 1) == tc::Gear::N_CLUTCH) ? 2 : 1));  // skip neutral
-      } else {
-        setGear(m_currentGear + 1);
-      }
-    } else  // GearSwitchMode::SEQUENTIAL
-      switchSeqGear(true);
-  }
-  void gearDown() {
-    if (m_settings.gearSwitchMode == GearSwitchMode::CLUTCH) {
-      if (settings().skipNeutral) {
-        setGear(m_currentGear - ((((m_currentGear - 1) == tc::Gear::N_CLUTCH) ? 2 : 1)));  // skip neutral
-      } else {
-        setGear(m_currentGear - 1);
-      }
-    } else  // GearSwitchMode::SEQUENTIAL
-      switchSeqGear(false);
-  }
+  void gearUp();
+  void gearDown();
 
   void switchGearSwitchMode() {
     if (m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)

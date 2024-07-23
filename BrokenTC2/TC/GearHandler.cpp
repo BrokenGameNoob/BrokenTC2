@@ -52,15 +52,13 @@ int getKeyCode(Gear gear, const ProfileSettings& settings) {
       return settings.g6;
     case Gear::G7:
       return settings.g7;
+    case Gear::G8:;
   }
   return settings.g7;
 }
 
 GearHandler::GearHandler(QObject* parent, ProfileSettings settings)
-    : QObject(parent), m_settings{settings}, m_currentGear{} {
-  if (m_settings.maxGear == -9999)  // if the maximum gear isn't initialized
-    m_settings.maxGear = static_cast<int>(Gear::G7);
-}
+    : QObject(parent), m_settings{settings}, m_currentGear{} {}
 
 void GearHandler::setGear(int gear) {
   if (m_settings.gearSwitchMode == GearSwitchMode::SEQUENTIAL) {
@@ -76,7 +74,7 @@ void GearHandler::setGear(int gear) {
   }};
 #endif
 
-  gear = std::clamp(gear, static_cast<int>(Gear::R), m_settings.maxGear);
+  gear = std::clamp(gear, toInt(Gear::R), toInt(kClutchMaxGear));
   const auto kOldGear{m_currentGear};
   m_currentGear = static_cast<Gear>(gear);
 
@@ -128,7 +126,7 @@ void GearHandler::switchSeqGear(bool goUp)  // if you don't go up, I'll assume y
     gear = toInt(m_currentGear - 1);
     gearKey = m_settings.seqGearDown;
   }
-  gear = std::clamp(gear, static_cast<int>(Gear::R), m_settings.maxGear);
+  gear = std::clamp(gear, toInt(Gear::R), toInt(kSequentialMaxGear));
   m_currentGear = static_cast<Gear>(gear);
 
   auto lambdaSwitchSeq{[&](int gearKeyCode) {
@@ -140,6 +138,32 @@ void GearHandler::switchSeqGear(bool goUp)  // if you don't go up, I'll assume y
   t.detach();
 
   emit gearChanged(toInt(m_currentGear));
+}
+
+void GearHandler::gearUp() {
+  const bool kShouldUseSequential{m_settings.useSequentialAfterClutch && m_currentGear >= kClutchMaxGear};
+  const bool kUseClutch{m_settings.gearSwitchMode == GearSwitchMode::CLUTCH && !kShouldUseSequential};
+  if (kUseClutch) {
+    if (settings().skipNeutral) {
+      setGear(m_currentGear + (((m_currentGear + 1) == tc::Gear::N_CLUTCH) ? 2 : 1));  // skip neutral
+    } else {
+      setGear(m_currentGear + 1);
+    }
+  } else  // GearSwitchMode::SEQUENTIAL
+    switchSeqGear(true);
+}
+
+void GearHandler::gearDown() {
+  const bool kShouldUseSequential{m_settings.useSequentialAfterClutch && m_currentGear > (kClutchMaxGear + 1)};
+  const bool kUseClutch{m_settings.gearSwitchMode == GearSwitchMode::CLUTCH && !kShouldUseSequential};
+  if (kUseClutch) {
+    if (settings().skipNeutral) {
+      setGear(m_currentGear - ((((m_currentGear - 1) == tc::Gear::N_CLUTCH) ? 2 : 1)));  // skip neutral
+    } else {
+      setGear(m_currentGear - 1);
+    }
+  } else  // GearSwitchMode::SEQUENTIAL
+    switchSeqGear(false);
 }
 
 }  // namespace tc
