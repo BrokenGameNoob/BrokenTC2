@@ -23,7 +23,9 @@
 namespace tc {
 
 enum class GearSwitchMode { CLUTCH = 0, SEQUENTIAL = 1 };
-inline int toInt(GearSwitchMode g) { return static_cast<int>(g); }
+inline int toInt(GearSwitchMode g) {
+  return static_cast<int>(g);
+}
 
 struct ProfileSettings {
   using Key = int;
@@ -34,30 +36,29 @@ struct ProfileSettings {
   QString profileName{"Default"};
   GearSwitchMode gearSwitchMode{GearSwitchMode::CLUTCH};
 
-  int maxGear{7};
-
   //---- keyboard ----//
 
-  Key reverse{-1}; // key "8"
-  Key clutch{-1};  // key "0"
-  Key g1{-1};      // key "1"
-  Key g2{-1};      // key "2"
-  Key g3{-1};      // key "3"
-  Key g4{-1};      // key "4"
-  Key g5{-1};      // key "5"
-  Key g6{-1};      // key "6"
-  Key g7{-1};      // key "7"
+  Key reverse{-1};  // key "8"
+  Key clutch{-1};   // key "0"
+  Key g1{-1};       // key "1"
+  Key g2{-1};       // key "2"
+  Key g3{-1};       // key "3"
+  Key g4{-1};       // key "4"
+  Key g5{-1};       // key "5"
+  Key g6{-1};       // key "6"
+  Key g7{-1};       // key "7"
 
   // the crew keyboard keys for gear up/down
-  Key seqGearUp{-1};   // key "e"
-  Key seqGearDown{-1}; // key "a"
+  Key seqGearUp{-1};    // key "e"
+  Key seqGearDown{-1};  // key "a"
 
-  Key kSwitchMode{-1};   // keyboard key to switch
-  Key kCycleProfile{-1}; // keyboard key to cycle controller
+  Key kSwitchMode{-1};    // keyboard key to switch
+  Key kCycleProfile{-1};  // keyboard key to cycle controller
   Key keyboardSeqGearUp{-1};
   Key keyboardSeqGearDown{-1};
-  int keyDownTime{20}; // ms
+  int keyDownTime{20};  // ms
   bool skipNeutral{true};
+  bool useSequentialAfterClutch{false};  // if true, after 7th gear, it will switch use sequential
 
   //---- Controller ----//
 
@@ -80,6 +81,6 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName);
 
 ProfileSettings readProfileSettings(const QString &fileName);
 
-} // namespace tc
+}  // namespace tc
 
-#endif // TC_PROFILE_HPP
+#endif  // TC_PROFILE_HPP
