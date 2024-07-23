@@ -52,7 +52,9 @@ int getKeyCode(Gear gear, const ProfileSettings& settings) {
       return settings.g6;
     case Gear::G7:
       return settings.g7;
-    case Gear::G8:;
+    case Gear::G8:
+    case Gear::G9:
+    case Gear::G10:;
   }
   return settings.g7;
 }

@@ -1,3 +1,26 @@
+# 1.2.0 is here! (Auto 8th gear)
+
+## -> New Features
+- It is now possible (and advised) to automatically use a classical sequential gearbox after the 7th gear. This means you don't need to switch gearbox mode anymore after gear 7!
+- Keyboard users can now use sequential clutch as well!
+- It is now possible to set a controller button to get directly into 7th gear.
+
+<br/><br/>
+
+## -> Bugs patched
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+- You won't be able to select a screen among multiple identical screens for the gear indicator (no solution either)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.1.8 is here! (Skip neutral!)
 
 ## -> New Features

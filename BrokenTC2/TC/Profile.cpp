@@ -71,6 +71,7 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName) {
   controller.insert("setFourthGear", sett.setFourthGear);
   controller.insert("setFifthGear", sett.setFifthGear);
   controller.insert("setSixthGear", sett.setSixthGear);
+  controller.insert("setSeventhGear", sett.setSeventhGear);
 
   controller.insert("switchMode", sett.switchMode);
   controller.insert("cycleProfile", sett.cycleProfile);
@@ -128,6 +129,7 @@ ProfileSettings readProfileSettings(const QString &fileName) {
   out.setFourthGear = controller.value("setFourthGear").toInt(ref.setFourthGear);
   out.setFifthGear = controller.value("setFifthGear").toInt(ref.setFifthGear);
   out.setSixthGear = controller.value("setSixthGear").toInt(ref.setSixthGear);
+  out.setSeventhGear = controller.value("setSeventhGear").toInt(ref.setSeventhGear);
 
   out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
   out.cycleProfile = controller.value("cycleProfile").toInt(ref.cycleProfile);
