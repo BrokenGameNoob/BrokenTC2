@@ -115,6 +115,7 @@ int main(int argc,char* argv[])
 
     try
     {
+        std::cout << "Hello World";
         MainWindow w{parser.isSet("hide")};
         w.show();
         splash.finish(&w);
