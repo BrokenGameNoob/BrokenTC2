@@ -95,7 +95,7 @@
        </size>
       </property>
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
       <widget class="QGroupBox" name="gb_settings">
        <property name="sizePolicy">
@@ -109,6 +109,22 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
+         <widget class="QLabel" name="lbl_conflict">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(255, 233, 233)</string>
+          </property>
+          <property name="text">
+           <string>Conflict was detected between &lt;Keyboard inputs&gt; &amp; &lt;In game Config&gt;. You won't be able to use keyboard inputs while these are not fixed.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="margin">
+           <number>2</number>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QTabWidget" name="tb_settings">
           <property name="minimumSize">
            <size>
@@ -117,7 +133,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QScrollArea" name="tb_settings_controller">
            <property name="sizePolicy">
@@ -136,7 +152,7 @@
             <string notr="true"/>
            </property>
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::Shape::NoFrame</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
@@ -148,9 +164,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-120</y>
+              <y>-34</y>
               <width>582</width>
-              <height>552</height>
+              <height>660</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -165,6 +181,43 @@
 }</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
+             <item row="3" column="2">
+              <widget class="QLabel" name="lbl_btn_GDown">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="2">
+              <widget class="QLabel" name="lbl_btn_gear7">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <spacer name="verticalSpacer_9">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="25" column="0">
+              <widget class="QPushButton" name="pb_selectButton_cycleProfile">
+               <property name="text">
+                <string>Cycle profile</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="lbl_disp_selectButton">
                <property name="sizePolicy">
@@ -178,6 +231,20 @@
                </property>
               </widget>
              </item>
+             <item row="10" column="2">
+              <widget class="QLabel" name="lbl_btn_gear3">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" rowspan="3">
+              <widget class="Line" name="line_3">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+              </widget>
+             </item>
              <item row="9" column="2">
               <widget class="QLabel" name="lbl_btn_gear2">
                <property name="text">
@@ -185,98 +252,17 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="2">
-              <widget class="QLabel" name="lbl_btn_gearR">
+             <item row="8" column="2">
+              <widget class="QLabel" name="lbl_btn_gear1">
                <property name="text">
                 <string>-</string>
                </property>
               </widget>
              </item>
-             <item row="18" column="2">
-              <widget class="QLabel" name="lbl_btn_switchMode">
+             <item row="10" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear3">
                <property name="text">
-                <string>-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gearR">
-               <property name="text">
-                <string>Reverse</string>
-               </property>
-              </widget>
-             </item>
-             <item row="11" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear4">
-               <property name="text">
-                <string>4th gear</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="Line" name="line_18">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="17" column="1" rowspan="3">
-              <widget class="Line" name="line_8">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="20" column="0" colspan="3">
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Expanding</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>297</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pb_selectButton_GUp">
-               <property name="text">
-                <string>Gear Up</string>
-               </property>
-              </widget>
-             </item>
-             <item row="15" column="0">
-              <spacer name="verticalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>10</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="19" column="2">
-              <widget class="QLabel" name="lbl_btn_cycleProfile">
-               <property name="text">
-                <string>-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="19" column="0">
-              <widget class="QPushButton" name="pb_selectButton_cycleProfile">
-               <property name="text">
-                <string>Cycle profile</string>
+                <string>3rd gear</string>
                </property>
               </widget>
              </item>
@@ -287,7 +273,14 @@
                </property>
               </widget>
              </item>
-             <item row="18" column="0">
+             <item row="7" column="2">
+              <widget class="QLabel" name="lbl_btn_gearR">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="24" column="0">
               <widget class="QPushButton" name="pb_selectButton_switchMode">
                <property name="text">
                 <string>Switch mode
@@ -295,13 +288,34 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
-              <spacer name="verticalSpacer_9">
+             <item row="8" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear1">
+               <property name="text">
+                <string>1st gear</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="2">
+              <widget class="QLabel" name="lbl_btn_gear4">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="pb_selectButton_GUp">
+               <property name="text">
+                <string>Gear Up</string>
+               </property>
+              </widget>
+             </item>
+             <item row="26" column="0">
+              <spacer name="verticalSpacer_24">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -318,20 +332,6 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="2">
-              <widget class="QLabel" name="lbl_btn_GUp">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear2">
-               <property name="text">
-                <string>2nd gear</string>
-               </property>
-              </widget>
-             </item>
              <item row="13" column="2">
               <widget class="QLabel" name="lbl_btn_gear6">
                <property name="text">
@@ -339,118 +339,34 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="lbl_disp_currKey_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+             <item row="14" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear7">
                <property name="text">
-                <string>Current key</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <string>7th gear</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="hlay_directGearSep">
-               <item>
-                <widget class="Line" name="line_16">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_disp_directGearSep">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Direct gear</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="line_15">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="2" column="1" rowspan="3">
-              <widget class="Line" name="line_3">
+             <item row="23" column="1" rowspan="3">
+              <widget class="Line" name="line_8">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
-             <item row="1" column="0" colspan="3">
-              <layout class="QHBoxLayout" name="hlay_seqSep">
-               <item>
-                <widget class="Line" name="line_17">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lbl_disp_seqSep">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Sequential</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="Line" name="line_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="8" column="2">
-              <widget class="QLabel" name="lbl_btn_gear1">
+             <item row="31" column="2">
+              <widget class="QLabel" name="lbl_btn_holdFirstGear">
                <property name="text">
                 <string>-</string>
                </property>
               </widget>
              </item>
-             <item row="12" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear5">
-               <property name="text">
-                <string>5th gear</string>
-               </property>
-              </widget>
-             </item>
-             <item row="17" column="0">
-              <spacer name="verticalSpacer_8">
+             <item row="15" column="0">
+              <spacer name="verticalSpacer_7">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -460,26 +376,12 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="6" column="1" rowspan="10">
-              <widget class="Line" name="line_9">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="10" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear3">
-               <property name="text">
-                <string>3rd gear</string>
-               </property>
-              </widget>
-             </item>
-             <item row="16" column="0" colspan="3">
+             <item row="21" column="0" colspan="3">
               <layout class="QHBoxLayout" name="hlay_joySoftSettSep">
                <item>
                 <widget class="Line" name="line_20">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -495,33 +397,36 @@ Sequential / Clutch</string>
                   <string>Software</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_19">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
               </layout>
              </item>
-             <item row="3" column="2">
-              <widget class="QLabel" name="lbl_btn_GDown">
+             <item row="32" column="0">
+              <widget class="QLabel" name="lbl_disp_holdFirstGearWithClutch">
                <property name="text">
-                <string>-</string>
+                <string>Hold 1st gear with clutch</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <spacer name="verticalSpacer_10">
+             <item row="23" column="0">
+              <spacer name="verticalSpacer_8">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -531,17 +436,182 @@ Sequential / Clutch</string>
                </property>
               </spacer>
              </item>
-             <item row="10" column="2">
-              <widget class="QLabel" name="lbl_btn_gear3">
+             <item row="9" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear2">
                <property name="text">
-                <string>-</string>
+                <string>2nd gear</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear1">
+             <item row="5" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="hlay_directGearSep">
+               <item>
+                <widget class="Line" name="line_16">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_disp_directGearSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Direct gear</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_15">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="lbl_btn_GUp">
                <property name="text">
-                <string>1st gear</string>
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear5">
+               <property name="text">
+                <string>5th gear</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="lbl_disp_currKey_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Current key</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="Line" name="line_18">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="31" column="0">
+              <widget class="QPushButton" name="pb_holdFirstGear">
+               <property name="text">
+                <string>Hold 1st gear</string>
+               </property>
+              </widget>
+             </item>
+             <item row="32" column="2">
+              <widget class="QCheckBox" name="cb_holdFirstGearWithClutch">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="hlay_seqSep">
+               <item>
+                <widget class="Line" name="line_17">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_disp_seqSep">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Sequential</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_7">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="29" column="0" colspan="3">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="Line" name="line_35">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Utility</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line_34">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="25" column="2">
+              <widget class="QLabel" name="lbl_btn_cycleProfile">
+               <property name="text">
+                <string>-</string>
                </property>
               </widget>
              </item>
@@ -552,24 +622,86 @@ Sequential / Clutch</string>
                </property>
               </widget>
              </item>
-             <item row="11" column="2">
-              <widget class="QLabel" name="lbl_btn_gear4">
+             <item row="7" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gearR">
+               <property name="text">
+                <string>Reverse</string>
+               </property>
+              </widget>
+             </item>
+             <item row="24" column="2">
+              <widget class="QLabel" name="lbl_btn_switchMode">
                <property name="text">
                 <string>-</string>
                </property>
               </widget>
              </item>
-             <item row="14" column="0">
-              <widget class="QPushButton" name="pb_selectButton_gear7">
-               <property name="text">
-                <string>7th gear</string>
+             <item row="31" column="1" rowspan="2">
+              <widget class="Line" name="line_36">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
-             <item row="14" column="2">
-              <widget class="QLabel" name="lbl_btn_gear7">
+             <item row="27" column="0" colspan="3">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Expanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>297</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="0">
+              <spacer name="verticalSpacer_10">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="11" column="0">
+              <widget class="QPushButton" name="pb_selectButton_gear4">
                <property name="text">
-                <string>-</string>
+                <string>4th gear</string>
+               </property>
+              </widget>
+             </item>
+             <item row="30" column="0">
+              <spacer name="verticalSpacer_25">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="1" rowspan="8">
+              <widget class="Line" name="line_9">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -596,7 +728,7 @@ Sequential / Clutch</string>
 }</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::Shape::NoFrame</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
@@ -629,7 +761,7 @@ Sequential / Clutch</string>
              <item row="9" column="0">
               <spacer name="verticalSpacer_11">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -675,7 +807,7 @@ Sequential / Clutch</string>
              <item row="0" column="1">
               <widget class="Line" name="line">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -692,7 +824,7 @@ Sequential / Clutch</string>
                 <string>Current key</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -714,10 +846,10 @@ Sequential / Clutch</string>
              <item row="6" column="0">
               <spacer name="verticalSpacer_221">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -732,7 +864,7 @@ Sequential / Clutch</string>
                <item>
                 <widget class="Line" name="line_23">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -748,14 +880,14 @@ Sequential / Clutch</string>
                   <string>Software</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_24">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -771,7 +903,7 @@ Sequential / Clutch</string>
              <item row="2" column="1" rowspan="7">
               <widget class="Line" name="line_6">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -818,7 +950,7 @@ Sequential / Clutch</string>
 }</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::Shape::NoFrame</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
@@ -861,10 +993,10 @@ Sequential / Clutch</string>
              <item row="18" column="1">
               <spacer name="verticalSpacer">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Expanding</enum>
+                <enum>QSizePolicy::Policy::Expanding</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -877,10 +1009,10 @@ Sequential / Clutch</string>
              <item row="16" column="0">
               <spacer name="verticalSpacer_5">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -942,7 +1074,7 @@ Sequential / Clutch</string>
                <item>
                 <widget class="Line" name="line_13">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -958,14 +1090,14 @@ Sequential / Clutch</string>
                   <string>Keys affected to these actions in TC2</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_4">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1032,10 +1164,10 @@ Sequential / Clutch</string>
              <item row="11" column="0">
               <spacer name="verticalSpacer_3">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1048,7 +1180,7 @@ Sequential / Clutch</string>
              <item row="12" column="0" colspan="3">
               <widget class="Line" name="line_2">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
               </widget>
              </item>
@@ -1082,7 +1214,7 @@ Sequential / Clutch</string>
              <item row="13" column="1" rowspan="4">
               <widget class="Line" name="line_5">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -1099,7 +1231,7 @@ Sequential / Clutch</string>
              <item row="2" column="1" rowspan="10">
               <widget class="Line" name="line_0">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -1140,7 +1272,7 @@ Sequential / Clutch</string>
              <item row="0" column="1">
               <widget class="Line" name="line_14">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -1154,10 +1286,10 @@ Sequential / Clutch</string>
              <item row="13" column="0">
               <spacer name="verticalSpacer_4">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1179,7 +1311,7 @@ Sequential / Clutch</string>
                 <string>Current key</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1213,7 +1345,7 @@ Sequential / Clutch</string>
 }</string>
            </property>
            <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+            <enum>QFrame::Shape::NoFrame</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
@@ -1246,7 +1378,7 @@ Sequential / Clutch</string>
              <item row="23" column="1" rowspan="5">
               <widget class="Line" name="line_28">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
@@ -1270,10 +1402,10 @@ Sequential / Clutch</string>
              <item row="18" column="0">
               <spacer name="verticalSpacer_21">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1293,10 +1425,10 @@ Sequential / Clutch</string>
              <item row="4" column="0">
               <spacer name="verticalSpacer_22">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1332,10 +1464,10 @@ Sequential / Clutch</string>
              <item row="26" column="0">
               <spacer name="verticalSpacer_17">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1348,10 +1480,10 @@ Sequential / Clutch</string>
              <item row="16" column="0">
               <spacer name="verticalSpacer_20">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1364,14 +1496,14 @@ Sequential / Clutch</string>
              <item row="14" column="1" rowspan="7">
               <widget class="Line" name="line_29">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
              <item row="28" column="0">
               <spacer name="verticalSpacer_12">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1399,17 +1531,17 @@ Sequential / Clutch</string>
              <item row="10" column="1" rowspan="3">
               <widget class="Line" name="line_32">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
              <item row="12" column="0">
               <spacer name="verticalSpacer_18">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1422,10 +1554,10 @@ Sequential / Clutch</string>
              <item row="20" column="0">
               <spacer name="verticalSpacer_15">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1447,7 +1579,7 @@ Sequential / Clutch</string>
                <item>
                 <widget class="Line" name="line_25">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1463,14 +1595,14 @@ Sequential / Clutch</string>
                   <string>Display</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_10">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1486,10 +1618,10 @@ Sequential / Clutch</string>
              <item row="6" column="0">
               <spacer name="verticalSpacer_14">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1502,10 +1634,10 @@ Sequential / Clutch</string>
              <item row="14" column="0">
               <spacer name="verticalSpacer_13">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1520,7 +1652,7 @@ Sequential / Clutch</string>
                <item>
                 <widget class="Line" name="line_12">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1536,14 +1668,14 @@ Sequential / Clutch</string>
                   <string>Profile settings</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_11">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1577,7 +1709,7 @@ background color</string>
                 <string>Value</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1586,7 +1718,7 @@ background color</string>
                <item>
                 <widget class="Line" name="line_26">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1602,14 +1734,14 @@ background color</string>
                   <string>General</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_27">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1624,10 +1756,10 @@ background color</string>
                 <bool>true</bool>
                </property>
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Orientation::Horizontal</enum>
                </property>
                <property name="tickPosition">
-                <enum>QSlider::NoTicks</enum>
+                <enum>QSlider::TickPosition::NoTicks</enum>
                </property>
                <property name="tickInterval">
                 <number>0</number>
@@ -1670,7 +1802,7 @@ background color</string>
                   <number>255</number>
                  </property>
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1714,10 +1846,10 @@ background color</string>
              <item row="23" column="0">
               <spacer name="verticalSpacer_16">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1730,10 +1862,10 @@ background color</string>
              <item row="2" column="0">
               <spacer name="verticalSpacer_6">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1760,17 +1892,17 @@ background color</string>
              <item row="0" column="1">
               <widget class="Line" name="line_21">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
              <item row="10" column="0">
               <spacer name="verticalSpacer_19">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1785,7 +1917,7 @@ background color</string>
                <item>
                 <widget class="Line" name="line_30">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1801,14 +1933,14 @@ background color</string>
                   <string>Controller</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignCenter</set>
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
                 <widget class="Line" name="line_31">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -1827,10 +1959,10 @@ background color</string>
              <item row="8" column="0">
               <spacer name="verticalSpacer_23">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Minimum</enum>
+                <enum>QSizePolicy::Policy::Minimum</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -1850,29 +1982,13 @@ background color</string>
              <item row="2" column="1" rowspan="7">
               <widget class="Line" name="line_22">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Orientation::Vertical</enum>
                </property>
               </widget>
              </item>
             </layout>
            </widget>
           </widget>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="lbl_conflict">
-          <property name="styleSheet">
-           <string notr="true">background-color:rgb(255, 233, 233)</string>
-          </property>
-          <property name="text">
-           <string>Conflict was detected between &lt;Keyboard inputs&gt; &amp; &lt;In game Config&gt;. You won't be able to use keyboard inputs while these are not fixed.</string>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-          <property name="margin">
-           <number>2</number>
-          </property>
          </widget>
         </item>
        </layout>
@@ -1884,7 +2000,7 @@ background color</string>
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1903,7 +2019,7 @@ background color</string>
          </sizepolicy>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="text">
          <string>Display current gear engaged on screen</string>
@@ -1916,7 +2032,7 @@ background color</string>
       <item>
        <widget class="Line" name="line_33">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
        </widget>
       </item>
@@ -1929,7 +2045,7 @@ background color</string>
          </sizepolicy>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="text">
          <string>Enable gear switch notifications</string>
@@ -1942,7 +2058,7 @@ background color</string>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+         <enum>Qt::Orientation::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -1969,7 +2085,7 @@ background color</string>
        <item row="1" column="1">
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -2004,7 +2120,7 @@ background color</string>
            <normaloff>:/img/img/helpIcon.png</normaloff>:/img/img/helpIcon.png</iconset>
          </property>
          <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonIconOnly</enum>
+          <enum>Qt::ToolButtonStyle::ToolButtonIconOnly</enum>
          </property>
         </widget>
        </item>
@@ -2016,7 +2132,7 @@ background color</string>
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/img/img/discord.png&quot; width=&quot;100&quot; href=&quot;https://discord.gg/tkVRs4tp&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
            </property>
            <property name="openExternalLinks">
             <bool>true</bool>
@@ -2039,7 +2155,7 @@ background color</string>
          <item>
           <spacer name="horizontalSpacer_3">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -2054,7 +2170,7 @@ background color</string>
        <item row="1" column="2">
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

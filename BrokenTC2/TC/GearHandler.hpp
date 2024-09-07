@@ -110,6 +110,9 @@ class GearHandler : public QObject {
   void gearUp();
   void gearDown();
 
+  void holdFirstGear();
+  void releaseFirstGear();
+
   void switchGearSwitchMode() {
     if (m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
       setGearSwitchMode(GearSwitchMode::SEQUENTIAL);

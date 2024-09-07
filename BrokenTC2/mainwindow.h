@@ -107,6 +107,7 @@ class MainWindow : public QMainWindow {
   void onControllerUnplugged(int id);
 
   void onControllerButtonPressed(int id);
+  void onControllerButtonReleased(int id);
 
   void onKeyboardPressed(int key);
 

@@ -45,6 +45,7 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName) {
   keys.insert("gear_5", sett.g5);
   keys.insert("gear_6", sett.g6);
   keys.insert("gear_7", sett.g7);
+
   keys.insert("seqGearUp", sett.seqGearUp);
   keys.insert("seqGearDown", sett.seqGearDown);
 
@@ -72,6 +73,9 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName) {
   controller.insert("setFifthGear", sett.setFifthGear);
   controller.insert("setSixthGear", sett.setSixthGear);
   controller.insert("setSeventhGear", sett.setSeventhGear);
+
+  controller.insert("setHoldFirstGear", sett.setHoldFirstGear);
+  controller.insert("holdFirstGearWithClutch", sett.holdFirstGearWithClutch);
 
   controller.insert("switchMode", sett.switchMode);
   controller.insert("cycleProfile", sett.cycleProfile);
@@ -108,6 +112,7 @@ ProfileSettings readProfileSettings(const QString &fileName) {
   out.g5 = keys.value("gear_5").toInt(ref.g5);
   out.g6 = keys.value("gear_6").toInt(ref.g6);
   out.g7 = keys.value("gear_7").toInt(ref.g7);
+
   out.seqGearUp = keys.value("seqGearUp").toInt(ref.seqGearUp);
   out.seqGearDown = keys.value("seqGearDown").toInt(ref.seqGearDown);
   out.kSwitchMode = keys.value("kSwitchMode").toInt(ref.kSwitchMode);
@@ -130,6 +135,8 @@ ProfileSettings readProfileSettings(const QString &fileName) {
   out.setFifthGear = controller.value("setFifthGear").toInt(ref.setFifthGear);
   out.setSixthGear = controller.value("setSixthGear").toInt(ref.setSixthGear);
   out.setSeventhGear = controller.value("setSeventhGear").toInt(ref.setSeventhGear);
+  out.setHoldFirstGear = controller.value("setHoldFirstGear").toInt(ref.setHoldFirstGear);
+  out.holdFirstGearWithClutch = controller.value("holdFirstGearWithClutch").toBool(ref.holdFirstGearWithClutch);
 
   out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
   out.cycleProfile = controller.value("cycleProfile").toInt(ref.cycleProfile);
