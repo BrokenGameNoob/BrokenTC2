@@ -175,7 +175,7 @@ void GearHandler::holdFirstGear() {
     std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
     windows::sendKeyboardEvent(m_settings.g1,true);
   } else {
-    windows::sendKeyboardEvent(m_settings.seqGearUp,true);
+    windows::sendKeyboardEvent(m_settings.g1,true);
   }
 
   m_currentGear = static_cast<Gear>(1);
@@ -188,7 +188,7 @@ void GearHandler::releaseFirstGear() {
       std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
       windows::sendKeyboardEvent(m_settings.clutch,false);
     } else {
-      windows::sendKeyboardEvent(m_settings.seqGearUp,false);
+      windows::sendKeyboardEvent(m_settings.g1,false);
     }
 }
 
