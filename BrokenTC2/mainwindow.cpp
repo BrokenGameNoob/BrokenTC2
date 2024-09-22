@@ -282,6 +282,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     auto key{GetKey()};
     setKey(key, ui->lbl_GClutch, m_gearHandler.settings().clutch);
     saveProfileSettings();
+    UpdateConflicts();
   });
   connect(ui->pb_selectKey_G1, &QPushButton::clicked, this, [&]() {
     auto key{GetKey()};
@@ -914,6 +915,31 @@ void MainWindow::UpdateConflicts() {
   } else {
     ::ClearLabelConflict(ui->lbl_keyboardGearDown);
     ::ClearLabelConflict(ui->lbl_seqDown);
+  }
+
+  bool gclutch_has_conflict{false};
+  if (m_gearHandler.settings().keyboardSeqGearUp == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearUp, tr("In game config: %2").arg(ui->pb_selectKey_SeqUp->text()));
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearUp);
+    ::ClearLabelConflict(ui->lbl_GClutch);
+  }
+
+  if (m_gearHandler.settings().keyboardSeqGearDown == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearDown, tr("In game config: %2").arg(ui->pb_selectKey_SeqDown->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearDown);
+  }
+
+  if (gclutch_has_conflict) {
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+  } else {
+    ::ClearLabelConflict(ui->lbl_GClutch);
   }
 
   if (has_at_least_one_conflict) {
