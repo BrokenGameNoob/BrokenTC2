@@ -126,6 +126,7 @@ set(PROJECT_SOURCES
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
+        Utils/monotonic_clock.hpp
 
         ${PLATEFORM_DEPENDANT_SOURCES}
 )

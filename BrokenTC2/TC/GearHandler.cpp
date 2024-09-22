@@ -93,9 +93,9 @@ void GearHandler::setGear(int gear) {
 
     sendKeyboardEvent(gearKeyCode, true);  // press gear key
     std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
-    sendKeyboardEvent(gearKeyCode, false);  // release gear Key
+    // sendKeyboardEvent(gearKeyCode, false);  // release gear Key
 
-    sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH, m_settings), false);  // release clutch
+    // sendKeyboardEvent(getKeyCode(Gear::N_CLUTCH, m_settings), false);  // release clutch
 
     auto t_ending{std::chrono::high_resolution_clock::now()};
     auto duration{std::chrono::duration<double>(t_ending - t_starting).count() * 1000};

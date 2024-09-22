@@ -741,6 +741,7 @@ void MainWindow::saveProfileSettings() {
 }
 
 bool MainWindow::loadProfileSettings() {
+  qDebug() << "Loading profile: " << getCurrentProfileFilePath();
   try {
     m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
     m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
@@ -1089,7 +1090,11 @@ void MainWindow::on_pb_changeBackground_clicked() {
 }
 
 void MainWindow::on_pb_ezConf_clicked() {
-  Dialog_ConfigureGame::configure(this);
+  auto deviceList{qsdl::getPluggedJoysticks()};
+  Dialog_ConfigureGame::configure(this, deviceList, m_gearHandler.settings().profileName, c_appDataFolder);
+  loadProfileSettings(); /* Because we might have modified it */
+  refreshFromSettings();
+  refreshDisplayFromGearHandlerSettings();
 }
 
 void MainWindow::on_action_checkUpdates_triggered() {

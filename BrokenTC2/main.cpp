@@ -15,123 +15,109 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mainwindow.h"
-
 #include <QApplication>
-#include <SDL2/SDL.h>
-
-#include <QMessageBox>
-#include <QString>
-#include <QFile>
+#include <QCommandLineParser>
 #include <QDateTime>
-#include <QSplashScreen>
+#include <QFile>
+#include <QMessageBox>
 #include <QPixmap>
+#include <QSplashScreen>
+#include <QString>
 #include <QThread>
 
-#include <QCommandLineParser>
-
-#include "Windows/WinUtils.hpp"
+#include <SDL2/SDL.h>
 
 #include "LoggerHandler.hpp"
+#include "Utils/monotonic_clock.hpp"
+#include "Windows/WinUtils.hpp"
+#include "mainwindow.h"
 
-namespace{
+namespace {
 
 static constexpr auto PROCESS_NAME{"BrokenTC2.exe"};
 
-struct CanStart{
-    enum Code{
-        CAN_START,
-        ALREADY_RUNNING
-    };
+struct CanStart {
+  enum Code { CAN_START, ALREADY_RUNNING };
 };
 
-void preStart(){
-    auto pIdList{win::findProcessesId(PROCESS_NAME)};
-    auto curPId{GetCurrentProcessId()};
-    qDebug() << "Current pid:" << curPId;
-    for(const auto& e : pIdList)
-    {
-        if(e != curPId)
-        {
-            qDebug() << "Should terminate " << e;
-            while(win::isProcessRunning(e))
-                win::terminateProcess(e);
-        }
+void preStart() {
+  auto pIdList{win::findProcessesId(PROCESS_NAME)};
+  auto curPId{GetCurrentProcessId()};
+  qDebug() << "Current pid:" << curPId;
+  for (const auto &e : pIdList) {
+    if (e != curPId) {
+      qDebug() << "Should terminate " << e;
+      while (win::isProcessRunning(e))
+        win::terminateProcess(e);
     }
+  }
 }
 
-CanStart::Code canStart(){
-    CanStart::Code rVal{CanStart::CAN_START};
+CanStart::Code canStart() {
+  CanStart::Code rVal{CanStart::CAN_START};
 
-    if(win::processCount(PROCESS_NAME) > 1)
-    {
-        rVal = CanStart::ALREADY_RUNNING;
-    }
+  if (win::processCount(PROCESS_NAME) > 1) {
+    rVal = CanStart::ALREADY_RUNNING;
+  }
 
-    return rVal;
+  return rVal;
 }
 
-}
-
+} // namespace
 
 #ifdef WIN32
 int SDL_main(int argc, char *argv[])
 #else
-int main(int argc,char* argv[])
+int main(int argc, char *argv[])
 #endif
 {
-    installCustomLogHandler(logHandler::GlobalLogInfo{.progLogFilePath="BrokeLog.log",.progName="BrokenTC2"});
+  std::ignore = utils::HighResMs();
 
-    int rCode{0};
-    QApplication a(argc, argv);
+  installCustomLogHandler(logHandler::GlobalLogInfo{
+      .progLogFilePath = "BrokeLog.log", .progName = "BrokenTC2"});
 
-    QSplashScreen splash{QPixmap{":/img/img/spashScreen.png"}};
-    splash.show();
+  int rCode{0};
+  QApplication a(argc, argv);
 
-//    ::preStart();
+  QSplashScreen splash{QPixmap{":/img/img/spashScreen.png"}};
+  splash.show();
 
-//    auto canStart{::canStart()};
-//    if(canStart != CanStart::CAN_START)
-//    {
-//        switch(canStart)
-//        {
-//        case CanStart::ALREADY_RUNNING:
-//            QMessageBox::information(nullptr,QObject::tr("Info"),QObject::tr("BrokenTC2 is already running."));
-//            break;
-//        default:
-//            break;
-//        }
-//        splash.finish(nullptr);
-//        return 0;
-//    }
+  //    ::preStart();
 
-    QCommandLineParser parser;
-    parser.addOptions({
-                          // A boolean option with a single name (--hide)
-                          {"hide",
-                           QCoreApplication::translate("main", "Hide program on startup")}
-                      });
-    parser.process(a);
+  //    auto canStart{::canStart()};
+  //    if(canStart != CanStart::CAN_START)
+  //    {
+  //        switch(canStart)
+  //        {
+  //        case CanStart::ALREADY_RUNNING:
+  //            QMessageBox::information(nullptr,QObject::tr("Info"),QObject::tr("BrokenTC2
+  //            is already running.")); break;
+  //        default:
+  //            break;
+  //        }
+  //        splash.finish(nullptr);
+  //        return 0;
+  //    }
 
-    try
-    {
-        std::cout << "Hello World";
-        MainWindow w{parser.isSet("hide")};
-        w.show();
-        splash.finish(&w);
-        rCode = a.exec();
-    }
-    catch (const std::exception& e)
-    {
-        qCritical() << "A FATAL ERROR OCCURED";
-        qCritical() << e.what();
+  QCommandLineParser parser;
+  parser.addOptions({// A boolean option with a single name (--hide)
+                     {"hide", QCoreApplication::translate(
+                                  "main", "Hide program on startup")}});
+  parser.process(a);
 
-        rCode = 1;
-    }
-    catch(...)
-    {
-        qCritical() << "AN UNKNOWN FATAL ERROR OCCURED";
-    }
+  try {
+    MainWindow w{parser.isSet("hide")};
+    w.show();
+    splash.finish(&w);
+    rCode = a.exec();
+  } catch (const std::exception &e) {
+    qCritical() << "A FATAL ERROR OCCURED";
+    qCritical() << e.what();
 
-    return rCode;
+    rCode = 1;
+  } catch (...) {
+    qCritical() << "AN UNKNOWN FATAL ERROR OCCURED";
+  }
+
+  return rCode;
 }

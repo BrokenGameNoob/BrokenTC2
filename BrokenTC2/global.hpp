@@ -19,12 +19,12 @@
 #define GLOBAL_HPP
 
 #include <QDebug>
-#include <QStringLiteral>
 #include <QString>
-#include <string_view>
+#include <QStringLiteral>
+#include <QVector>
 #include <algorithm>
 #include <stdexcept>
-#include <QVector>
+#include <string_view>
 
 #ifdef __PRETTY_FUNCTION__
 #define __CURRENT_PLACE__ __PRETTY_FUNCTION__
@@ -32,49 +32,57 @@
 #define __CURRENT_PLACE__ __FUNCTION__
 #endif
 
-#define __CURRENT_PLACE_std_ std::string{__CURRENT_PLACE__}
-#define __CURRENT_PLACE_q_ QString{__CURRENT_PLACE__}
+#define __CURRENT_PLACE_std_ \
+  std::string {              \
+    __CURRENT_PLACE__        \
+  }
+#define __CURRENT_PLACE_q_ \
+  QString {                \
+    __CURRENT_PLACE__      \
+  }
 
-//namespace formatting{
+// namespace formatting{
 
-//just keep it because I like it but should really not be used...
+// just keep it because I like it but should really not be used...
 
-//template<typename T,typename... Ts>
-//QString recursiveQStringFormat(const QString& out, const T& firstArg, const Ts&... rest) {
-//    if constexpr (sizeof...(rest) > 0) {
-//        // this line will only be instantiated if there are further
-//        // arguments. if rest... is empty, there will be no recursive call
-//        return recursiveQStringFormat(out.arg(firstArg),rest...);
-//    }
-//    return out.arg(firstArg);
-//}
+// template<typename T,typename... Ts>
+// QString recursiveQStringFormat(const QString& out, const T& firstArg, const Ts&... rest) {
+//     if constexpr (sizeof...(rest) > 0) {
+//         // this line will only be instantiated if there are further
+//         // arguments. if rest... is empty, there will be no recursive call
+//         return recursiveQStringFormat(out.arg(firstArg),rest...);
+//     }
+//     return out.arg(firstArg);
+// }
 
 //}// namespace formatting
 
-class ContextualRuntimeErrorq : public std::runtime_error{
-public:
-    ContextualRuntimeErrorq(const QString context, const QString errMessage):
-        std::runtime_error{QString{"from: %0 -> %1"}.arg(context,errMessage).toStdString()}
-    {}
+class ContextualRuntimeErrorq : public std::runtime_error {
+ public:
+  ContextualRuntimeErrorq(const QString context, const QString errMessage)
+      : std::runtime_error{QString{"from: %0 -> %1"}.arg(context, errMessage).toStdString()} {}
 };
 
-inline
-QString removeSpecialChars(QString str){
-    auto it = std::remove_if(str.begin(), str.end(), [](const QChar& c){ return !c.isLetterOrNumber();});
-    str.chop(std::distance(it, str.end()));
-    return str;
+inline QString removeSpecialChars(QString str) {
+  auto it = std::remove_if(str.begin(), str.end(), [](const QChar& c) { return !c.isLetterOrNumber(); });
+  str.chop(std::distance(it, str.end()));
+  return str;
 }
 
-template<typename T>
-auto retrieveChildren(QObject* parent){
-    QVector<T*> out{};
-    for(auto* child : parent->children()){
-        auto* castedChild{qobject_cast<T *>(child)};
-        if(castedChild){
-            out.append(castedChild);
-        }
+template <typename T>
+auto retrieveChildren(QObject* parent) {
+  QVector<T*> out{};
+  for (auto* child : parent->children()) {
+    auto* castedChild{qobject_cast<T*>(child)};
+    if (castedChild) {
+      out.append(castedChild);
     }
-    return out;
+  }
+  return out;
 }
 
-#endif // GLOBAL_HPP
+inline QString getProfileFilePath(const QString appdataFolder, const QString& deviceName) {
+  return appdataFolder + removeSpecialChars(deviceName) + ".json";
+}
+
+#endif  // GLOBAL_HPP
