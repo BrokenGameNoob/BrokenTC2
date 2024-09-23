@@ -90,12 +90,6 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked() {
   const auto kConfigPath{tc::getConfigPath(kGameInfos)};
   auto configFileList{tc::getBindingsFiles(kConfigPath)};
 
-  qInfo() << "Setting up game: ";
-  qInfo() << "\t" << getSelectedGameId();
-  qInfo() << "\t" << kGameInfos.kProcessName;
-  qInfo() << "\t" << kGameInfos.kFolderInDocuments;
-  qInfo() << "\t" << kConfigPath;
-
   switch (curIndex) {
     case kIntro: {
       if (configFileList.empty()) {
@@ -138,6 +132,27 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked() {
       break;
     }
     case kDone: {
+      if (ui->cb_set_bindings->isChecked()) {
+        auto confirmAnswer{QMessageBox::question(
+            this,
+            tr("Confirmation"),
+            tr("<html><head/><body><p>You are about to <span style=\" font - weight : 700; \">remove all "
+               "mappings</span> "
+               "in game and in BTC2 for gear keys (In Game tab).<br/>Are you sure you "
+               "want to edit the keys for the profile &lt;%0&gt; and game &lt;%1&gt;</p></body></html>")
+                .arg(m_currentDevice, ui->comboBox->currentText()))};
+        if (confirmAnswer == QMessageBox::No) {
+          this->done(QDialog::Rejected);
+          break;
+        }
+      }
+
+      qInfo() << "Setting up game: ";
+      qInfo() << "\t" << getSelectedGameId();
+      qInfo() << "\t" << kGameInfos.kProcessName;
+      qInfo() << "\t" << kGameInfos.kFolderInDocuments;
+      qInfo() << "\t" << kConfigPath;
+
       auto bindingList{tc::getBindingsFiles(kConfigPath)};
       for (const auto& f : bindingList) {
         qDebug() << __PRETTY_FUNCTION__ << " edit config file -> " << f;
@@ -160,7 +175,8 @@ void Dialog_ConfigureGame::on_pb_nextOk_clicked() {
 
       auto targetProfile{tc::readProfileSettings(::getProfileFilePath(m_appdataFolder, m_currentDevice))};
 
-      if (!tc::xml::editXmlKeyboardConf(kConfigPath + "/" + keyboardFile, &targetProfile)) {
+      if (ui->cb_set_bindings->isChecked() &&
+          !tc::xml::editXmlKeyboardConf(kConfigPath + "/" + keyboardFile, &targetProfile)) {
         QMessageBox::critical(
             this,
             tr("Error while configuring game keyboard"),

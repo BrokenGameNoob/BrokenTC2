@@ -20,17 +20,17 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:700;&quot;&gt;Game config assistant&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::Maximum</enum>
+      <enum>QSizePolicy::Policy::Maximum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -43,7 +43,7 @@
    <item>
     <widget class="Line" name="line">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -60,7 +60,7 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;WARNING&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: This assistant will &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;unbind&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; all your gamepad keys to shift gear up and down.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;This mean you will &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;not be able to shift gears without running BrokenTC2 anymore&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;.&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;However, this &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;can be undone&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; simply by affecting the right keys in the game as you would do with any other.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;&amp;gt; This step is &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700; font-style:italic; text-decoration: underline; color:#ff0000;&quot;&gt;REQUIRED&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; and shall not be skipped to ensure proper operation of the software.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -91,10 +91,10 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;We need&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;the game&lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; to be closed to edit the configuration.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;When clicking next,&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;the game will automatically be closed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
-          <enum>Qt::AutoText</enum>
+          <enum>Qt::TextFormat::AutoText</enum>
          </property>
          <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -104,7 +104,7 @@
        <item>
         <layout class="QHBoxLayout" name="hlay_waitTC2Closed">
          <property name="sizeConstraint">
-          <enum>QLayout::SetDefaultConstraint</enum>
+          <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
          </property>
          <item>
           <widget class="QLabel" name="lbl_disp_waitTC2Closed">
@@ -149,7 +149,7 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The configuration of will be edited once you click &amp;quot;Finish&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -163,7 +163,7 @@
    <item>
     <widget class="Line" name="line_2">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -196,9 +196,19 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="cb_set_bindings">
+       <property name="text">
+        <string>Auto set game bindings</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
