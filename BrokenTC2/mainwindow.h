@@ -167,7 +167,7 @@ class MainWindow : public QMainWindow {
 };
 
 inline QString MainWindow::getProfileFilePath(const QString &deviceName) {
-  return c_appDataFolder + removeSpecialChars(deviceName) + ".json";
+  return ::getProfileFilePath(c_appDataFolder, deviceName);
 }
 inline QString MainWindow::getCurrentProfileFilePath() {
   return getProfileFilePath(m_gearHandler.settings().profileName);
