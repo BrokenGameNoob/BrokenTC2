@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.tcc": "cpp",
-        "compare": "cpp",
-        "memory_resource": "cpp",
-        "optional": "cpp",
-        "type_traits": "cpp"
-    }
-}

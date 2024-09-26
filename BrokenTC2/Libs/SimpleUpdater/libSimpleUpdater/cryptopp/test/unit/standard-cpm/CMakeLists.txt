@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # ===-----------------------------------------------------------------------===#
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/cmake_minimum_required.cmake)
+include(${CPM_cryptopp-cmake_SOURCE}/cmake/cmake_minimum_required.cmake)
 cmake_minimum_required(VERSION ${CRYPTOPP_MINIMUM_CMAKE_VERSION})
 
 # Test project for the standard way of using cryptopp-cmake
@@ -21,9 +21,9 @@ cpmaddpackage(
   NAME
   cryptopp-cmake
   GIT_REPOSITORY
-  https://github.com./abdes/cryptopp-cmake
+  abdes/cryptopp-cmake
   GIT_TAG
-  master
+  ${cryptopp_GIT_BRANCH}
   OPTIONS
   "CRYPTOPP_BUILD_TESTING OFF")
 

@@ -37,7 +37,7 @@ add_library(libSimpleUpdater::libSimpleUpdater ALIAS ${LIB_NAME})
 
 add_subdirectory(cryptopp)
 
-target_link_libraries(${LIB_NAME}
+target_link_libraries(${LIB_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     cryptopp
