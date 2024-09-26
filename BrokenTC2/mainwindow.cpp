@@ -421,6 +421,16 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     setButton(btn, ui->lbl_btn_gear7, m_gearHandler.settings().setSeventhGear);
     saveProfileSettings();
   });
+  connect(ui->pb_holdFirstGear, &QPushButton::clicked, this, [&]() {
+    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
+    setButton(btn, ui->lbl_btn_holdFirstGear, m_gearHandler.settings().setHoldFirstGear);
+    saveProfileSettings();
+  });
+  connect(ui->cb_holdFirstGearWithClutch, &QCheckBox::stateChanged, this, [&](int val) {
+      m_gearHandler.settings().holdFirstGearWithClutch = val;
+      saveProfileSettings();
+      RefreshCheckBoxText(this->ui->cb_holdFirstGearWithClutch);
+  });
 
   /* MISC options */
 
@@ -484,6 +494,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       SDLEventHandler::instance(), &SDLEventHandler::gameControllerRemoved, this, &MainWindow::onControllerUnplugged);
 
   connect(&m_controller, &GameController::buttonDown, this, &MainWindow::onControllerButtonPressed);
+  connect(&m_controller, &GameController::buttonUp, this, &MainWindow::onControllerButtonReleased); // New Feature
 
   //--------------------------------------------------------------------
 
@@ -842,6 +853,9 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_G5, m_gearHandler.settings().g5);
   lambdaUpdateText(ui->lbl_G6, m_gearHandler.settings().g6);
   lambdaUpdateText(ui->lbl_G7, m_gearHandler.settings().g7);
+  ui->cb_holdFirstGearWithClutch->setChecked(m_gearHandler.settings().holdFirstGearWithClutch);
+  ::RefreshCheckBoxText(ui->cb_holdFirstGearWithClutch);
+
   lambdaUpdateText(ui->lbl_seqUp, m_gearHandler.settings().seqGearUp);
   lambdaUpdateText(ui->lbl_seqDown, m_gearHandler.settings().seqGearDown);
 
@@ -850,6 +864,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_keyboardGearUp, m_gearHandler.settings().keyboardSeqGearUp);
   lambdaUpdateText(ui->lbl_keyboardGearDown, m_gearHandler.settings().keyboardSeqGearDown);
   ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
+
   ui->cb_skip_neutral->setChecked(m_gearHandler.settings().skipNeutral);
   ::RefreshCheckBoxText(ui->cb_skip_neutral);
   ui->cb_use_seq_after_clutch->setChecked(m_gearHandler.settings().useSequentialAfterClutch);
@@ -866,6 +881,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_btn_gear5, m_gearHandler.settings().setFifthGear, false);
   lambdaUpdateText(ui->lbl_btn_gear6, m_gearHandler.settings().setSixthGear, false);
   lambdaUpdateText(ui->lbl_btn_gear7, m_gearHandler.settings().setSeventhGear, false);
+  lambdaUpdateText(ui->lbl_btn_holdFirstGear, m_gearHandler.settings().setHoldFirstGear, false);
 
   lambdaUpdateText(ui->lbl_btn_switchMode, m_gearHandler.settings().switchMode, false);
   lambdaUpdateText(ui->lbl_btn_cycleProfile, m_gearHandler.settings().cycleProfile, false);
@@ -1007,7 +1023,15 @@ void MainWindow::onControllerButtonPressed(int button) {
     if (ui->cb_enableNotification->isChecked()) m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
   } else if (button == m_gearHandler.settings().cycleProfile) {
     cycleGamepadProfile();
+  } else if (button == m_gearHandler.settings().setHoldFirstGear) {
+    m_gearHandler.holdFirstGear();
   }
+}
+
+void MainWindow::onControllerButtonReleased(int button) {
+    if (button == m_gearHandler.settings().setHoldFirstGear) {
+      m_gearHandler.releaseFirstGear();
+    }
 }
 
 void MainWindow::onKeyboardPressed(int key) {

@@ -57,8 +57,7 @@ def checkFile(path: str) -> bool:
 
 
 def getReleaseDir(rootPath: str = ".") -> str:
-    tmpList = ls(rootPath, ".*build-.*Desktop_Qt_6.*MinGW.*_64.*-Release")
-    # tmpList = ls()
+    tmpList = ls(rootPath, ".*Desktop_Qt_6.*MinGW.*_64.*-Release")
     for i, dir in enumerate(tmpList):
         tmpList[i] = dir + "/bin"
     if (len(tmpList) != 1):
@@ -70,7 +69,7 @@ def getReleaseDir(rootPath: str = ".") -> str:
     return tmpList[0]
 
 
-def getExePath(releaseDir: str, exeRegex: str = ".*BrokenTC2\.exe") -> str:
+def getExePath(releaseDir: str, exeRegex: str = ".*BrokenTC2\\.exe") -> str:
     tmpList = ls(releaseDir, exeRegex)
     # tmpList = ls(releaseDir)
     if (len(tmpList) > 1):
@@ -84,19 +83,19 @@ def getExePath(releaseDir: str, exeRegex: str = ".*BrokenTC2\.exe") -> str:
 
 def main():
     CONFIG_outputDir = "AUTO"  # the dir will have the name of the found executable
-    CONFIG_WINDEPLOYQT_PATH = "C:/Qt/6.2.4/mingw_64/bin/windeployqt.exe"
+    CONFIG_WINDEPLOYQT_PATH = "C:/Qt/6.7.2/mingw_64/bin/windeployqt.exe"
     CONFIG_DEPENDENCY_DIR = "../BrokenTC2/assets/dependency"
     CONFIG_INNOSETUP_SCRIPT = "./buildSetup.iss"
     CONFIG_DEPLOY_OUTPUT_DIR = "./DEPLOY_OUTPUT"
 
-    CONFIG_PRIVATE_SIGNER_KEY_FILE = "../keys/BrokenTC2.private"
-    CONFIG_PUBLIC_VERIFIER_KEY_FILE = "../keys/BrokenTC2.public"
+    CONFIG_PRIVATE_SIGNER_KEY_FILE = "../keys_NOPE/BrokenTC2.private"
+    CONFIG_PUBLIC_VERIFIER_KEY_FILE = "../keys_NOPE/BrokenTC2.public"
     CONFIG_MANIFEST_FILE = "manifest.json"
     CONFIG_outputAssetDir = f"{CONFIG_outputDir}/Assets/"
 
     print("------------------------------------------------------")
 
-    releaseDir = getReleaseDir("..")
+    releaseDir = getReleaseDir("../BrokenTC2/build")
     if (not releaseDir):
         errorOccured("Cannot find release dir", True)
     print("Found build release dir at : {}".format(releaseDir))
@@ -122,7 +121,7 @@ def main():
         errorOccured("Cannot copy exe file", True)
     print("Done\n")
 
-    simpleUpdaterExeFile = getExePath(releaseDir, ".*SimpleUpdater\.exe")
+    simpleUpdaterExeFile = getExePath(releaseDir, ".*SimpleUpdater\\.exe")
     print("Copying SimpleUpdater exe...")
     try:
         shutil.copy(simpleUpdaterExeFile, CONFIG_outputDir)

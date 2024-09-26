@@ -30,6 +30,7 @@
 #include <chrono>
 #include <thread>
 
+
 namespace tc {
 
 int getKeyCode(Gear gear, const ProfileSettings& settings) {
@@ -167,5 +168,25 @@ void GearHandler::gearDown() {
   } else  // GearSwitchMode::SEQUENTIAL
     switchSeqGear(false);
 }
+
+void GearHandler::holdFirstGear() {
+  if (m_settings.holdFirstGearWithClutch) {
+    windows::sendKeyboardEvent(m_settings.clutch,true);
+  }
+
+  windows::sendKeyboardEvent(m_settings.g1,true);
+
+  m_currentGear = static_cast<Gear>(1);
+  emit gearChanged(toInt(m_currentGear));
+}
+
+void GearHandler::releaseFirstGear() {
+  if (m_settings.holdFirstGearWithClutch) {
+    windows::sendKeyboardEvent(m_settings.g1,false);
+  }
+
+  windows::sendKeyboardEvent(m_settings.g1,false);
+}
+
 
 }  // namespace tc
