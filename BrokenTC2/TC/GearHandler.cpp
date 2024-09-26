@@ -172,24 +172,21 @@ void GearHandler::gearDown() {
 void GearHandler::holdFirstGear() {
   if (m_settings.holdFirstGearWithClutch) {
     windows::sendKeyboardEvent(m_settings.clutch,true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
-    windows::sendKeyboardEvent(m_settings.g1,true);
-  } else {
-    windows::sendKeyboardEvent(m_settings.g1,true);
   }
+
+  windows::sendKeyboardEvent(m_settings.g1,true);
 
   m_currentGear = static_cast<Gear>(1);
   emit gearChanged(toInt(m_currentGear));
 }
 
 void GearHandler::releaseFirstGear() {
-    if (m_settings.holdFirstGearWithClutch) {
-      windows::sendKeyboardEvent(m_settings.g1,false);
-      std::this_thread::sleep_for(std::chrono::milliseconds(m_settings.keyDownTime));
-      windows::sendKeyboardEvent(m_settings.clutch,false);
-    } else {
-      windows::sendKeyboardEvent(m_settings.g1,false);
-    }
+  if (m_settings.holdFirstGearWithClutch) {
+    windows::sendKeyboardEvent(m_settings.g1,false);
+  }
+
+  windows::sendKeyboardEvent(m_settings.g1,false);
 }
+
 
 }  // namespace tc

@@ -77,7 +77,7 @@ def getExePath(releaseDir : str,exeRegex:str = ".*BrokenTC2\.exe") -> str:
 
 def main():
     CONFIG_outputDir = "AUTO"#the dir will have the name of the found executable
-    CONFIG_WINDEPLOYQT_PATH = "C:/Qt/6.2.4/mingw_64/bin/windeployqt.exe"
+    CONFIG_WINDEPLOYQT_PATH = "C:\Qt\6.6.3\mingw_64\bin\windeployqt.exe"
     CONFIG_DEPENDENCY_DIR = "../BrokenTC2/assets/dependency"
     CONFIG_INNOSETUP_SCRIPT = "./buildSetup.iss"
     CONFIG_DEPLOY_OUTPUT_DIR = "./DEPLOY_OUTPUT"
@@ -153,11 +153,11 @@ def main():
         outputDir = dependency[1]
         print("\tAdding : <{}>".format(dependencyPath))
         if(not checkFile(dependencyPath)):
-            errorOccured("Cannot find following dependency : <{}>".format(dependencyPath),True)
+            errorOccured("Cannot find following dependency : <{}>".format(dependencyPath),False)
         try:
             shutil.copy(dependencyPath,outputDir)
         except:
-            errorOccured("Cannot copy dependency <{}> to <{}>".format(dependencyPath,outputDir),True)
+            errorOccured("Cannot copy dependency <{}> to <{}>".format(dependencyPath,outputDir),False)
     print("Done\n")
 
 
@@ -194,10 +194,10 @@ def main():
         ]
         rval = subprocess.run(args)
         if rval.returncode != 0:
-            errorOccured("Could not run SimpleUpdater create update package",True)
+            errorOccured("Could not run SimpleUpdater create update package",False)
     except Exception as e:
         print(e)
-        errorOccured("Cannot create update package",True)
+        errorOccured("Cannot create update package",False)
     print("Done\n")
 
 
