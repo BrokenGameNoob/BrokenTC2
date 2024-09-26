@@ -282,6 +282,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     auto key{GetKey()};
     setKey(key, ui->lbl_GClutch, m_gearHandler.settings().clutch);
     saveProfileSettings();
+    UpdateConflicts();
   });
   connect(ui->pb_selectKey_G1, &QPushButton::clicked, this, [&]() {
     auto key{GetKey()};
@@ -752,6 +753,7 @@ void MainWindow::saveProfileSettings() {
 }
 
 bool MainWindow::loadProfileSettings() {
+  qDebug() << "Loading profile: " << getCurrentProfileFilePath();
   try {
     m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
     m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
@@ -929,6 +931,31 @@ void MainWindow::UpdateConflicts() {
   } else {
     ::ClearLabelConflict(ui->lbl_keyboardGearDown);
     ::ClearLabelConflict(ui->lbl_seqDown);
+  }
+
+  bool gclutch_has_conflict{false};
+  if (m_gearHandler.settings().keyboardSeqGearUp == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearUp, tr("In game config: %2").arg(ui->pb_selectKey_SeqUp->text()));
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearUp);
+    ::ClearLabelConflict(ui->lbl_GClutch);
+  }
+
+  if (m_gearHandler.settings().keyboardSeqGearDown == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearDown, tr("In game config: %2").arg(ui->pb_selectKey_SeqDown->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearDown);
+  }
+
+  if (gclutch_has_conflict) {
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+  } else {
+    ::ClearLabelConflict(ui->lbl_GClutch);
   }
 
   if (has_at_least_one_conflict) {
@@ -1113,7 +1140,11 @@ void MainWindow::on_pb_changeBackground_clicked() {
 }
 
 void MainWindow::on_pb_ezConf_clicked() {
-  Dialog_ConfigureGame::configure(this);
+  auto deviceList{qsdl::getPluggedJoysticks()};
+  Dialog_ConfigureGame::configure(this, deviceList, m_gearHandler.settings().profileName, c_appDataFolder);
+  loadProfileSettings(); /* Because we might have modified it */
+  refreshFromSettings();
+  refreshDisplayFromGearHandlerSettings();
 }
 
 void MainWindow::on_action_checkUpdates_triggered() {
