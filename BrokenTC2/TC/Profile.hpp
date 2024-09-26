@@ -56,6 +56,7 @@ struct ProfileSettings {
   Key kCycleProfile{-1};  // keyboard key to cycle controller
   Key keyboardSeqGearUp{-1};
   Key keyboardSeqGearDown{-1};
+  Key keyboardDisableSoftware{-1};
   int keyDownTime{20};  // ms
   bool skipNeutral{true};
   bool useSequentialAfterClutch{true};  // if true, after 7th gear, it will switch use sequential
@@ -79,6 +80,7 @@ struct ProfileSettings {
 
   Button switchMode{-1};
   Button cycleProfile{-1};
+  Button disableSoftware{-1};
 };
 
 bool saveSettings(const ProfileSettings &sett, const QString &fileName);

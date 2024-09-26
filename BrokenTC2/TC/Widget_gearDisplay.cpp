@@ -81,7 +81,12 @@ void Widget_gearDisplay::refreshGear(int value) {
         break;
     }
   }
+  m_last_gear = text;
   ui->label->setText(text);
+}
+
+void Widget_gearDisplay::onSoftwareEnabledChanged(bool enabled) {
+  ui->label->setText(enabled ? m_last_gear : tr("Disabled"));
 }
 
 void Widget_gearDisplay::onSwitchGearModeChanged(tc::GearSwitchMode newMode) {

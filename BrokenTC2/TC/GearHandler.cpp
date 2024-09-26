@@ -30,7 +30,6 @@
 #include <chrono>
 #include <thread>
 
-
 namespace tc {
 
 int getKeyCode(Gear gear, const ProfileSettings& settings) {
@@ -64,6 +63,7 @@ GearHandler::GearHandler(QObject* parent, ProfileSettings settings)
     : QObject(parent), m_settings{settings}, m_currentGear{} {}
 
 void GearHandler::setGear(int gear) {
+  if (!m_enabled) return;
   if (m_settings.gearSwitchMode == GearSwitchMode::SEQUENTIAL) {
     throw std::runtime_error{__CURRENT_PLACE_std_ + " : You must not use setGear when in Sequential Mode!"};
   }
@@ -112,6 +112,7 @@ void GearHandler::setGear(int gear) {
 
 void GearHandler::switchSeqGear(bool goUp)  // if you don't go up, I'll assume you want to go down
 {
+  if (!m_enabled) return;
 #ifdef Q_OS_WIN
   using windows::sendKeyboardEvent;
 #else
@@ -144,6 +145,7 @@ void GearHandler::switchSeqGear(bool goUp)  // if you don't go up, I'll assume y
 }
 
 void GearHandler::gearUp() {
+  if (!m_enabled) return;
   const bool kShouldUseSequential{m_settings.useSequentialAfterClutch && m_currentGear >= kClutchMaxGear};
   const bool kUseClutch{m_settings.gearSwitchMode == GearSwitchMode::CLUTCH && !kShouldUseSequential};
   if (kUseClutch) {
@@ -157,6 +159,7 @@ void GearHandler::gearUp() {
 }
 
 void GearHandler::gearDown() {
+  if (!m_enabled) return;
   const bool kShouldUseSequential{m_settings.useSequentialAfterClutch && m_currentGear > (kClutchMaxGear + 1)};
   const bool kUseClutch{m_settings.gearSwitchMode == GearSwitchMode::CLUTCH && !kShouldUseSequential};
   if (kUseClutch) {
@@ -170,23 +173,24 @@ void GearHandler::gearDown() {
 }
 
 void GearHandler::holdFirstGear() {
+  if (!m_enabled) return;
   if (m_settings.holdFirstGearWithClutch) {
-    windows::sendKeyboardEvent(m_settings.clutch,true);
+    windows::sendKeyboardEvent(m_settings.clutch, true);
   }
 
-  windows::sendKeyboardEvent(m_settings.g1,true);
+  windows::sendKeyboardEvent(m_settings.g1, true);
 
   m_currentGear = static_cast<Gear>(1);
   emit gearChanged(toInt(m_currentGear));
 }
 
 void GearHandler::releaseFirstGear() {
+  if (!m_enabled) return;
   if (m_settings.holdFirstGearWithClutch) {
-    windows::sendKeyboardEvent(m_settings.g1,false);
+    windows::sendKeyboardEvent(m_settings.g1, false);
   }
 
-  windows::sendKeyboardEvent(m_settings.g1,false);
+  windows::sendKeyboardEvent(m_settings.g1, false);
 }
-
 
 }  // namespace tc

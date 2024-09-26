@@ -18,68 +18,67 @@
 #ifndef WIDGET_GEARDISPLAY_H
 #define WIDGET_GEARDISPLAY_H
 
-#include <QWidget>
 #include <QTimer>
+#include <QWidget>
+#include <unordered_map>
 
 #include "TC/Profile.hpp"
-#include <unordered_map>
 
 namespace Ui {
 class Widget_gearDisplay;
 }
 
-namespace tc{
+namespace tc {
 QString getStyleSheet(const QColor &textColor, const QColor &backgroundColor);
-inline
-QString colorToString(const QColor& in){
-    return QString{"rgba(%0,%1,%2,%3)"}.arg(in.red()).arg(in.green()).arg(in.blue()).arg(in.alpha());
+inline QString colorToString(const QColor &in) {
+  return QString{"rgba(%0,%1,%2,%3)"}.arg(in.red()).arg(in.green()).arg(in.blue()).arg(in.alpha());
 }
-QColor stringToColor(const QString& input);
-}
+QColor stringToColor(const QString &input);
+}  // namespace tc
 
+class Widget_gearDisplay : public QWidget {
+  Q_OBJECT
 
-class Widget_gearDisplay : public QWidget
-{
-    Q_OBJECT
+  std::unordered_map<decltype(tc::GearSwitchMode::CLUTCH), QString> m_gearModeText{
+      {tc::GearSwitchMode::CLUTCH, tr(" Sequential clutch ")},
+      {tc::GearSwitchMode::SEQUENTIAL, tr(" Classic sequential ")}};
 
-std::unordered_map<decltype(tc::GearSwitchMode::CLUTCH),QString> m_gearModeText{
-    {tc::GearSwitchMode::CLUTCH,tr(" Sequential clutch ")},
-    {tc::GearSwitchMode::SEQUENTIAL,tr(" Classic sequential ")}
+ public:
+  explicit Widget_gearDisplay(QWidget *parent = nullptr);
+  ~Widget_gearDisplay();
+
+  void setBgHUDColor(QColor bgColor);
+
+ public slots:
+  void refreshGear(int value);
+  void onSoftwareEnabledChanged(bool enabled);
+
+  void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
+
+  void showNotif(const QString &text);
+  void showGearModeChangeNotif(tc::GearSwitchMode newMode);
+
+  void showOnScreen(int screenId);
+
+  void setIndicatorVisible(bool visible);
+
+ private:
+  QColor colorFromMode(tc::GearSwitchMode mode) {
+    return mode == tc::GearSwitchMode::CLUTCH ? m_clutchColor : m_seqColor;
+  }
+
+ private:
+  Ui::Widget_gearDisplay *ui;
+
+  QString m_last_gear{};
+
+  QColor m_clutchColor{255, 255, 255};
+  QColor m_seqColor{255, 0, 0};
+  QColor m_currentColor{255, 255, 255};
+
+  QColor m_backgroundColor{79, 79, 79, 120};
+
+  QTimer m_tmpShowTimer{this};
 };
 
-public:
-    explicit Widget_gearDisplay(QWidget *parent = nullptr);
-    ~Widget_gearDisplay();
-
-    void setBgHUDColor(QColor bgColor);
-
-public slots:
-    void refreshGear(int value);
-
-    void onSwitchGearModeChanged(tc::GearSwitchMode newMode);
-
-    void showNotif(const QString& text);
-    void showGearModeChangeNotif(tc::GearSwitchMode newMode);
-
-    void showOnScreen(int screenId);
-
-    void setIndicatorVisible(bool visible);
-
-private:
-    QColor colorFromMode(tc::GearSwitchMode mode){
-        return mode == tc::GearSwitchMode::CLUTCH ? m_clutchColor : m_seqColor;
-    }
-
-private:
-    Ui::Widget_gearDisplay *ui;
-
-    QColor m_clutchColor{255,255,255};
-    QColor m_seqColor{255,0,0};
-    QColor m_currentColor{255,255,255};
-
-    QColor m_backgroundColor{79, 79, 79, 120};
-
-    QTimer m_tmpShowTimer{this};
-};
-
-#endif // WIDGET_GEARDISPLAY_H
+#endif  // WIDGET_GEARDISPLAY_H
