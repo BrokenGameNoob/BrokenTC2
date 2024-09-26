@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow {
     bool gearDisplayed{false};  // whether the current gear be displayed on screen or not
     bool enableNotification{false};
     QString displayGearScreen{};
+    bool ignoreVJoyProfile{false};
 
     bool exitOnCloseEvent{true};
 

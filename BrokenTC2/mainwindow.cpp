@@ -427,9 +427,9 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     saveProfileSettings();
   });
   connect(ui->cb_holdFirstGearWithClutch, &QCheckBox::stateChanged, this, [&](int val) {
-      m_gearHandler.settings().holdFirstGearWithClutch = val;
-      saveProfileSettings();
-      RefreshCheckBoxText(this->ui->cb_holdFirstGearWithClutch);
+    m_gearHandler.settings().holdFirstGearWithClutch = val;
+    saveProfileSettings();
+    RefreshCheckBoxText(this->ui->cb_holdFirstGearWithClutch);
   });
 
   /* MISC options */
@@ -468,6 +468,15 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
     saveSoftSettings();
   });
+
+  connect(ui->cb_ignoreVJoy, &QCheckBox::stateChanged, this, [&](int val) {
+    m_softSettings.ignoreVJoyProfile = val;
+    qInfo() << "Ignore VJoy profile: " << m_softSettings.ignoreVJoyProfile;
+    saveSoftSettings();
+    RefreshCheckBoxText(this->ui->cb_ignoreVJoy);
+    populateDevicesComboBox();
+  });
+
   connect(ui->cb_exitOnCloseEvent, &QComboBox::currentIndexChanged, this, [&](int valI) {
     m_softSettings.exitOnCloseEvent = bool(valI);
     saveSoftSettings();
@@ -494,7 +503,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       SDLEventHandler::instance(), &SDLEventHandler::gameControllerRemoved, this, &MainWindow::onControllerUnplugged);
 
   connect(&m_controller, &GameController::buttonDown, this, &MainWindow::onControllerButtonPressed);
-  connect(&m_controller, &GameController::buttonUp, this, &MainWindow::onControllerButtonReleased); // New Feature
+  connect(&m_controller, &GameController::buttonUp, this, &MainWindow::onControllerButtonReleased);  // New Feature
 
   //--------------------------------------------------------------------
 
@@ -681,6 +690,7 @@ bool MainWindow::saveSoftSettings() {
   settings.insert("bgHUDColor", tc::colorToString(m_softSettings.bgHUDColor()));
   settings.insert("joyAxisThreshold", m_softSettings.joyAxisThreshold());
   settings.insert("backgroundImagePath", m_softSettings.backgroundImagePath);
+  settings.insert("ignoreVJoyProfile", m_softSettings.ignoreVJoyProfile);
 
   globObj.insert("settings", settings);
 
@@ -729,6 +739,7 @@ bool MainWindow::loadSoftSettings() {
       static_cast<int16_t>(settings.value("joyAxisThreshold")
                                .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max() - 1)));
   m_softSettings.backgroundImagePath = settings.value("backgroundImagePath").toString();
+  m_softSettings.ignoreVJoyProfile = settings.value("ignoreVJoyProfile").toBool();
 
   refreshFromSettings();
 
@@ -806,6 +817,9 @@ void MainWindow::refreshFromSettings() {
     ui->cb_gearDisplayScreen->setCurrentIndex(-1);
   }
 
+  ui->cb_ignoreVJoy->setChecked(m_softSettings.ignoreVJoyProfile);
+  ::RefreshCheckBoxText(ui->cb_ignoreVJoy);
+
   ui->cb_exitOnCloseEvent->setCurrentIndex(int(m_softSettings.exitOnCloseEvent));
 
   ui->tb_settings->setCurrentIndex(m_softSettings.openedTab);
@@ -826,12 +840,14 @@ void MainWindow::populateDevicesComboBox() {
 
   auto deviceList{qsdl::getPluggedJoysticks()};
 
-  //    deviceList.append("Ceci est un test !");
-  //    deviceList.append("Et en voici un autre");
-
   auto newDeviceIndex{-1};
   int i{};
   for (const auto &e : deviceList) {
+    if (m_softSettings.ignoreVJoyProfile) {
+      if (e.contains("vJoy", Qt::CaseSensitivity::CaseInsensitive)) {
+        continue;
+      }
+    }
     if (curDevice == e) newDeviceIndex = i;
     ui->cb_selectDevice->addItem(e, i);  // store device id as data. Even though it should match cb index
     ++i;
@@ -1029,9 +1045,9 @@ void MainWindow::onControllerButtonPressed(int button) {
 }
 
 void MainWindow::onControllerButtonReleased(int button) {
-    if (button == m_gearHandler.settings().setHoldFirstGear) {
-      m_gearHandler.releaseFirstGear();
-    }
+  if (button == m_gearHandler.settings().setHoldFirstGear) {
+    m_gearHandler.releaseFirstGear();
+  }
 }
 
 void MainWindow::onKeyboardPressed(int key) {
