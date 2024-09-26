@@ -73,6 +73,8 @@ int getKeyCode(Gear gear, const ProfileSettings& settings);
 
 class GearHandler : public QObject {
   Q_OBJECT
+ signals:
+  void softwareEnabledChanged(bool);
 
  public:
   GearHandler(QObject* parent = nullptr, ProfileSettings settings = {});
@@ -106,9 +108,20 @@ class GearHandler : public QObject {
     return m_settings.useSequentialAfterClutch ? kSequentialMaxGear : kClutchMaxGear;
   }
 
+  void setEnabled(bool enabled) {
+    m_enabled = enabled;
+    emit softwareEnabledChanged(enabled);
+  }
+  bool isEnabled() const {
+    return m_enabled;
+  }
+
  public slots:
   void gearUp();
   void gearDown();
+
+  void holdFirstGear();
+  void releaseFirstGear();
 
   void switchGearSwitchMode() {
     if (m_settings.gearSwitchMode == GearSwitchMode::CLUTCH)
@@ -125,6 +138,8 @@ class GearHandler : public QObject {
   ProfileSettings m_settings;
 
   Gear m_currentGear;
+
+  bool m_enabled{true};
 };
 
 }  // namespace tc

@@ -58,6 +58,7 @@ compile_commands.json
 *-Debug/
 *-debug/
 build-*/
+build/
 *.pro.user
 
 *.ignore

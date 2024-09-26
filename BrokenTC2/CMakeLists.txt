@@ -18,7 +18,7 @@ cmake_minimum_required(VERSION 3.5)
 
 #VERSION = MAJOR.MINOR.PATCH
 set(VERSIONING_MAJOR 1)#incompatible update
-set(VERSIONING_MINOR 2)#new features added
+set(VERSIONING_MINOR 3)#new features added
 set(VERSIONING_PATCH 0)#bug fixed / minor change
 
 
@@ -126,6 +126,7 @@ set(PROJECT_SOURCES
         Utils/Dialog_About.hpp Utils/Dialog_About.cpp Utils/Dialog_About.ui
         Utils/XmlTools.hpp Utils/XmlTools.cpp
         Utils/GUITools.hpp Utils/GUITools.cpp
+        Utils/monotonic_clock.hpp
 
         ${PLATEFORM_DEPENDANT_SOURCES}
 )

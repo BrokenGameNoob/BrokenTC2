@@ -282,6 +282,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     auto key{GetKey()};
     setKey(key, ui->lbl_GClutch, m_gearHandler.settings().clutch);
     saveProfileSettings();
+    UpdateConflicts();
   });
   connect(ui->pb_selectKey_G1, &QPushButton::clicked, this, [&]() {
     auto key{GetKey()};
@@ -289,7 +290,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     saveProfileSettings();
   });
   connect(ui->pb_selectKey_G2, &QPushButton::clicked, this, [&]() {
-    qDebug() << "SELECT GEAR 2";
     auto key{GetKey()};
     setKey(key, ui->lbl_G2, m_gearHandler.settings().g2);
     saveProfileSettings();
@@ -366,6 +366,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     saveProfileSettings();
     UpdateConflicts();
   });
+  connect(ui->pb_selectKey_disableSoftware, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_keyboardDisableSoftware, m_gearHandler.settings().keyboardDisableSoftware);
+    saveProfileSettings();
+  });
 
   /* CONTROLLER */
 
@@ -377,6 +382,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
   connect(ui->pb_selectButton_cycleProfile, &QPushButton::clicked, this, [&]() {
     auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
     setButton(btn, ui->lbl_btn_cycleProfile, m_gearHandler.settings().cycleProfile);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectButton_disableSoftware, &QPushButton::clicked, this, [&]() {
+    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
+    setButton(btn, ui->lbl_btn_disableSoftware, m_gearHandler.settings().disableSoftware);
     saveProfileSettings();
   });
 
@@ -420,6 +430,16 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     setButton(btn, ui->lbl_btn_gear7, m_gearHandler.settings().setSeventhGear);
     saveProfileSettings();
   });
+  connect(ui->pb_holdFirstGear, &QPushButton::clicked, this, [&]() {
+    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
+    setButton(btn, ui->lbl_btn_holdFirstGear, m_gearHandler.settings().setHoldFirstGear);
+    saveProfileSettings();
+  });
+  connect(ui->cb_holdFirstGearWithClutch, &QCheckBox::stateChanged, this, [&](int val) {
+    m_gearHandler.settings().holdFirstGearWithClutch = val;
+    saveProfileSettings();
+    RefreshCheckBoxText(this->ui->cb_holdFirstGearWithClutch);
+  });
 
   /* MISC options */
 
@@ -457,6 +477,15 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     m_softSettings.enableNotification = ui->cb_enableNotification->isChecked();
     saveSoftSettings();
   });
+
+  connect(ui->cb_ignoreVJoy, &QCheckBox::stateChanged, this, [&](int val) {
+    m_softSettings.ignoreVJoyProfile = val;
+    qInfo() << "Ignore VJoy profile: " << m_softSettings.ignoreVJoyProfile;
+    saveSoftSettings();
+    RefreshCheckBoxText(this->ui->cb_ignoreVJoy);
+    populateDevicesComboBox();
+  });
+
   connect(ui->cb_exitOnCloseEvent, &QComboBox::currentIndexChanged, this, [&](int valI) {
     m_softSettings.exitOnCloseEvent = bool(valI);
     saveSoftSettings();
@@ -475,6 +504,14 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
           m_gearDisplay,
           &Widget_gearDisplay::onSwitchGearModeChanged);
   connect(&m_gearHandler, &tc::GearHandler::gearSwitchModeChanged, this, [&](auto) { saveProfileSettings(); });
+  connect(&m_gearHandler,
+          &tc::GearHandler::softwareEnabledChanged,
+          m_gearDisplay,
+          &Widget_gearDisplay::onSoftwareEnabledChanged);
+  auto lambda_updateSoftwareEnabledChanged{
+      [&](bool enabled) { ui->lbl_softEnabled->setText(enabled ? tr("Enabled") : tr("Disabled")); }};
+  connect(&m_gearHandler, &tc::GearHandler::softwareEnabledChanged, this, lambda_updateSoftwareEnabledChanged);
+  lambda_updateSoftwareEnabledChanged(m_gearHandler.isEnabled());
 
   using qsdl::GameController;
   using qsdl::SDLEventHandler;
@@ -483,6 +520,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
       SDLEventHandler::instance(), &SDLEventHandler::gameControllerRemoved, this, &MainWindow::onControllerUnplugged);
 
   connect(&m_controller, &GameController::buttonDown, this, &MainWindow::onControllerButtonPressed);
+  connect(&m_controller, &GameController::buttonUp, this, &MainWindow::onControllerButtonReleased);  // New Feature
 
   //--------------------------------------------------------------------
 
@@ -669,6 +707,7 @@ bool MainWindow::saveSoftSettings() {
   settings.insert("bgHUDColor", tc::colorToString(m_softSettings.bgHUDColor()));
   settings.insert("joyAxisThreshold", m_softSettings.joyAxisThreshold());
   settings.insert("backgroundImagePath", m_softSettings.backgroundImagePath);
+  settings.insert("ignoreVJoyProfile", m_softSettings.ignoreVJoyProfile);
 
   globObj.insert("settings", settings);
 
@@ -717,6 +756,7 @@ bool MainWindow::loadSoftSettings() {
       static_cast<int16_t>(settings.value("joyAxisThreshold")
                                .toInt(std::numeric_limits<decltype(m_softSettings.joyAxisThreshold())>::max() - 1)));
   m_softSettings.backgroundImagePath = settings.value("backgroundImagePath").toString();
+  m_softSettings.ignoreVJoyProfile = settings.value("ignoreVJoyProfile").toBool();
 
   refreshFromSettings();
 
@@ -741,6 +781,7 @@ void MainWindow::saveProfileSettings() {
 }
 
 bool MainWindow::loadProfileSettings() {
+  qDebug() << "Loading profile: " << getCurrentProfileFilePath();
   try {
     m_gearHandler.settings() = tc::readProfileSettings(getCurrentProfileFilePath());
     m_gearHandler.setGearSwitchMode(m_gearHandler.settings().gearSwitchMode);
@@ -793,6 +834,9 @@ void MainWindow::refreshFromSettings() {
     ui->cb_gearDisplayScreen->setCurrentIndex(-1);
   }
 
+  ui->cb_ignoreVJoy->setChecked(m_softSettings.ignoreVJoyProfile);
+  ::RefreshCheckBoxText(ui->cb_ignoreVJoy);
+
   ui->cb_exitOnCloseEvent->setCurrentIndex(int(m_softSettings.exitOnCloseEvent));
 
   ui->tb_settings->setCurrentIndex(m_softSettings.openedTab);
@@ -813,12 +857,14 @@ void MainWindow::populateDevicesComboBox() {
 
   auto deviceList{qsdl::getPluggedJoysticks()};
 
-  //    deviceList.append("Ceci est un test !");
-  //    deviceList.append("Et en voici un autre");
-
   auto newDeviceIndex{-1};
   int i{};
   for (const auto &e : deviceList) {
+    if (m_softSettings.ignoreVJoyProfile) {
+      if (e.contains("vJoy", Qt::CaseSensitivity::CaseInsensitive)) {
+        continue;
+      }
+    }
     if (curDevice == e) newDeviceIndex = i;
     ui->cb_selectDevice->addItem(e, i);  // store device id as data. Even though it should match cb index
     ++i;
@@ -840,6 +886,9 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_G5, m_gearHandler.settings().g5);
   lambdaUpdateText(ui->lbl_G6, m_gearHandler.settings().g6);
   lambdaUpdateText(ui->lbl_G7, m_gearHandler.settings().g7);
+  ui->cb_holdFirstGearWithClutch->setChecked(m_gearHandler.settings().holdFirstGearWithClutch);
+  ::RefreshCheckBoxText(ui->cb_holdFirstGearWithClutch);
+
   lambdaUpdateText(ui->lbl_seqUp, m_gearHandler.settings().seqGearUp);
   lambdaUpdateText(ui->lbl_seqDown, m_gearHandler.settings().seqGearDown);
 
@@ -847,7 +896,9 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_kCycleProfile, m_gearHandler.settings().kCycleProfile);
   lambdaUpdateText(ui->lbl_keyboardGearUp, m_gearHandler.settings().keyboardSeqGearUp);
   lambdaUpdateText(ui->lbl_keyboardGearDown, m_gearHandler.settings().keyboardSeqGearDown);
+  lambdaUpdateText(ui->lbl_keyboardDisableSoftware, m_gearHandler.settings().keyboardDisableSoftware);
   ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
+
   ui->cb_skip_neutral->setChecked(m_gearHandler.settings().skipNeutral);
   ::RefreshCheckBoxText(ui->cb_skip_neutral);
   ui->cb_use_seq_after_clutch->setChecked(m_gearHandler.settings().useSequentialAfterClutch);
@@ -864,9 +915,11 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_btn_gear5, m_gearHandler.settings().setFifthGear, false);
   lambdaUpdateText(ui->lbl_btn_gear6, m_gearHandler.settings().setSixthGear, false);
   lambdaUpdateText(ui->lbl_btn_gear7, m_gearHandler.settings().setSeventhGear, false);
+  lambdaUpdateText(ui->lbl_btn_holdFirstGear, m_gearHandler.settings().setHoldFirstGear, false);
 
   lambdaUpdateText(ui->lbl_btn_switchMode, m_gearHandler.settings().switchMode, false);
   lambdaUpdateText(ui->lbl_btn_cycleProfile, m_gearHandler.settings().cycleProfile, false);
+  lambdaUpdateText(ui->lbl_btn_disableSoftware, m_gearHandler.settings().disableSoftware, false);
 }
 
 void MainWindow::cycleGamepadProfile() {
@@ -913,6 +966,31 @@ void MainWindow::UpdateConflicts() {
   } else {
     ::ClearLabelConflict(ui->lbl_keyboardGearDown);
     ::ClearLabelConflict(ui->lbl_seqDown);
+  }
+
+  bool gclutch_has_conflict{false};
+  if (m_gearHandler.settings().keyboardSeqGearUp == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearUp, tr("In game config: %2").arg(ui->pb_selectKey_SeqUp->text()));
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearUp);
+    ::ClearLabelConflict(ui->lbl_GClutch);
+  }
+
+  if (m_gearHandler.settings().keyboardSeqGearDown == m_gearHandler.settings().clutch) {
+    ::SetLabelHasConflict(ui->lbl_keyboardGearDown, tr("In game config: %2").arg(ui->pb_selectKey_SeqDown->text()));
+    has_at_least_one_conflict = has_at_least_one_conflict || true;
+    gclutch_has_conflict = true;
+  } else {
+    ::ClearLabelConflict(ui->lbl_keyboardGearDown);
+  }
+
+  if (gclutch_has_conflict) {
+    ::SetLabelHasConflict(ui->lbl_GClutch, tr("Keyboard inputs: %2").arg(ui->pb_selectKey_GClutch->text()));
+  } else {
+    ::ClearLabelConflict(ui->lbl_GClutch);
   }
 
   if (has_at_least_one_conflict) {
@@ -980,6 +1058,16 @@ void MainWindow::onControllerButtonPressed(int button) {
     if (ui->cb_enableNotification->isChecked()) m_gearDisplay->showGearModeChangeNotif(m_gearHandler.mode());
   } else if (button == m_gearHandler.settings().cycleProfile) {
     cycleGamepadProfile();
+  } else if (button == m_gearHandler.settings().setHoldFirstGear) {
+    m_gearHandler.holdFirstGear();
+  } else if (button == m_gearHandler.settings().disableSoftware) {
+    m_gearHandler.setEnabled(!m_gearHandler.isEnabled());
+  }
+}
+
+void MainWindow::onControllerButtonReleased(int button) {
+  if (button == m_gearHandler.settings().setHoldFirstGear) {
+    m_gearHandler.releaseFirstGear();
   }
 }
 
@@ -999,6 +1087,8 @@ void MainWindow::onKeyboardPressed(int key) {
     m_gearHandler.gearUp();
   } else if (key == m_gearHandler.settings().keyboardSeqGearDown) {
     m_gearHandler.gearDown();
+  } else if (key == m_gearHandler.settings().keyboardDisableSoftware) {
+    m_gearHandler.setEnabled(!m_gearHandler.isEnabled());
   }
 }
 
@@ -1089,7 +1179,11 @@ void MainWindow::on_pb_changeBackground_clicked() {
 }
 
 void MainWindow::on_pb_ezConf_clicked() {
-  Dialog_ConfigureGame::configure(this);
+  auto deviceList{qsdl::getPluggedJoysticks()};
+  Dialog_ConfigureGame::configure(this, deviceList, m_gearHandler.settings().profileName, c_appDataFolder);
+  loadProfileSettings(); /* Because we might have modified it */
+  refreshFromSettings();
+  refreshDisplayFromGearHandlerSettings();
 }
 
 void MainWindow::on_action_checkUpdates_triggered() {

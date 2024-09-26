@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow {
     bool gearDisplayed{false};  // whether the current gear be displayed on screen or not
     bool enableNotification{false};
     QString displayGearScreen{};
+    bool ignoreVJoyProfile{false};
 
     bool exitOnCloseEvent{true};
 
@@ -107,6 +108,7 @@ class MainWindow : public QMainWindow {
   void onControllerUnplugged(int id);
 
   void onControllerButtonPressed(int id);
+  void onControllerButtonReleased(int id);
 
   void onKeyboardPressed(int key);
 
@@ -167,7 +169,7 @@ class MainWindow : public QMainWindow {
 };
 
 inline QString MainWindow::getProfileFilePath(const QString &deviceName) {
-  return c_appDataFolder + removeSpecialChars(deviceName) + ".json";
+  return ::getProfileFilePath(c_appDataFolder, deviceName);
 }
 inline QString MainWindow::getCurrentProfileFilePath() {
   return getProfileFilePath(m_gearHandler.settings().profileName);

@@ -30,28 +30,10 @@ set(PROJECT_SOURCES
         LoggerHandler.hpp
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(SimpleUpdater
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET SimpleUpdater APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(SimpleUpdater SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(SimpleUpdater
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+qt_add_executable(SimpleUpdater
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
 
 set(BUILD_SIGNING_KEYS_TOOLS ON)
 add_subdirectory(libSimpleUpdater)
@@ -72,9 +54,7 @@ set_target_properties(SimpleUpdater PROPERTIES
     WIN32_EXECUTABLE FALSE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(SimpleUpdater)
-endif()
+qt_finalize_executable(SimpleUpdater)
 
 add_definitions(${LOG_HANDLER_BASE_DIR_MACRO})
 
