@@ -290,7 +290,6 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     saveProfileSettings();
   });
   connect(ui->pb_selectKey_G2, &QPushButton::clicked, this, [&]() {
-    qDebug() << "SELECT GEAR 2";
     auto key{GetKey()};
     setKey(key, ui->lbl_G2, m_gearHandler.settings().g2);
     saveProfileSettings();
@@ -367,6 +366,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     saveProfileSettings();
     UpdateConflicts();
   });
+  connect(ui->pb_selectKey_disableSoftware, &QPushButton::clicked, this, [&]() {
+    auto key{GetKey()};
+    setKey(key, ui->lbl_keyboardDisableSoftware, m_gearHandler.settings().keyboardDisableSoftware);
+    saveProfileSettings();
+  });
 
   /* CONTROLLER */
 
@@ -378,6 +382,11 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
   connect(ui->pb_selectButton_cycleProfile, &QPushButton::clicked, this, [&]() {
     auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
     setButton(btn, ui->lbl_btn_cycleProfile, m_gearHandler.settings().cycleProfile);
+    saveProfileSettings();
+  });
+  connect(ui->pb_selectButton_disableSoftware, &QPushButton::clicked, this, [&]() {
+    auto btn{Dialog_getGameControllerButton::getButton(&m_controller, this)};
+    setButton(btn, ui->lbl_btn_disableSoftware, m_gearHandler.settings().disableSoftware);
     saveProfileSettings();
   });
 
@@ -495,6 +504,14 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
           m_gearDisplay,
           &Widget_gearDisplay::onSwitchGearModeChanged);
   connect(&m_gearHandler, &tc::GearHandler::gearSwitchModeChanged, this, [&](auto) { saveProfileSettings(); });
+  connect(&m_gearHandler,
+          &tc::GearHandler::softwareEnabledChanged,
+          m_gearDisplay,
+          &Widget_gearDisplay::onSoftwareEnabledChanged);
+  auto lambda_updateSoftwareEnabledChanged{
+      [&](bool enabled) { ui->lbl_softEnabled->setText(enabled ? tr("Enabled") : tr("Disabled")); }};
+  connect(&m_gearHandler, &tc::GearHandler::softwareEnabledChanged, this, lambda_updateSoftwareEnabledChanged);
+  lambda_updateSoftwareEnabledChanged(m_gearHandler.isEnabled());
 
   using qsdl::GameController;
   using qsdl::SDLEventHandler;
@@ -879,6 +896,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
   lambdaUpdateText(ui->lbl_kCycleProfile, m_gearHandler.settings().kCycleProfile);
   lambdaUpdateText(ui->lbl_keyboardGearUp, m_gearHandler.settings().keyboardSeqGearUp);
   lambdaUpdateText(ui->lbl_keyboardGearDown, m_gearHandler.settings().keyboardSeqGearDown);
+  lambdaUpdateText(ui->lbl_keyboardDisableSoftware, m_gearHandler.settings().keyboardDisableSoftware);
   ui->sb_gearDelay->setValue(m_gearHandler.settings().keyDownTime);
 
   ui->cb_skip_neutral->setChecked(m_gearHandler.settings().skipNeutral);
@@ -901,6 +919,7 @@ void MainWindow::refreshDisplayFromGearHandlerSettings() {
 
   lambdaUpdateText(ui->lbl_btn_switchMode, m_gearHandler.settings().switchMode, false);
   lambdaUpdateText(ui->lbl_btn_cycleProfile, m_gearHandler.settings().cycleProfile, false);
+  lambdaUpdateText(ui->lbl_btn_disableSoftware, m_gearHandler.settings().disableSoftware, false);
 }
 
 void MainWindow::cycleGamepadProfile() {
@@ -1041,6 +1060,8 @@ void MainWindow::onControllerButtonPressed(int button) {
     cycleGamepadProfile();
   } else if (button == m_gearHandler.settings().setHoldFirstGear) {
     m_gearHandler.holdFirstGear();
+  } else if (button == m_gearHandler.settings().disableSoftware) {
+    m_gearHandler.setEnabled(!m_gearHandler.isEnabled());
   }
 }
 
@@ -1066,6 +1087,8 @@ void MainWindow::onKeyboardPressed(int key) {
     m_gearHandler.gearUp();
   } else if (key == m_gearHandler.settings().keyboardSeqGearDown) {
     m_gearHandler.gearDown();
+  } else if (key == m_gearHandler.settings().keyboardDisableSoftware) {
+    m_gearHandler.setEnabled(!m_gearHandler.isEnabled());
   }
 }
 

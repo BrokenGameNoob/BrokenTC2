@@ -59,6 +59,7 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName) {
   keys.insert("kCycleProfile", sett.kCycleProfile);
   keys.insert("keyboardSeqGearUp", sett.keyboardSeqGearUp);
   keys.insert("keyboardSeqGearDown", sett.keyboardSeqGearDown);
+  keys.insert("keyboardDisableSoftware", sett.keyboardDisableSoftware);
   keys.insert("keyDownTime", sett.keyDownTime);
 
   QJsonObject controller{};
@@ -79,6 +80,7 @@ bool saveSettings(const ProfileSettings &sett, const QString &fileName) {
 
   controller.insert("switchMode", sett.switchMode);
   controller.insert("cycleProfile", sett.cycleProfile);
+  controller.insert("disableSoftware", sett.disableSoftware);
   globObj.insert("keys", keys);
   globObj.insert("controller", controller);
 
@@ -119,6 +121,7 @@ ProfileSettings readProfileSettings(const QString &fileName) {
   out.kCycleProfile = keys.value("kCycleProfile").toInt(ref.kCycleProfile);
   out.keyboardSeqGearUp = keys.value("keyboardSeqGearUp").toInt(ref.keyboardSeqGearUp);
   out.keyboardSeqGearDown = keys.value("keyboardSeqGearDown").toInt(ref.keyboardSeqGearDown);
+  out.keyboardDisableSoftware = keys.value("keyboardDisableSoftware").toInt(ref.keyboardDisableSoftware);
   out.keyDownTime = keys.value("keyDownTime").toInt(ref.keyDownTime);
   out.skipNeutral = keys.value("skipNeutral").toBool(ref.skipNeutral);
   out.useSequentialAfterClutch = keys.value("useSequentialAfterClutch").toBool(ref.useSequentialAfterClutch);
@@ -140,6 +143,7 @@ ProfileSettings readProfileSettings(const QString &fileName) {
 
   out.switchMode = controller.value("switchMode").toInt(ref.switchMode);
   out.cycleProfile = controller.value("cycleProfile").toInt(ref.cycleProfile);
+  out.disableSoftware = controller.value("disableSoftware").toInt(ref.disableSoftware);
 
   return out;
 }
