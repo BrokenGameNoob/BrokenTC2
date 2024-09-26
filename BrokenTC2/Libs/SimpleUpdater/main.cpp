@@ -18,7 +18,7 @@
 
 int main(int argc, char *argv[])
 {
-    auto logConf{logHandler::GlobalLogInfo{.progLogFilePath="SimpleUpdater.log",.progName="BrokenTC2SimpleUpdater"}};
+    auto logConf{logHandler::GlobalLogInfo{.progLogFilePath="SimpleUpdater.log",.progName="SimpleUpdater"}};
     installCustomLogHandler(std::move(logConf));
     QApplication a(argc, argv);
 
@@ -40,16 +40,6 @@ int main(int argc, char *argv[])
         qCritical() << "Invalid CLI option combination";
         parser.showHelp(1);//exit the program
     }
-
-
-//    updt::Manifest m{{0,0,0},{"../../SimpleUpdater/ExampleFiles/Qt6Xml.dll","../../SimpleUpdater/ExampleFiles/BrokenTC2.exe"},
-//                    "","UPDATED.TAG"};
-//    updt::Manifest m{.minVersionRequired={0,0,0},
-//                     .updateFileList={"Qt6Xml.dll","BrokenTC2.exe","ExampleDir"},
-//                     .finalizeUpdateCommand="",
-//                     .updatedTagFile="UPDATED.TAG"};
-//    qDebug() << "Saving manifest test:" <<  updt::save(m,"../../SimpleUpdater/ExampleFiles/manifest.json");
-
 
     MainWindow w{parsedArgs};
 //    w.show();

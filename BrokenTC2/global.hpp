@@ -19,12 +19,12 @@
 #define GLOBAL_HPP
 
 #include <QDebug>
+#include <QObject>
 #include <QString>
 #include <QStringLiteral>
 #include <QVector>
 #include <algorithm>
 #include <stdexcept>
-#include <string_view>
 
 #ifdef __PRETTY_FUNCTION__
 #define __CURRENT_PLACE__ __PRETTY_FUNCTION__
