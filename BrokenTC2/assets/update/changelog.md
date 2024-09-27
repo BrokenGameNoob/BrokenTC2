@@ -1,4 +1,4 @@
-# 1.3.0 is here! (Easy life)
+# 1.3.1 is here! (Fix my mistakes)
 
 ## -> New Features
 - *Not this time, sorry 🤷*
