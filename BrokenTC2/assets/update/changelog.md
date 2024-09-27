@@ -1,6 +1,28 @@
 # 1.3.0 is here! (Easy life)
 
 ## -> New Features
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs patched
+- Fixed writings on Windows 11 dark theme
+- Fixed an installation bug in which some dependencies were not installed
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+- You won't be able to select a screen among multiple identical screens for the gear indicator (no solution either)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
+# 1.3.0 is here! (Easy life)
+
+## -> New Features
 - Better easy setup: automatically setup BTC2 AND the game for them to be ready to use together
 - Added a button to make starts easier in game! (Thanks to CarbonX07)
 - Can now ignore the "vJoy" profile
