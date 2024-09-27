@@ -1,3 +1,24 @@
+# 1.3.2 is here! (Fix my mistakes 2)
+
+## -> New Features
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs patched
+- Fucked up UI is fixed
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+- You won't be able to select a screen among multiple identical screens for the gear indicator (no solution either)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.3.1 is here! (Fix my mistakes)
 
 ## -> New Features
