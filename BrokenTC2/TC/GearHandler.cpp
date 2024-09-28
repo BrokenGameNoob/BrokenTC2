@@ -187,7 +187,7 @@ void GearHandler::holdFirstGear() {
 void GearHandler::releaseFirstGear() {
   if (!m_enabled) return;
   if (m_settings.holdFirstGearWithClutch) {
-    windows::sendKeyboardEvent(m_settings.g1, false);
+    windows::sendKeyboardEvent(m_settings.clutch, false);
   }
 
   windows::sendKeyboardEvent(m_settings.g1, false);
