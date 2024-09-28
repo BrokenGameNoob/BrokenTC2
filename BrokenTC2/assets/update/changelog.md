@@ -1,3 +1,24 @@
+# 1.3.3 is here! (I wish mistakes would never happen)
+
+## -> New Features
+- *Not this time, sorry 🤷*
+
+<br/><br/>
+
+## -> Bugs patched
+- Fixed the bug in which the clutch was never released when holding in the first gear
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+- You won't be able to select a screen among multiple identical screens for the gear indicator (no solution either)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.3.2 is here! (Fix my mistakes 2)
 
 ## -> New Features
