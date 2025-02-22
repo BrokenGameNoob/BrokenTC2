@@ -47,8 +47,7 @@ void preStart() {
   for (const auto &e : pIdList) {
     if (e != curPId) {
       qDebug() << "Should terminate " << e;
-      while (win::isProcessRunning(e))
-        win::terminateProcess(e);
+      while (win::isProcessRunning(e)) win::terminateProcess(e);
     }
   }
 }
@@ -63,7 +62,7 @@ CanStart::Code canStart() {
   return rVal;
 }
 
-} // namespace
+}  // namespace
 
 #ifdef WIN32
 int SDL_main(int argc, char *argv[])
@@ -73,8 +72,7 @@ int main(int argc, char *argv[])
 {
   std::ignore = utils::HighResMs();
 
-  installCustomLogHandler(logHandler::GlobalLogInfo{
-      .progLogFilePath = "BrokeLog.log", .progName = "BrokenTC2"});
+  installCustomLogHandler(logHandler::GlobalLogInfo{.progLogFilePath = "BrokeLog.log", .progName = "BrokenTC2"});
 
   int rCode{0};
   QApplication a(argc, argv);
@@ -101,9 +99,10 @@ int main(int argc, char *argv[])
 
   QCommandLineParser parser;
   parser.addOptions({// A boolean option with a single name (--hide)
-                     {"hide", QCoreApplication::translate(
-                                  "main", "Hide program on startup")}});
+                     {"hide", QCoreApplication::translate("main", "Hide program on startup")}});
   parser.process(a);
+
+  win::SetNumLock(true);
 
   try {
     MainWindow w{parser.isSet("hide")};

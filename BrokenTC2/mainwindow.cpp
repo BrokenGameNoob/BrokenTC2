@@ -533,6 +533,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     }
   }
 
+  touchMissingProfiles();
   populateDevicesComboBox();
 
   auto availableScreens{QApplication::screens()};
@@ -872,6 +873,21 @@ void MainWindow::populateDevicesComboBox() {
   ui->cb_selectDevice->setCurrentIndex(newDeviceIndex);
 }
 
+void MainWindow::touchMissingProfiles() {
+  const auto kDeviceList{qsdl::getPluggedJoysticks()};
+
+  for (const auto &device : kDeviceList) {
+    const auto kProfilePath{getProfileFilePath(device)};
+
+    if (!QFileInfo::exists(kProfilePath)) {
+      qInfo() << "Creating profile for " << device;
+      if (!tc::saveSettings(tc::ProfileSettings{.profileName = device}, kProfilePath)) {
+        qCritical() << "Could not save gearHandler settings as <" << kProfilePath << "> for device <" << device << ">";
+      }
+    }
+  }
+}
+
 void MainWindow::refreshDisplayFromGearHandlerSettings() {
   auto lambdaUpdateText{[&](QLabel *lbl, auto newCode, bool useVkCodeChar = true) {
     lbl->setText(getKeyOrButtonText(newCode, useVkCodeChar));
@@ -1004,6 +1020,7 @@ void MainWindow::UpdateConflicts() {
 
 void MainWindow::onControllerPluggedIn(int id) {
   std::ignore = id;
+  touchMissingProfiles();
   populateDevicesComboBox();
 }
 void MainWindow::onControllerUnplugged(int id) {
