@@ -25,6 +25,7 @@
 #include "Update/PostUpdate.hpp"
 #include "Update/Update.hpp"
 #include "Utils/Dialog_About.hpp"
+#include "Utils/Dialog_deviceSelection.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "global.hpp"
@@ -533,6 +534,7 @@ MainWindow::MainWindow(bool hideOnStartup, QWidget *parent)
     }
   }
 
+  touchMissingProfiles();
   populateDevicesComboBox();
 
   auto availableScreens{QApplication::screens()};
@@ -872,6 +874,21 @@ void MainWindow::populateDevicesComboBox() {
   ui->cb_selectDevice->setCurrentIndex(newDeviceIndex);
 }
 
+void MainWindow::touchMissingProfiles() {
+  const auto kDeviceList{qsdl::getPluggedJoysticks()};
+
+  for (const auto &device : kDeviceList) {
+    const auto kProfilePath{getProfileFilePath(device)};
+
+    if (!QFileInfo::exists(kProfilePath)) {
+      qInfo() << "Creating profile for " << device;
+      if (!tc::saveSettings(tc::ProfileSettings{.profileName = device}, kProfilePath)) {
+        qCritical() << "Could not save gearHandler settings as <" << kProfilePath << "> for device <" << device << ">";
+      }
+    }
+  }
+}
+
 void MainWindow::refreshDisplayFromGearHandlerSettings() {
   auto lambdaUpdateText{[&](QLabel *lbl, auto newCode, bool useVkCodeChar = true) {
     lbl->setText(getKeyOrButtonText(newCode, useVkCodeChar));
@@ -1004,6 +1021,7 @@ void MainWindow::UpdateConflicts() {
 
 void MainWindow::onControllerPluggedIn(int id) {
   std::ignore = id;
+  touchMissingProfiles();
   populateDevicesComboBox();
 }
 void MainWindow::onControllerUnplugged(int id) {
@@ -1179,8 +1197,19 @@ void MainWindow::on_pb_changeBackground_clicked() {
 }
 
 void MainWindow::on_pb_ezConf_clicked() {
+  static const tc::ProfileSettings kDefaultProfile{};
   auto deviceList{qsdl::getPluggedJoysticks()};
-  Dialog_ConfigureGame::configure(this, deviceList, m_gearHandler.settings().profileName, c_appDataFolder);
+  const auto kShouldAskForDeviceSelection{deviceList.size() > 0 &&
+                                          m_gearHandler.settings().profileName == kDefaultProfile.profileName};
+  qDebug() << "deviceList.size()=" << deviceList.size()
+           << "   m_gearHandler.settings().profileName=" << m_gearHandler.settings().profileName
+           << "   kDefaultProfile.profileName=" << kDefaultProfile.profileName
+           << "   kShouldAskForDeviceSelection=" << kShouldAskForDeviceSelection;
+
+  const auto kDevice{kShouldAskForDeviceSelection
+                         ? Dialog_deviceSelection::getDevice(this, m_gearHandler.settings().profileName)
+                         : m_gearHandler.settings().profileName};
+  Dialog_ConfigureGame::configure(this, deviceList, kDevice, c_appDataFolder);
   loadProfileSettings(); /* Because we might have modified it */
   refreshFromSettings();
   refreshDisplayFromGearHandlerSettings();
