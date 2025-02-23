@@ -25,6 +25,7 @@
 #include "Update/PostUpdate.hpp"
 #include "Update/Update.hpp"
 #include "Utils/Dialog_About.hpp"
+#include "Utils/Dialog_deviceSelection.hpp"
 #include "Utils/Dialog_getGameControllerButton.hpp"
 #include "Utils/Dialog_getKeyCode.hpp"
 #include "global.hpp"
@@ -1196,8 +1197,19 @@ void MainWindow::on_pb_changeBackground_clicked() {
 }
 
 void MainWindow::on_pb_ezConf_clicked() {
+  static const tc::ProfileSettings kDefaultProfile{};
   auto deviceList{qsdl::getPluggedJoysticks()};
-  Dialog_ConfigureGame::configure(this, deviceList, m_gearHandler.settings().profileName, c_appDataFolder);
+  const auto kShouldAskForDeviceSelection{deviceList.size() > 0 &&
+                                          m_gearHandler.settings().profileName == kDefaultProfile.profileName};
+  qDebug() << "deviceList.size()=" << deviceList.size()
+           << "   m_gearHandler.settings().profileName=" << m_gearHandler.settings().profileName
+           << "   kDefaultProfile.profileName=" << kDefaultProfile.profileName
+           << "   kShouldAskForDeviceSelection=" << kShouldAskForDeviceSelection;
+
+  const auto kDevice{kShouldAskForDeviceSelection
+                         ? Dialog_deviceSelection::getDevice(this, m_gearHandler.settings().profileName)
+                         : m_gearHandler.settings().profileName};
+  Dialog_ConfigureGame::configure(this, deviceList, kDevice, c_appDataFolder);
   loadProfileSettings(); /* Because we might have modified it */
   refreshFromSettings();
   refreshDisplayFromGearHandlerSettings();
