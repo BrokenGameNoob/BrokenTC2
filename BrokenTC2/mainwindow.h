@@ -141,6 +141,7 @@ class MainWindow : public QMainWindow {
 
   void refreshFromSettings();
   void populateDevicesComboBox();
+  void touchMissingProfiles();
   void refreshDisplayFromGearHandlerSettings();
 
   void cycleGamepadProfile();

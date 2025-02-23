@@ -19,7 +19,7 @@ Dialog_ConfigureGame::Dialog_ConfigureGame(const QStringList& availableDevices, 
 
   setModal(true);
 
-  connect(ui->stackedWidget, &QStackedWidget::currentChanged, this, &Dialog_ConfigureGame::onCurrentIndexChanged);
+  connect(ui->stackedWidget, &QStackedWidget::currentChanged, this, Dialog_ConfigureGame::onCurrentIndexChanged);
 
   setWaitWidgetsVisible(false);
 
@@ -32,23 +32,25 @@ Dialog_ConfigureGame::~Dialog_ConfigureGame() {
 
 bool Dialog_ConfigureGame::configure(QWidget* parent, const QStringList& availableDevices, const QString& currentDevice,
                                      const QString& appdataFolder) {
-  Dialog_ConfigureGame dial{availableDevices, currentDevice, appdataFolder, parent};
+  auto* dial{new Dialog_ConfigureGame{availableDevices, currentDevice, appdataFolder, parent}};
 
-  auto ans{dial.exec()};
+  auto ans{dial->exec()};
 
-  auto success{dial.succeeded()};
+  auto success{dial->succeeded()};
 
-  const auto& kGameInfos{tc::GetGameInfo(dial.getSelectedGameId())};
+  const auto& kGameInfos{tc::GetGameInfo(dial->getSelectedGameId())};
 
   if (ans != QDialog::Accepted) return success;
 
   if (success) {
-    QMessageBox::information(&dial, dial.windowTitle(), tr("Successfully configured %0").arg(kGameInfos.kGameName));
+    QMessageBox::information(dial, dial->windowTitle(), tr("Successfully configured %0").arg(kGameInfos.kGameName));
     //        QMessageBox::information()
   } else {
     QMessageBox::warning(
-        &dial, dial.windowTitle(), tr("An error occurred when trying to configure %0").arg(kGameInfos.kGameName));
+        dial, dial->windowTitle(), tr("An error occurred when trying to configure %0").arg(kGameInfos.kGameName));
   }
+
+  dial->deleteLater();
 
   return success;  // cancelling is a success because it's an expected behavior
 }

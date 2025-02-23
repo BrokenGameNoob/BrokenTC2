@@ -1,3 +1,25 @@
+# 1.4.0 is here! (Beginner friendly)
+
+## -> New Features
+- Enable Num.Lock on BTC2 start (yup, that's a feature. I think?)
+
+<br/><br/>
+
+## -> Bugs patched
+- BTC2 would crash when configuring a profile on which no keys were touched
+- BTC2 would configure the default profile on first start and thus crash
+
+<br/><br/>
+
+## -> Bugs known
+- The gear indicator may not appear on Motorfest for some users (It's the fault of windows... Solution on discord server)
+- You won't be able to select a screen among multiple identical screens for the gear indicator (no solution either)
+
+<br/><br/>
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+<br/><br/><br/><br/>
+
+
 # 1.3.3 is here! (I wish mistakes would never happen)
 
 ## -> New Features
